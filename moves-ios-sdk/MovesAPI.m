@@ -93,9 +93,10 @@ static int request_handler(struct mg_connection *connection) {
         [self setDefaultHeader:@"Accept" value:@"application/json"];
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        self.accessToken = [defaults objectForKey:@"AccessToken"];
-        self.fetchTime = (NSDate*) [defaults objectForKey:@"FetchTime"];
-        self.expiry = (NSNumber*) [defaults objectForKey:@"Expires"];
+        self.accessToken = [defaults objectForKey:MV_AUTH_ACCESS_TOKEN];
+        self.refreshToken = [defaults objectForKey:MV_AUTH_REFRESH_TOKEN];
+        self.fetchTime = (NSDate*) [defaults objectForKey:MV_AUTH_FETCH_TIME];
+        self.expiry = (NSNumber*) [defaults objectForKey:MV_AUTH_EXPIRY];
     }
     return self;
 }
@@ -159,7 +160,6 @@ static int request_handler(struct mg_connection *connection) {
 
 - (void)executeAuthorizationSuccessCallbackWithSuccess:(void (^)(void))success {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
-        [self initServer];
         if (success) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 success();
@@ -184,16 +184,18 @@ static int request_handler(struct mg_connection *connection) {
 - (void)updateUserDefaultsWithAccessToken:(NSString*)accessToken refreshToken:(NSString*)refreshToken andExpiry:(NSNumber*)expiry {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    [defaults setObject:accessToken forKey:@"AccessToken"];
-    [defaults setObject:refreshToken forKey:@"RefreshToken"];
-    [defaults setObject:expiry forKey:@"Expires"];
-    [defaults setObject:[NSDate date] forKey:@"FetchTime"];
+    [defaults setObject:accessToken forKey:MV_AUTH_ACCESS_TOKEN];
+    [defaults setObject:refreshToken forKey:MV_AUTH_REFRESH_TOKEN];
+    [defaults setObject:expiry forKey:MV_AUTH_EXPIRY];
+    NSDate *fetchTime = [NSDate date];
+    [defaults setObject:fetchTime forKey:MV_AUTH_FETCH_TIME];
     
     [defaults synchronize];
     
     self.accessToken = accessToken;
     self.refreshToken = refreshToken;
     self.expiry = expiry;
+    self.fetchTime = fetchTime;
 }
 
 - (void)requestOrRefreshAccessToken:(NSString*)code complete:(void (^)())complete failure:(void (^)(NSError* reason))failure
@@ -228,10 +230,10 @@ static int request_handler(struct mg_connection *connection) {
 
 - (void)logout {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:@"AccessToken"];
-    [defaults removeObjectForKey:@"RefreshToken"];
-    [defaults removeObjectForKey:@"Expires"];
-    [defaults removeObjectForKey:@"FetchTime"];
+    [defaults removeObjectForKey:MV_AUTH_ACCESS_TOKEN];
+    [defaults removeObjectForKey:MV_AUTH_REFRESH_TOKEN];
+    [defaults removeObjectForKey:MV_AUTH_EXPIRY];
+    [defaults removeObjectForKey:MV_AUTH_FETCH_TIME];
     
     self.accessToken = nil;
     self.expiry = nil;
@@ -249,6 +251,8 @@ static int request_handler(struct mg_connection *connection) {
     
     callbacks.begin_request = request_handler;
     context = mg_start(&callbacks, (__bridge void *)(self), options);
+    
+    self.serverStarted = YES;
 }
 
 #pragma mark - Helper
@@ -389,6 +393,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getJsonByUrl:(NSURL *)url
              success:(void (^)(id json))success
              failure:(void (^)(NSError *error))failure {
+    if (!self.serverStarted) [self initServer];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSLog(@"request: %@, response: %@", request, response);
@@ -416,7 +421,7 @@ static int request_handler(struct mg_connection *connection) {
 }
 
 #pragma mark MVSummary
-// TODO: Add trackPoints param
+
 - (void)getDayDailySummariesByDate:(NSDate *)date
                            success:(void (^)(NSArray *dailySummaries))success
                            failure:(void (^)(NSError *error))failure {

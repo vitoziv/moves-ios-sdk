@@ -15,6 +15,11 @@
 #define MV_URL_PLACES @"/api/v1/user/places/daily"
 #define MV_URL_STORYLINE @"/api/v1/user/storyline/daily"
 
+#define MV_AUTH_ACCESS_TOKEN @"MV_AUTH_ACCESS_TOKEN"
+#define MV_AUTH_REFRESH_TOKEN @"MV_AUTH_REFRESH_TOKEN"
+#define MV_AUTH_FETCH_TIME @"MV_AUTH_FETCH_TIME"
+#define MV_AUTH_EXPIRY @"MV_AUTH_EXPIRY"
+
 typedef NS_ENUM(NSInteger, MVModelType) {
     MVModelTypeProfile = 0,
     MVModelTypeSummary,
@@ -38,6 +43,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 @property (nonatomic, strong) NSString *oauthClientId;
 @property (nonatomic, strong) NSString *oauthClientSecret;
 @property (nonatomic, strong) NSString *callbackUrlScheme;
+
+@property (nonatomic) BOOL serverStarted;
 
 @end
 
