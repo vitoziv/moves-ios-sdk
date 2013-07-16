@@ -55,9 +55,13 @@ At the top of your app delegate source file (and anywhere you call the MovesAPI 
 The final step is to give the SDK an opportunity to handle incoming URLs. 
  
     - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-        [[MovesAPI sharedInstance] authorizationCompletedCallback:url];
-    
-        return YES;
+        if ([[MovesAPI sharedInstance] canHandleOpenUrl:url]) {
+            return YES;
+        }
+        // Other 3rdParty Apps Handle Url Method...
+        
+        
+        return NO;
     }
 
 #Authorization 
