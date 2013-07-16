@@ -72,11 +72,11 @@
 
 #pragma mark - MVStoryLine
 - (void)getDayStoryLineByDate:(NSDate *)date
+                  trackPoints:(BOOL)trackPoints
                       success:(void (^)(NSArray *storyLines))success
                       failure:(void (^)(NSError *error))failure;
 
 - (void)getWeekStoryLineByDate:(NSDate *)date
-               withtrackPoints:(BOOL)trackPoints
                        success:(void (^)(NSArray *storyLines))success
                        failure:(void (^)(NSError *error))failure;
 

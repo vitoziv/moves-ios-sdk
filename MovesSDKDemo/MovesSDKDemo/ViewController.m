@@ -44,6 +44,7 @@
     
     
     //    [[MovesAPI sharedInstance] getDayStoryLineByDate:[NSDate date]
+    //                                         trackPoints:YES
     //                                             success:^(NSArray *storyLines) {
     //                                                 [self printStoryLine:storyLines];
     //                                             }
@@ -78,7 +79,6 @@
                                                    }];
     
     //    [[MovesAPI sharedInstance] getWeekStoryLineByDate:[NSDate date]
-    //                                      withtrackPoints:NO
     //                                              success:^(NSArray *storyLines) {
     //                                                  [self printStoryLine:storyLines];
     //                                              }

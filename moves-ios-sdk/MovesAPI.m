@@ -503,9 +503,14 @@ static int request_handler(struct mg_connection *connection) {
 
 #pragma mark - MVStoryLine
 - (void)getDayStoryLineByDate:(NSDate *)date
+                  trackPoints:(BOOL)trackPoints
                       success:(void (^)(NSArray *storyLines))success
                       failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] date:date dateFormatType:MVDateFormatTypeDay]];
+    NSString *urlString = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] date:date dateFormatType:MVDateFormatTypeDay];
+    if (trackPoints) {
+        urlString = [urlString stringByAppendingFormat:@"%@", @"?trackPoints=true"];
+    }
+    NSURL *url = [NSURL URLWithString:urlString];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);
@@ -514,13 +519,9 @@ static int request_handler(struct mg_connection *connection) {
 }
 
 - (void)getWeekStoryLineByDate:(NSDate *)date
-               withtrackPoints:(BOOL)trackPoints
                        success:(void (^)(NSArray *storyLines))success
                        failure:(void (^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] date:date dateFormatType:MVDateFormatTypeWeek];
-    if (trackPoints) {
-        urlString = [NSString stringWithFormat:@"%@&trackPoints=true", urlString];
-    }
     NSURL *url = [NSURL URLWithString:urlString];
     [self getJsonByUrl:url
                success:^(id json) {
