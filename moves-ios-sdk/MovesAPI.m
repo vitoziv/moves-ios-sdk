@@ -337,16 +337,25 @@ static int request_handler(struct mg_connection *connection) {
 }
 
 - (NSString *)urlByModelType:(MVModelType)modelType {
-    if (modelType == MVModelTypeSummary) {
-        return MV_URL_SUMMARY;
-    } else if (modelType == MVModelTypeActivity) {
-        return MV_URL_ACTIVITY;
-    } else if (modelType == MVModelTypePlace){
-        return MV_URL_PLACES;
-    } else if (modelType == MVModelTypeStoryLine){
-        return MV_URL_STORYLINE;
-    } else {
-        return MV_URL_USER_PROFILE;
+    switch (modelType) {
+        case MVModelTypeSummary:
+            return MV_URL_SUMMARY;
+            break;
+        case MVModelTypeActivity:
+            return MV_URL_ACTIVITY;
+            break;
+        case MVModelTypePlace:
+            return MV_URL_PLACES;
+            break;
+        case MVModelTypeStoryLine:
+            return MV_URL_STORYLINE;
+            break;
+        case MVModelTypeProfile:
+            return MV_URL_USER_PROFILE;
+            break;
+        default:
+            return @"";
+            break;
     }
 }
 
@@ -354,14 +363,22 @@ static int request_handler(struct mg_connection *connection) {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (NSDictionary *dic in json) {
         NSObject *obj = nil;
-        if (modelType == MVModelTypeSummary) {
-            obj = [[MVDailySummary alloc] initWithDictionary:dic];
-        } else if (modelType == MVModelTypeActivity) {
-            obj = [[MVDailyActivity alloc] initWithDictionary:dic];
-        } else if (modelType == MVModelTypePlace){
-            obj = [[MVDailyPlace alloc] initWithDictionary:dic];
-        } else if (modelType == MVModelTypeStoryLine){
-            obj = [[MVStoryLine alloc] initWithDictionary:dic];
+        
+        switch (modelType) {
+            case MVModelTypeSummary:
+                obj = [[MVDailySummary alloc] initWithDictionary:dic];
+                break;
+            case MVModelTypeActivity:
+                obj = [[MVDailyActivity alloc] initWithDictionary:dic];
+                break;
+            case MVModelTypePlace:
+                obj = [[MVDailyPlace alloc] initWithDictionary:dic];
+                break;
+            case MVModelTypeStoryLine:
+                obj = [[MVStoryLine alloc] initWithDictionary:dic];
+                break;
+            default:
+                break;
         }
         
         if (obj) [array addObject:obj];
@@ -479,6 +496,30 @@ static int request_handler(struct mg_connection *connection) {
                failure:failure];
 }
 
+- (void)getDailyActivitiesFromDate:(NSDate *)fromDate
+                            toDate:(NSDate *)toDate
+                           success:(void (^)(NSArray *dailyActivities))success
+                           failure:(void (^)(NSError *error))failure {
+    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] fromDate:fromDate toDate:toDate]];
+    [self getJsonByUrl:url
+               success:^(id json) {
+                   if (success) success([self arrayByJson:json modelType:MVModelTypeActivity]);
+               }
+               failure:failure];
+}
+
+- (void)getDailyActivitiesByPastDays:(NSInteger)pastDays
+                             success:(void (^)(NSArray *dailyActivities))success
+                             failure:(void (^)(NSError *error))failure {
+    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] pastDays:pastDays]];
+    [self getJsonByUrl:url
+               success:^(id json) {
+                   if (success) success([self arrayByJson:json modelType:MVModelTypeActivity]);
+               }
+               failure:failure];
+}
+
+
 #pragma mark MVPlace
 - (void)getDayDailyPlacesByDate:(NSDate *)date
                         success:(void (^)(NSArray *dailyPlaces))success
@@ -494,6 +535,29 @@ static int request_handler(struct mg_connection *connection) {
                          success:(void (^)(NSArray *dailyPlaces))success
                          failure:(void (^)(NSError *error))failure {
     NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypePlace] date:date dateFormatType:MVDateFormatTypeWeek]];
+    [self getJsonByUrl:url
+               success:^(id json) {
+                   if (success) success([self arrayByJson:json modelType:MVModelTypePlace]);
+               }
+               failure:failure];
+}
+
+- (void)getDailyPlacesFromDate:(NSDate *)fromDate
+                        toDate:(NSDate *)toDate
+                       success:(void (^)(NSArray *dailyPlaces))success
+                       failure:(void (^)(NSError *error))failure {
+    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypePlace] fromDate:fromDate toDate:toDate]];
+    [self getJsonByUrl:url
+               success:^(id json) {
+                   if (success) success([self arrayByJson:json modelType:MVModelTypePlace]);
+               }
+               failure:failure];
+}
+
+- (void)getDailyPlacesByPastDays:(NSInteger)pastDays
+                         success:(void (^)(NSArray *dailyPlaces))success
+                         failure:(void (^)(NSError *error))failure {
+    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypePlace] pastDays:pastDays]];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypePlace]);
@@ -523,6 +587,29 @@ static int request_handler(struct mg_connection *connection) {
                        failure:(void (^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] date:date dateFormatType:MVDateFormatTypeWeek];
     NSURL *url = [NSURL URLWithString:urlString];
+    [self getJsonByUrl:url
+               success:^(id json) {
+                   if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);
+               }
+               failure:failure];
+}
+
+- (void)getDailyStoryLineFromDate:(NSDate *)fromDate
+                           toDate:(NSDate *)toDate
+                          success:(void (^)(NSArray *storyLines))success
+                          failure:(void (^)(NSError *error))failure {
+    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] fromDate:fromDate toDate:toDate]];
+    [self getJsonByUrl:url
+               success:^(id json) {
+                   if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);
+               }
+               failure:failure];
+}
+
+- (void)getDailyStoryLineByPastDays:(NSInteger)pastDays
+                            success:(void (^)(NSArray *storyLines))success
+                            failure:(void (^)(NSError *error))failure {
+    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] pastDays:pastDays]];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);

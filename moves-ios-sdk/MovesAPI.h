@@ -61,12 +61,30 @@
                              success:(void (^)(NSArray *dailyActivities))success
                              failure:(void (^)(NSError *error))failure;
 
+- (void)getDailyActivitiesFromDate:(NSDate *)fromDate
+                            toDate:(NSDate *)toDate
+                           success:(void (^)(NSArray *dailyActivities))success
+                           failure:(void (^)(NSError *error))failure;
+
+- (void)getDailyActivitiesByPastDays:(NSInteger)pastDays
+                             success:(void (^)(NSArray *dailyActivities))success
+                             failure:(void (^)(NSError *error))failure;
+
 #pragma mark - MVPlace
 - (void)getDayDailyPlacesByDate:(NSDate *)date
                         success:(void (^)(NSArray *dailyPlaces))success
                         failure:(void (^)(NSError *error))failure;
 
 - (void)getWeekDailyPlacesByDate:(NSDate *)date
+                         success:(void (^)(NSArray *dailyPlaces))success
+                         failure:(void (^)(NSError *error))failure;
+
+- (void)getDailyPlacesFromDate:(NSDate *)fromDate
+                        toDate:(NSDate *)toDate
+                       success:(void (^)(NSArray *dailyPlaces))success
+                       failure:(void (^)(NSError *error))failure;
+
+- (void)getDailyPlacesByPastDays:(NSInteger)pastDays
                          success:(void (^)(NSArray *dailyPlaces))success
                          failure:(void (^)(NSError *error))failure;
 
@@ -80,4 +98,12 @@
                        success:(void (^)(NSArray *storyLines))success
                        failure:(void (^)(NSError *error))failure;
 
+- (void)getDailyStoryLineFromDate:(NSDate *)fromDate
+                           toDate:(NSDate *)toDate
+                          success:(void (^)(NSArray *storyLines))success
+                          failure:(void (^)(NSError *error))failure;
+
+- (void)getDailyStoryLineByPastDays:(NSInteger)pastDays
+                            success:(void (^)(NSArray *storyLines))success
+                            failure:(void (^)(NSError *error))failure;
 @end
