@@ -108,9 +108,10 @@ static int request_handler(struct mg_connection *connection) {
     [MovesAPI sharedInstance].callbackUrlScheme = callbackUrlScheme;
 }
 
-- (void)authorizationCompletedCallback:(NSURL*)responseUrl
+- (BOOL)canHandleOpenUrl:(NSURL*)url
 {
-    NSArray *keysAndObjs = [[responseUrl.query stringByReplacingOccurrencesOfString:@"=" withString:@"&"] componentsSeparatedByString:@"&"];
+    BOOL canHandle = NO;
+    NSArray *keysAndObjs = [[url.query stringByReplacingOccurrencesOfString:@"=" withString:@"&"] componentsSeparatedByString:@"&"];
     
     for(int i=0;i<keysAndObjs.count;i+=2) {
         NSString *key = keysAndObjs[i];
@@ -130,6 +131,7 @@ static int request_handler(struct mg_connection *connection) {
                     authorizationSuccessCallback = nil;
                 }
             }];
+            canHandle = YES;
             break;
         } else if([key isEqualToString:@"error"]) {
             if (authorizationFailureCallback) {
@@ -137,8 +139,12 @@ static int request_handler(struct mg_connection *connection) {
                 authorizationSuccessCallback = nil;
                 authorizationFailureCallback = nil;
             }
+            canHandle = NO;
+            break;
         }
     }
+    
+    return canHandle;
 }
 
 #pragma mark - General methods appending authorization key to requests

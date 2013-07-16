@@ -20,9 +20,13 @@
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    [[MovesAPI sharedInstance] authorizationCompletedCallback:url];
+    if ([[MovesAPI sharedInstance] canHandleOpenUrl:url]) {
+        return YES;
+    }
+    // Other 3rdParty Apps Handle Url Method...
     
-    return YES;
+    
+    return NO;
 }
 
 @end

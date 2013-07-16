@@ -18,7 +18,7 @@
 @interface MovesAPI : AFHTTPClient
 + (MovesAPI*)sharedInstance;
 - (void)setShareMovesOauthClientId:(NSString *)oauthClientId oauthClientSecret:(NSString *)oauthClientSecret callbackUrlScheme:(NSString *)callbackUrlScheme;
-- (void)authorizationCompletedCallback:(NSURL*)responseUrl;
+- (BOOL)canHandleOpenUrl:(NSURL*)url;
 
 #pragma mark - Authorization
 - (void)authorizationSuccess:(void (^)(void))success failure:(void (^)(NSError *reason))failure;
