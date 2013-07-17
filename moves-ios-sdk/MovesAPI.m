@@ -131,7 +131,7 @@ static int request_handler(struct mg_connection *connection) {
         if([key isEqualToString:@"code"]) {
             [self requestOrRefreshAccessToken:value complete:^{
                 if (self.authorizationSuccessCallback) {
-                    [self executeAuthorizationSuccessCallbackWithSuccess:self.authorizationSuccessCallback];
+                    if (self.authorizationSuccessCallback) self.authorizationSuccessCallback();
                     self.authorizationSuccessCallback = nil;
                     self.authorizationFailureCallback = nil;
                 }
@@ -174,16 +174,6 @@ static int request_handler(struct mg_connection *connection) {
 }
 
 #pragma mark - OAuth2 authentication with Moves app
-
-- (void)executeAuthorizationSuccessCallbackWithSuccess:(void (^)(void))success {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
-        if (success) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                success();
-            });
-        }
-    });
-}
 
 - (void)authorizationSuccess:(void (^)(void))success failure:(void (^)(NSError *reason))failure
 {
