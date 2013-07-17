@@ -46,6 +46,12 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 @property (nonatomic) BOOL serverStarted;
 
+@property (nonatomic, copy) void (^authorizationSuccessCallback)(void);
+@property (nonatomic, copy) void (^authorizationFailureCallback)(NSError *reason);
+@property (nonatomic, strong) NSError *expiredError;
+
+- (void)initServer;
+
 @end
 
 #endif

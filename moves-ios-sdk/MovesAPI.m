@@ -14,17 +14,14 @@
 #import "MovesAPI.h"
 #import "MovesAPI+Private.h"
 
-static void (^authorizationSuccessCallback)(void);
-static void (^authorizationFailureCallback)(NSError *reason);
-
 static const char* LISTEN_PORT = "8080";
-static int content_length;
 
 static int request_handler(struct mg_connection *connection) {
     @autoreleasepool {
         const struct mg_request_info *info = mg_get_request_info(connection);
         
         __block const char *response = NULL;
+        __block int content_length;
         __block pthread_cond_t request_cond = PTHREAD_COND_INITIALIZER;
         pthread_mutex_t request_mutex = PTHREAD_MUTEX_INITIALIZER;
         
@@ -33,16 +30,38 @@ static int request_handler(struct mg_connection *connection) {
             uri = [uri stringByAppendingFormat:@"?%@", [NSString stringWithUTF8String:info->query_string]];
         }
         
+        void(^CallBackBlock)(void) = ^{
+            // Send HTTP reply to the client
+            mg_printf(connection,
+                      "HTTP/1.1 200 OK\r\n"
+                      "Content-Type: application/json\r\n"
+                      "Content-Length: %d\r\n"        // Always set Content-Length
+                      "\r\n",
+                      content_length);
+            
+            mg_write(connection, response, content_length);
+        };
+        
         [[MovesAPI sharedInstance] getPath:uri parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             response = [operation.responseString cStringUsingEncoding:operation.responseStringEncoding];
             content_length = [operation.responseString  lengthOfBytesUsingEncoding:operation.responseStringEncoding];
             
-            pthread_cond_signal(&request_cond);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            response = [[error description] cStringUsingEncoding:NSUTF8StringEncoding];
-            content_length = [[error description] lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
+            CallBackBlock();
             
             pthread_cond_signal(&request_cond);
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
+                [MovesAPI sharedInstance].expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
+            }
+            
+            response = [error.description cStringUsingEncoding:operation.responseStringEncoding];
+            content_length = [error.description  lengthOfBytesUsingEncoding:operation.responseStringEncoding];
+            
+            CallBackBlock();
+            
+            pthread_cond_signal(&request_cond);
+            
         }];
         
         pthread_mutex_lock(&request_mutex);
@@ -51,15 +70,7 @@ static int request_handler(struct mg_connection *connection) {
         pthread_mutex_destroy(&request_mutex);
         pthread_cond_destroy(&request_cond);
         
-        // Send HTTP reply to the client
-        mg_printf(connection,
-                  "HTTP/1.1 200 OK\r\n"
-                  "Content-Type: application/json\r\n"
-                  "Content-Length: %d\r\n"        // Always set Content-Length
-                  "\r\n",
-                  content_length);
         
-        mg_write(connection, response, content_length);
         return 1;
     }
 }
@@ -119,25 +130,25 @@ static int request_handler(struct mg_connection *connection) {
         
         if([key isEqualToString:@"code"]) {
             [self requestOrRefreshAccessToken:value complete:^{
-                if (authorizationSuccessCallback) {
-                    [self executeAuthorizationSuccessCallbackWithSuccess:authorizationSuccessCallback];
-                    authorizationSuccessCallback = nil;
-                    authorizationFailureCallback = nil;
+                if (self.authorizationSuccessCallback) {
+                    [self executeAuthorizationSuccessCallbackWithSuccess:self.authorizationSuccessCallback];
+                    self.authorizationSuccessCallback = nil;
+                    self.authorizationFailureCallback = nil;
                 }
             } failure:^(NSError *reason) {
-                if (authorizationFailureCallback) {
-                    authorizationFailureCallback(reason);
-                    authorizationFailureCallback = nil;
-                    authorizationSuccessCallback = nil;
+                if (self.authorizationFailureCallback) {
+                    self.authorizationFailureCallback(reason);
+                    self.authorizationFailureCallback = nil;
+                    self.authorizationSuccessCallback = nil;
                 }
             }];
             canHandle = YES;
             break;
         } else if([key isEqualToString:@"error"]) {
-            if (authorizationFailureCallback) {
-                authorizationFailureCallback([NSError errorWithDomain:@"moves-ios-sdk" code:0 userInfo:@{@"description": value}]);
-                authorizationSuccessCallback = nil;
-                authorizationFailureCallback = nil;
+            if (self.authorizationFailureCallback) {
+                self.authorizationFailureCallback([NSError errorWithDomain:@"moves-ios-sdk" code:0 userInfo:@{@"description": value}]);
+                self.authorizationSuccessCallback = nil;
+                self.authorizationFailureCallback = nil;
             }
             canHandle = NO;
             break;
@@ -177,11 +188,10 @@ static int request_handler(struct mg_connection *connection) {
 - (void)authorizationSuccess:(void (^)(void))success failure:(void (^)(NSError *reason))failure
 {
     if(self.isAuthenticated) {
-        [self executeAuthorizationSuccessCallbackWithSuccess:success];
+        if (success) success();
     } else {
-        authorizationSuccessCallback = success;
-        authorizationFailureCallback = failure;
-        
+        self.authorizationSuccessCallback = success;
+        self.authorizationFailureCallback = failure;
         NSURL *authUrl = [NSURL URLWithString:[NSString stringWithFormat:@"moves://app/authorize?client_id=%@&redirect_uri=%@&scope=activity%%20location", self.oauthClientId, self.oauthRedirectUri]];
         [[UIApplication sharedApplication] openURL:authUrl];
     }
@@ -211,10 +221,11 @@ static int request_handler(struct mg_connection *connection) {
     if(self.accessToken) {
         path = [NSString stringWithFormat:@"/oauth/v1/access_token?grant_type=refresh_token&refresh_token=%@&client_id=%@&client_secret=%@",
                 self.refreshToken, self.oauthClientId, self.oauthClientSecret];
-   
+        
     }
     
     [self postPath:path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"responseObject: %@", responseObject);
         [self updateUserDefaultsWithAccessToken:responseObject[@"access_token"]
                                    refreshToken:responseObject[@"refresh_token"]
                                       andExpiry:responseObject[@"expires_in"]];
@@ -282,7 +293,7 @@ static int request_handler(struct mg_connection *connection) {
             if(sa_type == AF_INET || sa_type == AF_INET6) {
                 NSString *name = [NSString stringWithUTF8String:temp_addr->ifa_name];
                 NSString *addr = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)]; // pdp_ip0
-                NSLog(@"NAME: \"%@\" addr: %@", name, addr); // see for yourself
+                //NSLog(@"NAME: \"%@\" addr: %@", name, addr); // see for yourself
                 
                 if([name isEqualToString:@"en0"]) {
                     // Interface is the wifi connection on the iPhone
@@ -399,14 +410,19 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getJsonByUrl:(NSURL *)url
              success:(void (^)(id json))success
              failure:(void (^)(NSError *error))failure {
+    
     if (!self.serverStarted) [self initServer];
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        NSLog(@"request: %@, response: %@", request, response);
         if (success) success(JSON);
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"error with\nrequest: %@\nresponse: %@error: %@\nJSON: %@",request, response, error, JSON);
-        if (failure) failure(error);
+        if (failure) {
+            if (self.expiredError) failure(self.expiredError);
+            self.expiredError = nil;
+        } else {
+            failure(error);
+        }
     }];
     
     [operation start];
