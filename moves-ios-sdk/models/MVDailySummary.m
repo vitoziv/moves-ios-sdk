@@ -36,4 +36,12 @@
     return self;
 }
 
+- (NSInteger)dailyCalories {
+    NSInteger dailyCalories = 0;
+    for (MVSummary *summary in self.summaries) {
+        dailyCalories += summary.calories;
+    }
+    return dailyCalories;
+}
+
 @end

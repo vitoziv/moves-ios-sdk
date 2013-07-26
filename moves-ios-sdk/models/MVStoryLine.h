@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSArray *segments;
 @property (nonatomic) NSInteger caloriesIdle;
+@property (nonatomic, readonly) NSInteger dailyCalories;
 
 - (MVStoryLine *)initWithDictionary:(NSDictionary *)dic;
 

@@ -32,4 +32,14 @@
     return self;
 }
 
+- (NSInteger)dailyCalories {
+    NSInteger dailyCalories = 0;
+    for (MVSegment *segment in self.segments) {
+        for (MVActivity *activity in segment.activities) {
+            dailyCalories += activity.calories;
+        }
+    }
+    return dailyCalories;
+}
+
 @end
