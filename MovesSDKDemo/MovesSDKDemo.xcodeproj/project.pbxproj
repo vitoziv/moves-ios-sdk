@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F23E201179CD802007BBB8B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F23E200179CD802007BBB8B /* XCTest.framework */; };
+		5F23E202179CD802007BBB8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DEB1794072200B51480 /* Foundation.framework */; };
+		5F23E203179CD802007BBB8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DE91794072200B51480 /* UIKit.framework */; };
+		5F23E209179CD802007BBB8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5F23E207179CD802007BBB8B /* InfoPlist.strings */; };
+		5F23E20B179CD802007BBB8B /* MovesSDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F23E20A179CD802007BBB8B /* MovesSDKDemoTests.m */; };
 		5FFB3DEA1794072200B51480 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DE91794072200B51480 /* UIKit.framework */; };
 		5FFB3DEC1794072200B51480 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DEB1794072200B51480 /* Foundation.framework */; };
 		5FFB3DEE1794072200B51480 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DED1794072200B51480 /* CoreGraphics.framework */; };
@@ -36,8 +41,24 @@
 		B2E665866A784FCA9599F6AE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58A271D31DBB4C719B12DA15 /* libPods.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		5F23E20D179CD802007BBB8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FFB3DDE1794072200B51480 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FFB3DE51794072200B51480;
+			remoteInfo = MovesSDKDemo;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		58A271D31DBB4C719B12DA15 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F23E1FF179CD802007BBB8B /* MovesSDKDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovesSDKDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F23E200179CD802007BBB8B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		5F23E206179CD802007BBB8B /* MovesSDKDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MovesSDKDemoTests-Info.plist"; sourceTree = "<group>"; };
+		5F23E208179CD802007BBB8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5F23E20A179CD802007BBB8B /* MovesSDKDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MovesSDKDemoTests.m; sourceTree = "<group>"; };
+		5F23E20C179CD802007BBB8B /* MovesSDKDemoTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MovesSDKDemoTests-Prefix.pch"; sourceTree = "<group>"; };
 		5FFB3DE61794072200B51480 /* MovesSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovesSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FFB3DE91794072200B51480 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5FFB3DEB1794072200B51480 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -87,6 +108,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5F23E1FC179CD802007BBB8B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F23E201179CD802007BBB8B /* XCTest.framework in Frameworks */,
+				5F23E203179CD802007BBB8B /* UIKit.framework in Frameworks */,
+				5F23E202179CD802007BBB8B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5FFB3DE31794072200B51480 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -103,10 +134,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5F23E204179CD802007BBB8B /* MovesSDKDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				5F23E20A179CD802007BBB8B /* MovesSDKDemoTests.m */,
+				5F23E205179CD802007BBB8B /* Supporting Files */,
+			);
+			path = MovesSDKDemoTests;
+			sourceTree = "<group>";
+		};
+		5F23E205179CD802007BBB8B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5F23E206179CD802007BBB8B /* MovesSDKDemoTests-Info.plist */,
+				5F23E207179CD802007BBB8B /* InfoPlist.strings */,
+				5F23E20C179CD802007BBB8B /* MovesSDKDemoTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		5FFB3DDD1794072200B51480 = {
 			isa = PBXGroup;
 			children = (
 				5FFB3DEF1794072200B51480 /* MovesSDKDemo */,
+				5F23E204179CD802007BBB8B /* MovesSDKDemoTests */,
 				5FFB3DE81794072200B51480 /* Frameworks */,
 				5FFB3DE71794072200B51480 /* Products */,
 				AEDC87ED8A17424EB8DBFD08 /* Pods.xcconfig */,
@@ -117,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				5FFB3DE61794072200B51480 /* MovesSDKDemo.app */,
+				5F23E1FF179CD802007BBB8B /* MovesSDKDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -130,6 +182,7 @@
 				5FFB3DEB1794072200B51480 /* Foundation.framework */,
 				5FFB3DED1794072200B51480 /* CoreGraphics.framework */,
 				58A271D31DBB4C719B12DA15 /* libPods.a */,
+				5F23E200179CD802007BBB8B /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -224,6 +277,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		5F23E1FE179CD802007BBB8B /* MovesSDKDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5F23E211179CD802007BBB8B /* Build configuration list for PBXNativeTarget "MovesSDKDemoTests" */;
+			buildPhases = (
+				5F23E1FB179CD802007BBB8B /* Sources */,
+				5F23E1FC179CD802007BBB8B /* Frameworks */,
+				5F23E1FD179CD802007BBB8B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5F23E20E179CD802007BBB8B /* PBXTargetDependency */,
+			);
+			name = MovesSDKDemoTests;
+			productName = MovesSDKDemoTests;
+			productReference = 5F23E1FF179CD802007BBB8B /* MovesSDKDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		5FFB3DE51794072200B51480 /* MovesSDKDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5FFB3E091794072200B51480 /* Build configuration list for PBXNativeTarget "MovesSDKDemo" */;
@@ -251,6 +322,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = vito;
+				TargetAttributes = {
+					5F23E1FE179CD802007BBB8B = {
+						TestTargetID = 5FFB3DE51794072200B51480;
+					};
+				};
 			};
 			buildConfigurationList = 5FFB3DE11794072200B51480 /* Build configuration list for PBXProject "MovesSDKDemo" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -265,11 +341,20 @@
 			projectRoot = "";
 			targets = (
 				5FFB3DE51794072200B51480 /* MovesSDKDemo */,
+				5F23E1FE179CD802007BBB8B /* MovesSDKDemoTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5F23E1FD179CD802007BBB8B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F23E209179CD802007BBB8B /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5FFB3DE41794072200B51480 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -316,6 +401,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5F23E1FB179CD802007BBB8B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F23E20B179CD802007BBB8B /* MovesSDKDemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5FFB3DE21794072200B51480 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -341,7 +434,23 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		5F23E20E179CD802007BBB8B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5FFB3DE51794072200B51480 /* MovesSDKDemo */;
+			targetProxy = 5F23E20D179CD802007BBB8B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		5F23E207179CD802007BBB8B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5F23E208179CD802007BBB8B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		5FFB3DF21794072200B51480 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -361,6 +470,64 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		5F23E20F179CD802007BBB8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AEDC87ED8A17424EB8DBFD08 /* Pods.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MovesSDKDemo.app/MovesSDKDemo";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Xcode5-DP3.app/Contents/Developer/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MovesSDKDemoTests/MovesSDKDemoTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "MovesSDKDemoTests/MovesSDKDemoTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		5F23E210179CD802007BBB8B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MovesSDKDemo.app/MovesSDKDemo";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Xcode5-DP3.app/Contents/Developer/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MovesSDKDemoTests/MovesSDKDemoTests-Prefix.pch";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "MovesSDKDemoTests/MovesSDKDemoTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 		5FFB3E071794072200B51480 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -446,6 +613,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5F23E211179CD802007BBB8B /* Build configuration list for PBXNativeTarget "MovesSDKDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F23E20F179CD802007BBB8B /* Debug */,
+				5F23E210179CD802007BBB8B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		5FFB3DE11794072200B51480 /* Build configuration list for PBXProject "MovesSDKDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
