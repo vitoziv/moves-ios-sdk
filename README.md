@@ -8,7 +8,7 @@ Moves App SDK For iOS.
 
 ##Installing the moves-ios-sdk
 ###1.CocoaPods
-If you use [CocoaPods](http://cocoapods.org/), you can add the ``moves-ios-sdk`` pod to your Podfile. Then run ``pod install``, and the Pocket SDK will be available in your project. See the documentation on the CocoaPods website if you want to set up a new or existing project.
+If you use [CocoaPods](http://cocoapods.org/), you can add the ``moves-ios-sdk`` pod to your Podfile. Then run ``pod install``, and the Moves SDK will be available in your project. See the documentation on the CocoaPods website if you want to set up a new or existing project.
 ###2.Add the moves-ios-sdk to your project
 - Open your existing project.
 - Drag the **moves-ios-sdk** folder from the example project into your Xcode project.
@@ -40,7 +40,7 @@ copy and paste the following into the XML Source for the Info.plist:
 
 At the top of your app delegate source file (and anywhere you call the MovesAPI object), you'll need to include the ``MovesAPI.h``.  Simply add this line:
 
-``#import "PocketAPI.h"``
+``#import "MovesAPI.h"``
 
 ###In AppDelegate. Set Your [Client ID],[Client secret] and [Redirect URI]
 
