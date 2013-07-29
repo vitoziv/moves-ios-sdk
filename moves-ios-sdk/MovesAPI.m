@@ -403,7 +403,9 @@ static int request_handler(struct mg_connection *connection) {
     
     if (!self.serverStarted) [self initServer];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url
+                                             cachePolicy:NSURLRequestReloadRevalidatingCacheData
+                                         timeoutInterval:25];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         if (success) success(JSON);
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
