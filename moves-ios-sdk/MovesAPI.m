@@ -75,11 +75,9 @@ static int request_handler(struct mg_connection *connection) {
     }
 }
 
-
 @interface MovesAPI() {
     struct mg_context *context;
 }
-
 
 @end
 
@@ -100,7 +98,6 @@ static int request_handler(struct mg_connection *connection) {
         [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
         [self setParameterEncoding:AFJSONParameterEncoding];
         
-        // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
         [self setDefaultHeader:@"Accept" value:@"application/json"];
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -397,6 +394,23 @@ static int request_handler(struct mg_connection *connection) {
     return array;
 }
 
+//- (BOOL)verifyCFBundleURLSchemes {
+//    NSArray *urlTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
+//    NSString* callbackScheme = [NSString stringWithFormat:@"mv-%@",self.oauthClientId];
+//    
+//    for (NSDictionary *dict in urlTypes) {
+//        NSArray *urlSchemes = [dict objectForKey:@"CFBundleURLSchemes"];
+//        for (NSString *urlScheme in urlSchemes) {
+//            if ([callbackScheme isEqualToString:urlScheme]) {
+//                return YES;
+//            }
+//        }
+//    }
+//    return NO;
+//}
+
+#pragma mark - API
+
 - (void)getJsonByUrl:(NSURL *)url
              success:(void (^)(id json))success
              failure:(void (^)(NSError *error))failure {
@@ -420,7 +434,6 @@ static int request_handler(struct mg_connection *connection) {
     [operation start];
 }
 
-#pragma mark - API
 #pragma mark User
 
 - (void)getUserSuccess:(void (^)(MVUser *user))success
