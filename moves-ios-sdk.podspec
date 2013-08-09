@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
     'moves-ios-sdk/models/**/*.{h,m}',
     'moves-ios-sdk/3rdParty/mongoose/**/*.{h,c}'
 
-  s.dependency 'AFNetworking',"1.3.1"
+s.dependency 'AFNetworking',"~> 1.3.1"
 end
