@@ -19,7 +19,7 @@
 - (MVUser *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.userId = dic[@"userId"];
+    self.userId = [dic[@"userId"] stringValue];
     self.firstDate = dic[@"profile"][@"firstDate"];
     self.caloriesAvailable = (BOOL)dic[@"profile"][@"caloriesAvailable"];
     self.currentTimeZoneId = dic[@"profile"][@"currentTimeZone"][@"id"];
