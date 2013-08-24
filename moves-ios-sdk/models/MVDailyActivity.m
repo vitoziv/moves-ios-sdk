@@ -23,11 +23,13 @@
     self.date = dic[@"date"];
     self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
     
-    NSMutableArray *segments = [[NSMutableArray alloc] init];
-    for (NSDictionary *segment in dic[@"segments"]) {
-        [segments addObject:[[MVSegment alloc] initWithDictionary:segment]];
+    if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {
+        NSMutableArray *segments = [[NSMutableArray alloc] init];
+        for (NSDictionary *segment in dic[@"segments"]) {
+            [segments addObject:[[MVSegment alloc] initWithDictionary:segment]];
+        }
+        self.segments = segments;
     }
-    self.segments = segments;
     
     return self;
 }

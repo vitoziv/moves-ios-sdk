@@ -37,12 +37,14 @@
     self.steps = [dic[@"steps"] integerValue];
     self.calories = [dic[@"calories"] integerValue];
     
-    NSMutableArray *trackPoints = [[NSMutableArray alloc] init];
-    for (NSDictionary *trackPoint in dic[@"trackPoints"]) {
-        [trackPoints addObject:[[MVTrackPoint alloc] initWithDictionary:trackPoint]];
+    if ([dic[@"trackPoints"] isKindOfClass:[NSArray class]]) {
+        NSMutableArray *trackPoints = [[NSMutableArray alloc] init];
+        for (NSDictionary *trackPoint in dic[@"trackPoints"]) {
+            [trackPoints addObject:[[MVTrackPoint alloc] initWithDictionary:trackPoint]];
+        }
+        
+        self.trackPoints = trackPoints;
     }
-    
-    self.trackPoints = trackPoints;
     
     return self;
 }

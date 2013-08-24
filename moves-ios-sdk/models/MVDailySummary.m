@@ -23,15 +23,13 @@
     self.date = dic[@"date"];
     self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
     
-    if (![dic[@"summary"] isKindOfClass:[NSArray class]]) {
-        return self;
+    if ([dic[@"summary"] isKindOfClass:[NSArray class]]) {
+        NSMutableArray *summaries = [[NSMutableArray alloc] init];
+        for (NSDictionary *summary in dic[@"summary"]) {
+            [summaries addObject:[[MVSummary alloc] initWithDictionary:summary]];
+        }
+        self.summaries = summaries;
     }
-    
-    NSMutableArray *summaries = [[NSMutableArray alloc] init];
-    for (NSDictionary *summary in dic[@"summary"]) {
-        [summaries addObject:[[MVSummary alloc] initWithDictionary:summary]];
-    }
-    self.summaries = summaries;
     
     return self;
 }

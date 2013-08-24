@@ -30,14 +30,14 @@
     self.endTime = dic[@"endTime"];
     self.place = [[MVPlace alloc] initWithDictionary:dic[@"place"]];
     
-    if (![dic[@"activities"] isKindOfClass:[NSArray class]]) {
-        return self;
+    if ([dic[@"activities"] isKindOfClass:[NSArray class]]) {
+        NSMutableArray *activities = [[NSMutableArray alloc] init];
+        for (NSDictionary *activity in dic[@"activities"]) {
+            [activities addObject:[[MVActivity alloc] initWithDictionary:activity]];
+        }
+        self.activities = activities;
     }
-    NSMutableArray *activities = [[NSMutableArray alloc] init];
-    for (NSDictionary *activity in dic[@"activities"]) {
-        [activities addObject:[[MVActivity alloc] initWithDictionary:activity]];
-    }
-    self.activities = activities;
+    
     
     return self;
 }
