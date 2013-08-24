@@ -84,8 +84,6 @@ More other API see the ``MovesAPI.h`` file
 #Acknowledgements
 The **moves-ios-sdk** uses the following open source software:
 
-- [MovesBridge](https://github.com/mharju/MovesBridge)
-- [mongoose](https://github.com/valenok/mongoose)
 - [AFNetworking](https://github.com/AFNetworking/AFNetworking)
 
 #License
