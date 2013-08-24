@@ -7,10 +7,10 @@ Pod::Spec.new do |s|
   s.homepage = 'https://github.com/vitoziv/moves-ios-sdk'
   s.author   = { 'Vito Zhang' => 'zhangwei.noair@gmail.com' }
   s.requires_arc = true
-  s.source   = { :git => 'https://github.com/vitoziv/moves-ios-sdk.git' }
+  s.source   = { :git => 'https://github.com/vitoziv/moves-ios-sdk.git' , :tag => '0.0.2' }
   s.source_files = 'moves-ios-sdk/*.{h,m}',
     'moves-ios-sdk/models/**/*.{h,m}',
-    'moves-ios-sdk/3rdParty/mongoose/**/*.{h,c}'
+    'moves-ios-sdk/3rdParty/mongoose/**/*.{h,c}',
+    'moves-ios-sdk/3rdParty/AFNetworking/**/*.{h,m}'
 
-s.dependency 'AFNetworking',"~> 1.3.1"
 end
