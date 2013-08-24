@@ -12,116 +12,129 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PuO-lt-Uj2">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Auth">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="authPress:" destination="2" eventType="touchUpInside" id="T27-9L-sw9"/>
-                                </connections>
-                            </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cJi-By-Sy5">
-                                <color key="backgroundColor" red="0.95294117649999999" green="0.95294117649999999" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bmh-Je-ru2">
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PuO-lt-Uj2">
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Auth">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="authPress:" destination="2" eventType="touchUpInside" id="T27-9L-sw9"/>
+                                        </connections>
+                                    </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cJi-By-Sy5">
+                                        <color key="backgroundColor" red="0.95294117649999999" green="0.95294117649999999" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="224" id="AO0-b3-4zt"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kfP-hS-tSR">
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="DaySummary">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="dayUrl:" destination="2" eventType="touchUpInside" id="VAT-4Z-YLQ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QnC-Is-m3k">
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="WeekSummary">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="weekUrl:" destination="2" eventType="touchUpInside" id="hns-CP-LS8"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxK-WL-ZvU">
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="MonthSummary">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="monthUrl:" destination="2" eventType="touchUpInside" id="I6m-NP-IZb"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HCy-aI-Izg">
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="pastDays=10 Summary">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="pastDaysUrl:" destination="2" eventType="touchUpInside" id="VIE-Gq-iWt"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uue-5F-oE5">
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="From&lt;date>To&lt;date> Summary">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="fromToUrl:" destination="2" eventType="touchUpInside" id="25J-Tz-EXJ"/>
+                                        </connections>
+                                    </button>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9wH-9i-d5q">
+                                        <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                                    </activityIndicatorView>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="224" id="AO0-b3-4zt"/>
+                                    <constraint firstAttribute="bottom" secondItem="Uue-5F-oE5" secondAttribute="bottom" constant="49" id="0Wa-SH-i9h"/>
+                                    <constraint firstItem="cJi-By-Sy5" firstAttribute="trailing" secondItem="bmh-Je-ru2" secondAttribute="trailing" type="default" id="1HO-X3-d1I"/>
+                                    <constraint firstItem="PuO-lt-Uj2" firstAttribute="centerX" secondItem="bmh-Je-ru2" secondAttribute="centerX" type="default" id="2Lt-MG-Wn7"/>
+                                    <constraint firstItem="9wH-9i-d5q" firstAttribute="top" secondItem="bmh-Je-ru2" secondAttribute="top" constant="20" symbolic="YES" type="default" id="NFj-5q-yAF"/>
+                                    <constraint firstItem="Uue-5F-oE5" firstAttribute="top" secondItem="HCy-aI-Izg" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="PDb-0v-LKa"/>
+                                    <constraint firstItem="HCy-aI-Izg" firstAttribute="leading" secondItem="bmh-Je-ru2" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="R2t-9x-TUx"/>
+                                    <constraint firstItem="Uue-5F-oE5" firstAttribute="leading" secondItem="bmh-Je-ru2" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="TiC-1T-ktr"/>
+                                    <constraint firstItem="QnC-Is-m3k" firstAttribute="leading" secondItem="kfP-hS-tSR" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="WkB-G7-hC8"/>
+                                    <constraint firstAttribute="trailing" secondItem="PuO-lt-Uj2" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="XEc-Id-R5s"/>
+                                    <constraint firstItem="PuO-lt-Uj2" firstAttribute="top" secondItem="cJi-By-Sy5" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="aQy-bU-63j"/>
+                                    <constraint firstItem="bxK-WL-ZvU" firstAttribute="top" secondItem="kfP-hS-tSR" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="c1A-Q7-nEH"/>
+                                    <constraint firstItem="kfP-hS-tSR" firstAttribute="top" secondItem="PuO-lt-Uj2" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="duM-de-mQP"/>
+                                    <constraint firstItem="cJi-By-Sy5" firstAttribute="top" secondItem="bmh-Je-ru2" secondAttribute="top" constant="20" symbolic="YES" type="default" id="lEO-Xt-qS8"/>
+                                    <constraint firstItem="QnC-Is-m3k" firstAttribute="baseline" secondItem="kfP-hS-tSR" secondAttribute="baseline" type="default" id="nv7-cp-xn1"/>
+                                    <constraint firstItem="bxK-WL-ZvU" firstAttribute="leading" secondItem="bmh-Je-ru2" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="nzy-9o-IJq"/>
+                                    <constraint firstItem="HCy-aI-Izg" firstAttribute="top" secondItem="bxK-WL-ZvU" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="p36-il-3Cc"/>
+                                    <constraint firstItem="QnC-Is-m3k" firstAttribute="top" secondItem="PuO-lt-Uj2" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="pW7-RR-IIt"/>
+                                    <constraint firstItem="9wH-9i-d5q" firstAttribute="trailing" secondItem="bmh-Je-ru2" secondAttribute="trailing" type="default" id="q2l-9J-veC"/>
+                                    <constraint firstItem="kfP-hS-tSR" firstAttribute="leading" secondItem="bmh-Je-ru2" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="s27-AK-odq"/>
+                                    <constraint firstItem="PuO-lt-Uj2" firstAttribute="leading" secondItem="bmh-Je-ru2" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="vOo-Ke-bex"/>
+                                    <constraint firstItem="cJi-By-Sy5" firstAttribute="leading" secondItem="bmh-Je-ru2" secondAttribute="leading" type="default" id="xN5-Fx-7fR"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kfP-hS-tSR">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="DaySummary">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="dayUrl:" destination="2" eventType="touchUpInside" id="VAT-4Z-YLQ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QnC-Is-m3k">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="WeekSummary">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="weekUrl:" destination="2" eventType="touchUpInside" id="hns-CP-LS8"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxK-WL-ZvU">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="MonthSummary">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="monthUrl:" destination="2" eventType="touchUpInside" id="I6m-NP-IZb"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HCy-aI-Izg">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="pastDays=10 Summary">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pastDaysUrl:" destination="2" eventType="touchUpInside" id="VIE-Gq-iWt"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uue-5F-oE5">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="From&lt;date>To&lt;date> Summary">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="fromToUrl:" destination="2" eventType="touchUpInside" id="25J-Tz-EXJ"/>
-                                </connections>
-                            </button>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9wH-9i-d5q">
-                                <color key="color" cocoaTouchSystemColor="darkTextColor"/>
-                            </activityIndicatorView>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="9wH-9i-d5q" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="63K-DB-zdS"/>
-                            <constraint firstItem="HCy-aI-Izg" firstAttribute="top" secondItem="bxK-WL-ZvU" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="7ED-vj-gsE"/>
-                            <constraint firstItem="bxK-WL-ZvU" firstAttribute="top" secondItem="kfP-hS-tSR" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="9GP-5O-r1c"/>
-                            <constraint firstItem="cJi-By-Sy5" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="Env-xY-4Ht"/>
-                            <constraint firstItem="kfP-hS-tSR" firstAttribute="top" secondItem="PuO-lt-Uj2" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Fci-6l-VPZ"/>
-                            <constraint firstItem="PuO-lt-Uj2" firstAttribute="top" secondItem="cJi-By-Sy5" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Qi2-jF-Znj"/>
-                            <constraint firstAttribute="trailing" secondItem="PuO-lt-Uj2" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="THL-SJ-LSO"/>
-                            <constraint firstItem="Uue-5F-oE5" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="WEl-wR-0a0"/>
-                            <constraint firstItem="QnC-Is-m3k" firstAttribute="leading" secondItem="kfP-hS-tSR" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="ZXL-8e-H9d"/>
-                            <constraint firstItem="cJi-By-Sy5" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="cFb-rT-oAf"/>
-                            <constraint firstItem="kfP-hS-tSR" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="czP-iB-2E3"/>
-                            <constraint firstItem="QnC-Is-m3k" firstAttribute="baseline" secondItem="kfP-hS-tSR" secondAttribute="baseline" type="default" id="dht-ky-laZ"/>
-                            <constraint firstItem="HCy-aI-Izg" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="gpd-ia-6oN"/>
-                            <constraint firstItem="PuO-lt-Uj2" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="kZB-pw-sxh"/>
-                            <constraint firstItem="bxK-WL-ZvU" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="kci-sx-MX8"/>
-                            <constraint firstItem="Uue-5F-oE5" firstAttribute="top" secondItem="HCy-aI-Izg" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="lad-gn-iXS"/>
-                            <constraint firstItem="9wH-9i-d5q" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="mk2-S5-ihY"/>
-                            <constraint firstItem="cJi-By-Sy5" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="uHZ-ie-hN9"/>
+                            <constraint firstItem="bmh-Je-ru2" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="32c-DC-8g7"/>
+                            <constraint firstItem="bmh-Je-ru2" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="9Io-Lh-fDO"/>
+                            <constraint firstItem="bmh-Je-ru2" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="Juv-IJ-a6B"/>
+                            <constraint firstItem="bmh-Je-ru2" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" type="default" id="Tj9-Ea-Pjj"/>
                         </constraints>
                     </view>
                     <connections>
@@ -141,9 +154,6 @@
         <class className="ViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
             <relationships>
-                <relationship kind="action" name="authPress:"/>
-                <relationship kind="action" name="dayUrl:"/>
-                <relationship kind="action" name="fromToUrl:"/>
                 <relationship kind="action" name="monthUrl:"/>
                 <relationship kind="action" name="pastDaysUrl:"/>
                 <relationship kind="action" name="weekUrl:"/>
