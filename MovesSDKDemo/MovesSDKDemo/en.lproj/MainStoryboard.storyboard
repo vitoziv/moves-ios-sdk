@@ -25,10 +25,10 @@
                                     <action selector="authPress:" destination="2" eventType="touchUpInside" id="T27-9L-sw9"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJi-By-Sy5">
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cJi-By-Sy5">
+                                <color key="backgroundColor" red="0.95294117649999999" green="0.95294117649999999" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="224" id="h2C-f9-tcY"/>
+                                    <constraint firstAttribute="height" constant="224" id="AO0-b3-4zt"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -98,29 +98,35 @@
                                     <action selector="fromToUrl:" destination="2" eventType="touchUpInside" id="25J-Tz-EXJ"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9wH-9i-d5q">
+                                <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="9wH-9i-d5q" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="63K-DB-zdS"/>
                             <constraint firstItem="HCy-aI-Izg" firstAttribute="top" secondItem="bxK-WL-ZvU" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="7ED-vj-gsE"/>
                             <constraint firstItem="bxK-WL-ZvU" firstAttribute="top" secondItem="kfP-hS-tSR" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="9GP-5O-r1c"/>
-                            <constraint firstAttribute="trailing" secondItem="cJi-By-Sy5" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="CxS-05-6V3"/>
+                            <constraint firstItem="cJi-By-Sy5" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="Env-xY-4Ht"/>
                             <constraint firstItem="kfP-hS-tSR" firstAttribute="top" secondItem="PuO-lt-Uj2" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Fci-6l-VPZ"/>
-                            <constraint firstAttribute="trailing" secondItem="PuO-lt-Uj2" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="Mzo-ZM-3aC"/>
                             <constraint firstItem="PuO-lt-Uj2" firstAttribute="top" secondItem="cJi-By-Sy5" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Qi2-jF-Znj"/>
+                            <constraint firstAttribute="trailing" secondItem="PuO-lt-Uj2" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="THL-SJ-LSO"/>
                             <constraint firstItem="Uue-5F-oE5" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="WEl-wR-0a0"/>
                             <constraint firstItem="QnC-Is-m3k" firstAttribute="leading" secondItem="kfP-hS-tSR" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="ZXL-8e-H9d"/>
+                            <constraint firstItem="cJi-By-Sy5" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="cFb-rT-oAf"/>
                             <constraint firstItem="kfP-hS-tSR" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="czP-iB-2E3"/>
                             <constraint firstItem="QnC-Is-m3k" firstAttribute="baseline" secondItem="kfP-hS-tSR" secondAttribute="baseline" type="default" id="dht-ky-laZ"/>
                             <constraint firstItem="HCy-aI-Izg" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="gpd-ia-6oN"/>
                             <constraint firstItem="PuO-lt-Uj2" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="kZB-pw-sxh"/>
                             <constraint firstItem="bxK-WL-ZvU" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="kci-sx-MX8"/>
                             <constraint firstItem="Uue-5F-oE5" firstAttribute="top" secondItem="HCy-aI-Izg" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="lad-gn-iXS"/>
+                            <constraint firstItem="9wH-9i-d5q" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="mk2-S5-ihY"/>
                             <constraint firstItem="cJi-By-Sy5" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="uHZ-ie-hN9"/>
-                            <constraint firstItem="cJi-By-Sy5" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="vsa-pX-Dsc"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="authBtn" destination="PuO-lt-Uj2" id="GAg-LN-lMF"/>
+                        <outlet property="indicatorView" destination="9wH-9i-d5q" id="Xg1-rM-FHU"/>
                         <outlet property="resultTextView" destination="cJi-By-Sy5" id="InC-vW-odM"/>
                     </connections>
                 </viewController>
@@ -142,6 +148,7 @@
                 <relationship kind="action" name="pastDaysUrl:"/>
                 <relationship kind="action" name="weekUrl:"/>
                 <relationship kind="outlet" name="authBtn" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="indicatorView" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="resultTextView" candidateClass="UITextView"/>
             </relationships>
         </class>
