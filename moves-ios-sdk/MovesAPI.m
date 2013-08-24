@@ -6,74 +6,11 @@
 //  Copyright (c) 2013 vito. All rights reserved.
 //
 
-#include <ifaddrs.h>
-#include <arpa/inet.h>
-#include <pthread.h>
-#import "mongoose.h"
 #import "AFNetworking.h"
 #import "MovesAPI.h"
 #import "MovesAPI+Private.h"
 
-static const char* LISTEN_PORT = "8080";
-
-static int request_handler(struct mg_connection *connection) {
-    @autoreleasepool {
-        const struct mg_request_info *info = mg_get_request_info(connection);
-        
-        __block const char *response = NULL;
-        __block int content_length;
-        __block pthread_cond_t request_cond = PTHREAD_COND_INITIALIZER;
-        pthread_mutex_t request_mutex = PTHREAD_MUTEX_INITIALIZER;
-        
-        NSString *uri = [NSString stringWithFormat:@"%@", [NSString stringWithUTF8String:info->uri]];
-        if (info->query_string) {
-            uri = [uri stringByAppendingFormat:@"?%@", [NSString stringWithUTF8String:info->query_string]];
-        }
-        
-        void(^CallBackBlock)(void) = ^{
-            // Send HTTP reply to the client
-            mg_printf(connection,
-                      "HTTP/1.1 200 OK\r\n"
-                      "Content-Type: application/json\r\n"
-                      "Content-Length: %d\r\n"        // Always set Content-Length
-                      "\r\n",
-                      content_length);
-            
-            mg_write(connection, response, content_length);
-        };
-        
-        [[MovesAPI sharedInstance] getPath:uri parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            response = [operation.responseString cStringUsingEncoding:operation.responseStringEncoding];
-            content_length = [operation.responseString  lengthOfBytesUsingEncoding:operation.responseStringEncoding];
-            
-            CallBackBlock();
-            
-            pthread_cond_signal(&request_cond);
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
-                [MovesAPI sharedInstance].expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
-            }
-            
-            response = [error.description cStringUsingEncoding:operation.responseStringEncoding];
-            content_length = [error.description  lengthOfBytesUsingEncoding:operation.responseStringEncoding];
-            
-            CallBackBlock();
-            
-            pthread_cond_signal(&request_cond);
-            
-        }];
-        
-        pthread_mutex_lock(&request_mutex);
-        pthread_cond_wait(&request_cond, &request_mutex);
-        
-        pthread_mutex_destroy(&request_mutex);
-        pthread_cond_destroy(&request_cond);
-        
-        
-        return 1;
-    }
-}
+#define BASE_DOMAIN @"https://api.moves-app.com"
 
 @interface MovesAPI() {
     struct mg_context *context;
@@ -82,6 +19,7 @@ static int request_handler(struct mg_connection *connection) {
 @end
 
 @implementation MovesAPI
+
 + (MovesAPI*)sharedInstance {
     static MovesAPI *_sharedClient = nil;
     static dispatch_once_t onceToken;
@@ -94,12 +32,7 @@ static int request_handler(struct mg_connection *connection) {
 
 - (id) init
 {
-    if(self = [super initWithBaseURL:[NSURL URLWithString:@"https://api.moves-app.com/"]]) {
-        [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
-        [self setParameterEncoding:AFJSONParameterEncoding];
-        
-        [self setDefaultHeader:@"Accept" value:@"application/json"];
-        
+    if(self = [super init]) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         self.accessToken = [defaults objectForKey:MV_AUTH_ACCESS_TOKEN];
         self.refreshToken = [defaults objectForKey:MV_AUTH_REFRESH_TOKEN];
@@ -155,21 +88,6 @@ static int request_handler(struct mg_connection *connection) {
     return canHandle;
 }
 
-#pragma mark - General methods appending authorization key to requests
-
-- (void)getPath:(NSString *)path parameters:(NSDictionary *)parameters success:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure
-{
-    NSRange range = [path rangeOfString:@"?" options:NSCaseInsensitiveSearch];
-    if (range.location != NSNotFound) {
-        path = [path stringByAppendingFormat:@"&access_token=%@", self.accessToken];
-    } else {
-        path = [path stringByAppendingFormat:@"?access_token=%@", self.accessToken];
-    }
-    
-    [super getPath:path parameters:parameters
-           success:success failure:failure];
-}
-
 #pragma mark - OAuth2 authentication with Moves app
 
 - (void)authorizationSuccess:(void (^)(void))success failure:(void (^)(NSError *reason))failure
@@ -203,19 +121,31 @@ static int request_handler(struct mg_connection *connection) {
 
 - (void)requestOrRefreshAccessToken:(NSString*)code complete:(void (^)())complete failure:(void (^)(NSError* reason))failure
 {
-    NSString *path = [NSString stringWithFormat:@"/oauth/v1/access_token?grant_type=authorization_code&code=%@&client_id=%@&client_secret=%@&redirect_uri=%@", code, self.oauthClientId, self.oauthClientSecret, self.oauthRedirectUri];
+    NSDictionary *params;
+    NSString *path = @"/oauth/v1/access_token";
     
     if(self.accessToken) {
-        path = [NSString stringWithFormat:@"/oauth/v1/access_token?grant_type=refresh_token&refresh_token=%@&client_id=%@&client_secret=%@",
-                self.refreshToken, self.oauthClientId, self.oauthClientSecret];
-        
+        params = @{@"grant_type":@"refresh_token",
+                   @"refresh_token":self.refreshToken,
+                   @"client_id":self.oauthClientId,
+                   @"client_secret":self.oauthClientSecret};
+    } else {
+        params = @{@"grant_type":@"authorization_code",
+                   @"code":code,
+                   @"client_id":self.oauthClientId,
+                   @"client_secret":self.oauthClientSecret,
+                   @"redirect_uri":[self oauthRedirectUri]};
     }
     
-    [self postPath:path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"responseObject: %@", responseObject);
-        [self updateUserDefaultsWithAccessToken:responseObject[@"access_token"]
-                                   refreshToken:responseObject[@"refresh_token"]
-                                      andExpiry:responseObject[@"expires_in"]];
+    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:BASE_DOMAIN]];
+    [client postPath:path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                    options:NSJSONReadingMutableLeaves
+                                                                      error:nil];
+        
+        [self updateUserDefaultsWithAccessToken:responseDic[@"access_token"]
+                                   refreshToken:responseDic[@"refresh_token"]
+                                      andExpiry:responseDic[@"expires_in"]];
         if (complete) complete();
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error.userInfo);
@@ -227,7 +157,7 @@ static int request_handler(struct mg_connection *connection) {
 {
     if(self.accessToken) {
         NSLog(@"Have a valid access token: %@", self.accessToken);
-        return [[NSDate date] compare:[self.fetchTime dateByAddingTimeInterval:[self.expiry doubleValue]]] == NSOrderedAscending;
+        return [self isAccessTokenExpiry];
     }
     return NO;
 }
@@ -245,60 +175,18 @@ static int request_handler(struct mg_connection *connection) {
     self.fetchTime = nil;
 }
 
-#pragma mark - Server
+#pragma mark - Helper
 
-- (void)initServer {
-    NSLog(@"Initializing server");
-    const char *options[] = {"listening_ports", LISTEN_PORT, NULL};
-    struct mg_callbacks callbacks = {0};
-    memset(&callbacks, 0, sizeof(callbacks));
-    
-    callbacks.begin_request = request_handler;
-    context = mg_start(&callbacks, (__bridge void *)(self), options);
-    
-    self.serverStarted = YES;
+- (BOOL)isAccessTokenExpiry {
+    NSLog(@"%f", [[NSDate date] timeIntervalSinceDate:[self.fetchTime dateByAddingTimeInterval:[self.expiry doubleValue]]]);
+    if ([[NSDate date] timeIntervalSinceDate:[self.fetchTime dateByAddingTimeInterval:[self.expiry doubleValue]]] <= 0) {
+        return NO;
+    }
+    return YES;
 }
 
-#pragma mark - Helper
 - (NSString *)oauthRedirectUri {
     return [NSString stringWithFormat:@"%@://authorization-completed", self.callbackUrlScheme];
-}
-
-- (NSString *)getIPAddressAndListenPort
-{
-    struct ifaddrs *interfaces = NULL;
-    struct ifaddrs *temp_addr = NULL;
-    NSString *wifiAddress = nil;
-    NSString *cellAddress = nil;
-    
-    // retrieve the current interfaces - returns 0 on success
-    if(!getifaddrs(&interfaces)) {
-        // Loop through linked list of interfaces
-        temp_addr = interfaces;
-        while(temp_addr != NULL) {
-            sa_family_t sa_type = temp_addr->ifa_addr->sa_family;
-            if(sa_type == AF_INET || sa_type == AF_INET6) {
-                NSString *name = [NSString stringWithUTF8String:temp_addr->ifa_name];
-                NSString *addr = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)]; // pdp_ip0
-                //NSLog(@"NAME: \"%@\" addr: %@", name, addr); // see for yourself
-                
-                if([name isEqualToString:@"en0"]) {
-                    // Interface is the wifi connection on the iPhone
-                    wifiAddress = addr;
-                } else
-                    if([name isEqualToString:@"pdp_ip0"]) {
-                        // Interface is the cell connection on the iPhone
-                        cellAddress = addr;
-                    }
-            }
-            temp_addr = temp_addr->ifa_next;
-        }
-        // Free memory
-        freeifaddrs(interfaces);
-    }
-    NSString *addr = wifiAddress ? wifiAddress : cellAddress;
-    addr = addr ? addr : @"0.0.0.0";
-    return [NSString stringWithFormat:@"http://%@:%s", addr, LISTEN_PORT];
 }
 
 - (NSString *)stringDate:(NSDate *)date ByFormatType:(MVDateFormatType)formatType {
@@ -323,16 +211,17 @@ static int request_handler(struct mg_connection *connection) {
 - (NSString *)urlByMVUrl:(NSString *)MVUrl date:(NSDate *)date dateFormatType:(MVDateFormatType)dateFormatType {
     NSString *url = @"";
     if (!date) {
-        url = [NSString stringWithFormat:@"%@%@", [self getIPAddressAndListenPort], MVUrl];
+        url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN, MVUrl];
     } else {
-        url = [NSString stringWithFormat:@"%@%@/%@", [self getIPAddressAndListenPort], MVUrl, [self stringDate:date ByFormatType:dateFormatType]];
+        url = [NSString stringWithFormat:@"%@%@/%@", BASE_DOMAIN, MVUrl, [self stringDate:date ByFormatType:dateFormatType]];
     }
+    
     return url;
 }
 
 - (NSString *)urlByMVUrl:(NSString *)MVUrl fromDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
     NSString *url = [NSString stringWithFormat:@"%@%@?from=%@&to=%@",
-                     [self getIPAddressAndListenPort],
+                     BASE_DOMAIN,
                      MVUrl,
                      [self stringDate:fromDate ByFormatType:MVDateFormatTypeDay],
                      [self stringDate:toDate ByFormatType:MVDateFormatTypeDay]];
@@ -340,8 +229,8 @@ static int request_handler(struct mg_connection *connection) {
 }
 
 - (NSString *)urlByMVUrl:(NSString *)MVUrl pastDays:(NSInteger)days {
-    NSString *url = [NSString stringWithFormat:@"%@%@?pastDays=%i", [self getIPAddressAndListenPort], MVUrl, days];
-    return url;//[self encodingUrlString:url];
+    NSString *url = [NSString stringWithFormat:@"%@%@?pastDays=%i", BASE_DOMAIN, MVUrl, days];
+    return url;
 }
 
 - (NSString *)urlByModelType:(MVModelType)modelType {
@@ -394,6 +283,7 @@ static int request_handler(struct mg_connection *connection) {
     return array;
 }
 
+  // Auto init by UrlScheme
 //- (BOOL)verifyCFBundleURLSchemes {
 //    NSArray *urlTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
 //    NSString* callbackScheme = [NSString stringWithFormat:@"mv-%@",self.oauthClientId];
@@ -411,34 +301,62 @@ static int request_handler(struct mg_connection *connection) {
 
 #pragma mark - API
 
-- (void)getJsonByUrl:(NSURL *)url
+- (void)getJsonByUrl:(NSString *)url
              success:(void (^)(id json))success
              failure:(void (^)(NSError *error))failure {
-    
-    if (!self.serverStarted) [self initServer];
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:url
-                                             cachePolicy:NSURLRequestReloadRevalidatingCacheData
-                                         timeoutInterval:25];
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        if (success) success(JSON);
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        if (failure) {
-            if (self.expiredError) failure(self.expiredError);
-            self.expiredError = nil;
+    // Step 1.
+    if (!self.accessToken) {
+        NSError *authError = [NSError errorWithDomain:@"MovesAPI Auth Error" code:1001 userInfo:@{@"ErrorReason": @"no_access_token"}];
+        failure(authError);
+    } else {
+        // Step 2. If accessToken is out of date, try to get a new one
+        if ([self isAccessTokenExpiry]) {
+            [self requestOrRefreshAccessToken:self.accessToken
+                                     complete:^{
+                                         [self getJsonByUrl:url success:success failure:failure];
+                                     }
+                                      failure:failure];
         } else {
-            failure(error);
+            // Step 3. Everthing is right, now try to getting data
+            NSLog(@"%@", url);
+            
+            NSRange range = [url rangeOfString:@"?" options:NSCaseInsensitiveSearch];
+            if (range.location != NSNotFound) {
+                url = [url stringByAppendingFormat:@"&access_token=%@", self.accessToken];
+            } else {
+                url = [url stringByAppendingFormat:@"?access_token=%@", self.accessToken];
+            }
+            
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]
+                                                     cachePolicy:NSURLRequestReloadRevalidatingCacheData
+                                                 timeoutInterval:25];
+            AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                if (success) success(JSON);
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                if (failure) {
+                    // Cause your app was revoked in Moves app.
+                    if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
+                        NSLog(@"expired_access_token");
+                        
+                        NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
+                        failure(expiredError);
+                    } else {
+                        failure(error);
+                    }
+                }
+            }];
+            
+            [operation start];
         }
-    }];
+    }
     
-    [operation start];
 }
 
 #pragma mark User
 
 - (void)getUserSuccess:(void (^)(MVUser *user))success
                failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeProfile] date:nil dateFormatType:MVDateFormatTypeDay]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeProfile] date:nil dateFormatType:MVDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
                    MVUser *user = [[MVUser alloc] initWithDictionary:json];
@@ -452,7 +370,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getDayDailySummariesByDate:(NSDate *)date
                            success:(void (^)(NSArray *dailySummaries))success
                            failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeDay]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeSummary]);
@@ -463,7 +381,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getWeekDailySummariesByDate:(NSDate *)date
                             success:(void (^)(NSArray *dailySummaries))success
                             failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeWeek]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeSummary]);
@@ -474,7 +392,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getMonthDailySummariesByDate:(NSDate *)date
                              success:(void (^)(NSArray *dailySummaries))success
                              failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeMonth]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeMonth];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeSummary]);
@@ -486,7 +404,7 @@ static int request_handler(struct mg_connection *connection) {
                            toDate:(NSDate *)toDate
                           success:(void (^)(NSArray *dailySummaries))success
                           failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] fromDate:fromDate toDate:toDate]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeSummary]);
@@ -497,7 +415,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getDailySummariesByPastDays:(NSInteger)pastDays
                             success:(void (^)(NSArray *dailySummaries))success
                             failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] pastDays:pastDays]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeSummary]);
@@ -509,7 +427,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getDayDailyActivitiesByDate:(NSDate *)date
                             success:(void (^)(NSArray *dailyActivities))success
                             failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] date:date dateFormatType:MVDateFormatTypeDay]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] date:date dateFormatType:MVDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeActivity]);
@@ -520,7 +438,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getWeekDailyActivitiesByDate:(NSDate *)date
                              success:(void (^)(NSArray *dailyActivities))success
                              failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] date:date dateFormatType:MVDateFormatTypeWeek]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] date:date dateFormatType:MVDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeActivity]);
@@ -532,7 +450,7 @@ static int request_handler(struct mg_connection *connection) {
                             toDate:(NSDate *)toDate
                            success:(void (^)(NSArray *dailyActivities))success
                            failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] fromDate:fromDate toDate:toDate]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeActivity]);
@@ -543,7 +461,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getDailyActivitiesByPastDays:(NSInteger)pastDays
                              success:(void (^)(NSArray *dailyActivities))success
                              failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] pastDays:pastDays]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeActivity]);
@@ -556,7 +474,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getDayDailyPlacesByDate:(NSDate *)date
                         success:(void (^)(NSArray *dailyPlaces))success
                         failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypePlace] date:date dateFormatType:MVDateFormatTypeDay]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypePlace] date:date dateFormatType:MVDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypePlace]);
@@ -566,7 +484,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getWeekDailyPlacesByDate:(NSDate *)date
                          success:(void (^)(NSArray *dailyPlaces))success
                          failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypePlace] date:date dateFormatType:MVDateFormatTypeWeek]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypePlace] date:date dateFormatType:MVDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypePlace]);
@@ -578,7 +496,7 @@ static int request_handler(struct mg_connection *connection) {
                         toDate:(NSDate *)toDate
                        success:(void (^)(NSArray *dailyPlaces))success
                        failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypePlace] fromDate:fromDate toDate:toDate]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypePlace] fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypePlace]);
@@ -589,7 +507,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getDailyPlacesByPastDays:(NSInteger)pastDays
                          success:(void (^)(NSArray *dailyPlaces))success
                          failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypePlace] pastDays:pastDays]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypePlace] pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypePlace]);
@@ -606,8 +524,7 @@ static int request_handler(struct mg_connection *connection) {
     if (trackPoints) {
         urlString = [urlString stringByAppendingFormat:@"%@", @"?trackPoints=true"];
     }
-    NSURL *url = [NSURL URLWithString:urlString];
-    [self getJsonByUrl:url
+    [self getJsonByUrl:urlString
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);
                }
@@ -618,8 +535,7 @@ static int request_handler(struct mg_connection *connection) {
                        success:(void (^)(NSArray *storyLines))success
                        failure:(void (^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] date:date dateFormatType:MVDateFormatTypeWeek];
-    NSURL *url = [NSURL URLWithString:urlString];
-    [self getJsonByUrl:url
+    [self getJsonByUrl:urlString
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);
                }
@@ -630,7 +546,7 @@ static int request_handler(struct mg_connection *connection) {
                            toDate:(NSDate *)toDate
                           success:(void (^)(NSArray *storyLines))success
                           failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] fromDate:fromDate toDate:toDate]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);
@@ -641,7 +557,7 @@ static int request_handler(struct mg_connection *connection) {
 - (void)getDailyStoryLineByPastDays:(NSInteger)pastDays
                             success:(void (^)(NSArray *storyLines))success
                             failure:(void (^)(NSError *error))failure {
-    NSURL *url = [NSURL URLWithString:[self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] pastDays:pastDays]];
+    NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);

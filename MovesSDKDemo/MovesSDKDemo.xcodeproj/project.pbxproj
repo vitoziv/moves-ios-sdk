@@ -31,7 +31,6 @@
 		5FFB3E001794072200B51480 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FFB3DFF1794072200B51480 /* Default-568h@2x.png */; };
 		5FFB3E031794072200B51480 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FFB3E011794072200B51480 /* MainStoryboard.storyboard */; };
 		5FFB3E061794072200B51480 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB3E051794072200B51480 /* ViewController.m */; };
-		5FFB3E2B179407EE00B51480 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB3E0F179407EE00B51480 /* mongoose.c */; };
 		5FFB3E2C179407EE00B51480 /* MVActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB3E13179407EE00B51480 /* MVActivity.m */; };
 		5FFB3E2D179407EE00B51480 /* MVDailyActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB3E15179407EE00B51480 /* MVDailyActivity.m */; };
 		5FFB3E2E179407EE00B51480 /* MVDailyPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB3E17179407EE00B51480 /* MVDailyPlace.m */; };
@@ -99,8 +98,6 @@
 		5FFB3E021794072200B51480 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		5FFB3E041794072200B51480 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		5FFB3E051794072200B51480 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		5FFB3E0F179407EE00B51480 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
-		5FFB3E10179407EE00B51480 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
 		5FFB3E12179407EE00B51480 /* MVActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVActivity.h; sourceTree = "<group>"; };
 		5FFB3E13179407EE00B51480 /* MVActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVActivity.m; sourceTree = "<group>"; };
 		5FFB3E14179407EE00B51480 /* MVDailyActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVDailyActivity.h; sourceTree = "<group>"; };
@@ -276,18 +273,8 @@
 			isa = PBXGroup;
 			children = (
 				5F36EE1717C82A5900FC425E /* AFNetworking */,
-				5FFB3E0E179407EE00B51480 /* mongoose */,
 			);
 			path = 3rdParty;
-			sourceTree = "<group>";
-		};
-		5FFB3E0E179407EE00B51480 /* mongoose */ = {
-			isa = PBXGroup;
-			children = (
-				5FFB3E0F179407EE00B51480 /* mongoose.c */,
-				5FFB3E10179407EE00B51480 /* mongoose.h */,
-			);
-			path = mongoose;
 			sourceTree = "<group>";
 		};
 		5FFB3E11179407EE00B51480 /* models */ = {
@@ -461,7 +448,6 @@
 				5FFB3DF61794072200B51480 /* main.m in Sources */,
 				5FFB3DFA1794072200B51480 /* AppDelegate.m in Sources */,
 				5FFB3E061794072200B51480 /* ViewController.m in Sources */,
-				5FFB3E2B179407EE00B51480 /* mongoose.c in Sources */,
 				5FFB3E2C179407EE00B51480 /* MVActivity.m in Sources */,
 				5FFB3E2D179407EE00B51480 /* MVDailyActivity.m in Sources */,
 				5FFB3E2E179407EE00B51480 /* MVDailyPlace.m in Sources */,

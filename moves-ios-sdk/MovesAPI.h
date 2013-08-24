@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 vito. All rights reserved.
 //
 
-#import "AFHTTPClient.h"
 #import "MVUser.h"
 #import "MVDailySummary.h"
 #import "MVSummary.h"
@@ -15,7 +14,7 @@
 #import "MVDailyPlace.h"
 #import "MVStoryLine.h"
 
-@interface MovesAPI : AFHTTPClient
+@interface MovesAPI : NSObject
 + (MovesAPI*)sharedInstance;
 - (void)setShareMovesOauthClientId:(NSString *)oauthClientId oauthClientSecret:(NSString *)oauthClientSecret callbackUrlScheme:(NSString *)callbackUrlScheme;
 - (BOOL)canHandleOpenUrl:(NSURL*)url;
