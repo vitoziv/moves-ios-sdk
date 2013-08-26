@@ -1,8 +1,8 @@
 moves-ios-sdk
 =============
-Moves App SDK For iOS. 
+[Moves App](http://moves-app.com) SDK For iOS. 
 
-[Official API Documents](https://dev.moves-app.com/)
+![Moves App Integration](https://dev.moves-app.com/assets/images/moves-api.png)
 
 #Getting Started
 
@@ -13,7 +13,6 @@ If you use [CocoaPods](http://cocoapods.org/), you can add the ``moves-ios-sdk``
 - Open your existing project.
 - Drag the **moves-ios-sdk** folder from the example project into your Xcode project.
 - Make sure the “Copy items into destination group’s folder (if needed)” checkbox is checked.
-- In this case you need to add [AFNetworking](https://github.com/AFNetworking/AFNetworking) to your project
 
 ##Get ClientId and ClientSecret
 When you register your app with Moves, it will provide you with a **Client ID** and **Client secret**. They identify your app to Moves's API. 
@@ -22,7 +21,7 @@ When you register your app with Moves, it will provide you with a **Client ID** 
 
 ##Add the Moves URL scheme
 copy and paste the following into the XML Source for the Info.plist:
-
+```Xml
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
@@ -34,6 +33,7 @@ copy and paste the following into the XML Source for the Info.plist:
             </array>
         </dict>
     </array>
+```
 **[YOUR URL SCHEME]** is set when you [Register your app with Moves](https://dev.moves-app.com/clients)
 
 ##Configure your App Delegate
@@ -42,50 +42,56 @@ At the top of your app delegate source file (and anywhere you call the MovesAPI 
 
 ``#import "MovesAPI.h"``
 
-###In AppDelegate. Set Your [Client ID],[Client secret] and [Redirect URI]
+###Step 1
 
-    - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-    {
-        [[MovesAPI sharedInstance] setShareMovesOauthClientId:@"[YOUR Client ID]"
-                                            oauthClientSecret:@"[YOUR Client secret]"
-                                            callbackUrlScheme:@"[YOUR URL SCHEME]"];
+In AppDelegate. Set Your **[Client ID]**,**[Client secret]** and **[Redirect URI]**.
+```Objc
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    [[MovesAPI sharedInstance] setShareMovesOauthClientId:@"[YOUR Client ID]"
+                                        oauthClientSecret:@"[YOUR Client secret]"
+                                        callbackUrlScheme:@"[YOUR URL SCHEME]"];
+    return YES;
+}
+```
+###Step 2
+
+The final step is to give the SDK an opportunity to handle incoming URLs. 
+```Objc
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    if ([[MovesAPI sharedInstance] canHandleOpenUrl:url]) {
         return YES;
     }
-###Add handle Url method
-The final step is to give the SDK an opportunity to handle incoming URLs. 
- 
-    - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-        if ([[MovesAPI sharedInstance] canHandleOpenUrl:url]) {
-            return YES;
-        }
-        // Other 3rdParty Apps Handle Url Method...
-        
-        
-        return NO;
-    }
-
+    // Other 3rdParty Apps Handle Url Method...
+    
+    
+    return NO;
+}
+```
 #Authorization 
-    [[MovesAPI sharedInstance] authorizationSuccess:^{
-        // Auth successed! Now you can get Moves's data
-    } failure:^(NSError *reason) {
-        // Auth failed!
-    }];
-
+```Objc
+[[MovesAPI sharedInstance] authorizationSuccess:^{
+    // Auth successed! Now you can get Moves's data
+} failure:^(NSError *reason) {
+    // Auth failed!
+}];
+```
 #Start get Moves's data
 Get user profile
-
-    [[MovesAPI sharedInstance] getUserSuccess:^(MVUser *user) {
-        // Get user
-    } failure:^(NSError *error) {
-        // Something wrong
-    }];
-
+```Objc
+[[MovesAPI sharedInstance] getUserSuccess:^(MVUser *user) {
+    // Get user
+} failure:^(NSError *error) {
+    // Something wrong
+}];
+```
 More other API see the ``MovesAPI.h`` file
+
 #Acknowledgements
 The **moves-ios-sdk** uses the following open source software:
 
 - [AFNetworking](https://github.com/AFNetworking/AFNetworking)
-
+- [Moves Official API Documents](https://dev.moves-app.com/)
 #License
 
 See the [MIT license](https://github.com/vitoziv/moves-ios-sdk/blob/master/LICENSE).
