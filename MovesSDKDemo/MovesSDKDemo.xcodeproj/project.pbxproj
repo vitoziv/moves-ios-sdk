@@ -120,7 +120,6 @@
 		5FFB3E25179407EE00B51480 /* MVTrackPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVTrackPoint.m; sourceTree = "<group>"; };
 		5FFB3E26179407EE00B51480 /* MVUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVUser.h; sourceTree = "<group>"; };
 		5FFB3E27179407EE00B51480 /* MVUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVUser.m; sourceTree = "<group>"; };
-		5FFB3E28179407EE00B51480 /* MovesAPI+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MovesAPI+Private.h"; sourceTree = "<group>"; };
 		5FFB3E29179407EE00B51480 /* MovesAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovesAPI.h; sourceTree = "<group>"; };
 		5FFB3E2A179407EE00B51480 /* MovesAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovesAPI.m; sourceTree = "<group>"; };
 		5FFB3E381794081700B51480 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -261,7 +260,6 @@
 			children = (
 				5FFB3E0D179407EE00B51480 /* 3rdParty */,
 				5FFB3E11179407EE00B51480 /* models */,
-				5FFB3E28179407EE00B51480 /* MovesAPI+Private.h */,
 				5FFB3E29179407EE00B51480 /* MovesAPI.h */,
 				5FFB3E2A179407EE00B51480 /* MovesAPI.m */,
 			);
