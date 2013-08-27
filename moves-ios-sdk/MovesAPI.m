@@ -192,7 +192,7 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 {
     if(self.accessToken) {
         NSLog(@"Have a valid access token: %@", self.accessToken);
-        return [self isAccessTokenExpiry];
+        return ![self isAccessTokenExpiry];
     }
     return NO;
 }
