@@ -102,3 +102,7 @@ The **moves-ios-sdk** uses the following open source software:
 #License
 
 See the [MIT license](https://github.com/vitoziv/moves-ios-sdk/blob/master/LICENSE).
+
+#API Terms
+
+[Moves API Terms](https://dev.moves-app.com/docs/terms_summary)
