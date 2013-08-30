@@ -19,31 +19,46 @@
 - (MVActivity *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    MVActivityType activityType = MVActivityTypeWalking;
-    NSString *activityName = dic[@"activity"];
-    if ([activityName isEqual: @"run"]) {
-        activityType = MVActivityTypeRunning;
-    } else if ([activityName isEqual: @"cyc"]){
-        activityType = MVActivityTypeCycling;
-    } else if ([activityName isEqual: @"trp"]){
-        activityType = MVActivityTypeTransport;
+    if (dic[@"activity"]) {
+        MVActivityType activityType = MVActivityTypeWalking;
+        NSString *activityName = dic[@"activity"];
+        if ([activityName isEqual: @"run"]) {
+            activityType = MVActivityTypeRunning;
+        } else if ([activityName isEqual: @"cyc"]){
+            activityType = MVActivityTypeCycling;
+        } else if ([activityName isEqual: @"trp"]){
+            activityType = MVActivityTypeTransport;
+        }
+        self.activity = activityType;
     }
-    self.activity = activityType;
     
-    self.startTime = dic[@"startTime"];
-    self.endTime = dic[@"endTime"];
-    self.distance = [dic[@"distance"] integerValue];
-    self.duration = [dic[@"duration"] integerValue];
-    self.steps = [dic[@"steps"] integerValue];
-    self.calories = [dic[@"calories"] integerValue];
+    if (dic[@"startTime"]) {
+        self.startTime = dic[@"startTime"];
+    }
+    if (dic[@"endTime"]) {
+        self.endTime = dic[@"endTime"];
+    }
+    if (dic[@"distance"]) {
+        self.distance = [dic[@"distance"] integerValue];
+    }
+    if (dic[@"duration"]) {
+        self.duration = [dic[@"duration"] integerValue];
+    }
+    if (dic[@"steps"]) {
+        self.steps = [dic[@"steps"] integerValue];
+    }
+    if (dic[@"calories"]) {
+        self.calories = [dic[@"calories"] integerValue];
+    }
     
     if ([dic[@"trackPoints"] isKindOfClass:[NSArray class]]) {
         NSMutableArray *trackPoints = [[NSMutableArray alloc] init];
         for (NSDictionary *trackPoint in dic[@"trackPoints"]) {
             [trackPoints addObject:[[MVTrackPoint alloc] initWithDictionary:trackPoint]];
         }
-        
-        self.trackPoints = trackPoints;
+        if (trackPoints.count > 0) {
+            self.trackPoints = trackPoints;
+        }
     }
     
     return self;

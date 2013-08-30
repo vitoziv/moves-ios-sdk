@@ -19,14 +19,18 @@
 - (MVDailyPlace *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.date = dic[@"date"];
+    if (dic[@"date"]) {
+        self.date = dic[@"date"];
+    }
     
     if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {
         NSMutableArray *segments = [[NSMutableArray alloc] init];
         for (NSDictionary *segment in dic[@"segments"]) {
             [segments addObject:[[MVSegment alloc] initWithDictionary:segment]];
         }
-        self.segments = segments;
+        if (segments.count > 0) {
+            self.segments = segments;
+        }
     }
     
     return self;

@@ -20,15 +20,21 @@
 - (MVDailySummary *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.date = dic[@"date"];
-    self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+    if (dic[@"date"]) {
+        self.date = dic[@"date"];
+    }
+    if (dic[@"caloriesIdle"]) {
+        self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+    }
     
     if ([dic[@"summary"] isKindOfClass:[NSArray class]]) {
         NSMutableArray *summaries = [[NSMutableArray alloc] init];
         for (NSDictionary *summary in dic[@"summary"]) {
             [summaries addObject:[[MVSummary alloc] initWithDictionary:summary]];
         }
-        self.summaries = summaries;
+        if (summaries.count>0) {
+            self.summaries = summaries;
+        }
     }
     
     return self;
@@ -36,8 +42,10 @@
 
 - (NSInteger)dailyCalories {
     NSInteger dailyCalories = 0;
-    for (MVSummary *summary in self.summaries) {
-        dailyCalories += summary.calories;
+    if (self.summaries && self.summaries.count > 0) {
+        for (MVSummary *summary in self.summaries) {
+            dailyCalories += summary.calories;
+        }
     }
     return dailyCalories;
 }

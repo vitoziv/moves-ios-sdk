@@ -20,9 +20,15 @@
 - (MVTrackPoint *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.lat = [dic[@"lat"] floatValue];
-    self.lon = [dic[@"lon"] floatValue];
-    self.time = [dic[@"time"] doubleValue];
+    if (dic[@"lat"]) {
+        self.lat = [dic[@"lat"] floatValue];
+    }
+    if (dic[@"lon"]) {
+        self.lon = [dic[@"lon"] floatValue];
+    }
+    if (dic[@"time"]) {
+        self.time = [dic[@"time"] doubleValue];
+    }
     
     return self;
 }

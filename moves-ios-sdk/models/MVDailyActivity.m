@@ -20,15 +20,21 @@
 - (MVDailyActivity *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.date = dic[@"date"];
-    self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+    if (dic[@"date"]) {
+        self.date = dic[@"date"];
+    }
+    if (dic[@"caloriesIdle"]) {
+        self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+    }
     
     if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {
         NSMutableArray *segments = [[NSMutableArray alloc] init];
         for (NSDictionary *segment in dic[@"segments"]) {
             [segments addObject:[[MVSegment alloc] initWithDictionary:segment]];
         }
-        self.segments = segments;
+        if (segments.count > 0) {
+            self.segments = segments;
+        }
     }
     
     return self;
@@ -36,9 +42,11 @@
 
 - (NSInteger)dailyCalories {
     NSInteger dailyCalories = 0;
-    for (MVSegment *segment in self.segments) {
-        for (MVActivity *activity in segment.activities) {
-            dailyCalories += activity.calories;
+    if (self.segments && self.segments.count > 0) {
+        for (MVSegment *segment in self.segments) {
+            for (MVActivity *activity in segment.activities) {
+                dailyCalories += activity.calories;
+            }
         }
     }
     return dailyCalories;

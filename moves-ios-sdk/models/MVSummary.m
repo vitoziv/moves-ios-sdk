@@ -19,21 +19,31 @@
 - (MVSummary *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.duration = [dic[@"duration"] integerValue];
-    self.distance = [dic[@"distance"] integerValue];
-    self.steps = [dic[@"steps"] integerValue];
-    self.calories = [dic[@"calories"] integerValue];
-    
-    MVActivityType activityType = MVActivityTypeWalking;
-    NSString *activityName = dic[@"activity"];
-    if ([activityName isEqual: @"run"]) {
-        activityType = MVActivityTypeRunning;
-    } else if ([activityName isEqual: @"cyc"]){
-        activityType = MVActivityTypeCycling;
-    } else if ([activityName isEqual: @"trp"]){
-        activityType = MVActivityTypeTransport;
+    if (dic[@"duration"]) {
+        self.duration = [dic[@"duration"] integerValue];
     }
-    self.activity = activityType;
+    if (dic[@"distance"]) {
+        self.distance = [dic[@"distance"] integerValue];
+    }
+    if (dic[@"steps"]) {
+        self.steps = [dic[@"steps"] integerValue];
+    }
+    if (dic[@"calories"]) {
+        self.calories = [dic[@"calories"] integerValue];
+    }
+    
+    if (dic[@"activity"]) {
+        MVActivityType activityType = MVActivityTypeWalking;
+        NSString *activityName = dic[@"activity"];
+        if ([activityName isEqual: @"run"]) {
+            activityType = MVActivityTypeRunning;
+        } else if ([activityName isEqual: @"cyc"]){
+            activityType = MVActivityTypeCycling;
+        } else if ([activityName isEqual: @"trp"]){
+            activityType = MVActivityTypeTransport;
+        }
+        self.activity = activityType;
+    }
     
     return self;
 }

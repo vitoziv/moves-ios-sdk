@@ -19,8 +19,12 @@
 - (MVStoryLine *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.date = dic[@"date"];
-    self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+    if (dic[@"date"]) {
+        self.date = dic[@"date"];
+    }
+    if (dic[@"caloriesIdle"]) {
+        self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+    }
     
     if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {
         NSMutableArray *segments = [[NSMutableArray alloc] init];

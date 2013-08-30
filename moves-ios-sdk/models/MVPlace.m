@@ -20,11 +20,21 @@
 - (MVPlace *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.placeId = dic[@"id"];
-    self.name = dic[@"name"];
-    self.type = dic[@"type"];
-    self.foursquareId = dic[@"foursquareId"];
-    self.location = [[MVLocation alloc] initWithDictionary:dic[@"location"]];
+    if (dic[@"id"]) {
+        self.placeId = dic[@"id"];
+    }
+    if (dic[@"name"]) {
+        self.name = dic[@"name"];
+    }
+    if (dic[@"type"]) {
+        self.type = dic[@"type"];
+    }
+    if (dic[@"foursquareId"]) {
+        self.foursquareId = dic[@"foursquareId"];
+    }
+    if (dic[@"location"]) {
+        self.location = [[MVLocation alloc] initWithDictionary:dic[@"location"]];
+    }
     
     return self;
 }

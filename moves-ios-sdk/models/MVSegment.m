@@ -20,15 +20,23 @@
 - (MVSegment *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if ([dic[@"type"] isEqual:@"move"]) {
-        self.type = MVSegmentTypeMove;
-    } else {
-        self.type = MVSegmentTypePlace;
+    if (dic[@"type"]) {
+        if ([dic[@"type"] isEqual:@"move"]) {
+            self.type = MVSegmentTypeMove;
+        } else {
+            self.type = MVSegmentTypePlace;
+        }
     }
     
-    self.startTime = dic[@"startTime"];
-    self.endTime = dic[@"endTime"];
-    self.place = [[MVPlace alloc] initWithDictionary:dic[@"place"]];
+    if (dic[@"startTime"]) {
+        self.startTime = dic[@"startTime"];
+    }
+    if (dic[@"endTime"]) {
+        self.endTime = dic[@"endTime"];
+    }
+    if (dic[@"place"]) {
+        self.place = [[MVPlace alloc] initWithDictionary:dic[@"place"]];
+    }
     
     if ([dic[@"activities"] isKindOfClass:[NSArray class]]) {
         NSMutableArray *activities = [[NSMutableArray alloc] init];

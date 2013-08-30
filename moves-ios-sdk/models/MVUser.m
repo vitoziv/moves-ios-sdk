@@ -19,11 +19,25 @@
 - (MVUser *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    self.userId = [dic[@"userId"] stringValue];
-    self.firstDate = dic[@"profile"][@"firstDate"];
-    self.caloriesAvailable = (BOOL)dic[@"profile"][@"caloriesAvailable"];
-    self.currentTimeZoneId = dic[@"profile"][@"currentTimeZone"][@"id"];
-    self.currentTimeZoneOffset = [(NSNumber *)dic[@"profile"][@"currentTimeZone"][@"offset"] intValue];
+    if (dic[@"userId"]) {
+        self.userId = [dic[@"userId"] stringValue];
+    }
+    if (dic[@"profile"]) {
+        if (dic[@"profile"][@"firstDate"]) {
+            self.firstDate = dic[@"profile"][@"firstDate"];
+        }
+        if (dic[@"profile"][@"caloriesAvailable"]) {
+            self.caloriesAvailable = (BOOL)dic[@"profile"][@"caloriesAvailable"];
+        }
+        if (dic[@"profile"][@"currentTimeZone"]) {
+            if (dic[@"profile"][@"currentTimeZone"][@"id"]) {
+                self.currentTimeZoneId = dic[@"profile"][@"currentTimeZone"][@"id"];
+            }
+            if (dic[@"profile"][@"currentTimeZone"][@"offset"]) {
+                self.currentTimeZoneOffset = [(NSNumber *)dic[@"profile"][@"currentTimeZone"][@"offset"] intValue];
+            }
+        }
+    }
     
     return self;
 }
