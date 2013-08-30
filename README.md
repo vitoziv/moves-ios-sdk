@@ -19,6 +19,7 @@ See the documentation on the CocoaPods website if you want to set up a new or ex
 - Open your existing project.
 - Drag the **moves-ios-sdk** folder from the example project into your Xcode project.
 - Make sure the “Copy items into destination group’s folder (if needed)” checkbox is checked.
+- In this case you need to add [AFNetworking](https://github.com/AFNetworking/AFNetworking) to your project.
 
 ##Get ClientId and ClientSecret
 When you register your app with Moves, it will provide you with a **Client ID** and **Client secret**. They identify your app to Moves's API. 
@@ -40,7 +41,7 @@ copy and paste the following into the XML Source for the Info.plist:
         </dict>
     </array>
 ```
-**[YOUR URL SCHEME]** is set when you [Register your app with Moves](https://dev.moves-app.com/clients)
+**[YOUR URL SCHEME]** is setted when you [Register your app with Moves](https://dev.moves-app.com/clients)
 
 ##Configure your App Delegate
 
@@ -50,7 +51,7 @@ At the top of your app delegate source file (and anywhere you call the MovesAPI 
 
 ###Step 1
 
-In AppDelegate. Set Your **[Client ID]**,**[Client secret]** and **[Redirect URI]**.
+In AppDelegate. Set Your **[Client ID]**, **[Client secret]** and **[Redirect URI]**.
 ```Objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -62,7 +63,7 @@ In AppDelegate. Set Your **[Client ID]**,**[Client secret]** and **[Redirect URI
 ```
 ###Step 2
 
-The final step is to give the SDK an opportunity to handle incoming URLs. 
+Give the SDK an opportunity to handle incoming URLs. 
 ```Objc
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     if ([[MovesAPI sharedInstance] canHandleOpenUrl:url]) {
@@ -99,10 +100,10 @@ The **moves-ios-sdk** uses the following open source software:
 - [AFNetworking](https://github.com/AFNetworking/AFNetworking)
 - [Moves Official API Documents](https://dev.moves-app.com/)
 
-#License
-
-See the [MIT license](https://github.com/vitoziv/moves-ios-sdk/blob/master/LICENSE).
-
 #API Terms
 
 [Moves API Terms](https://dev.moves-app.com/docs/terms_summary)
+
+#License
+
+See the [MIT license](https://github.com/vitoziv/moves-ios-sdk/blob/master/LICENSE).
