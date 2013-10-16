@@ -15,6 +15,7 @@
 #import "MVStoryLine.h"
 
 @interface MovesAPI : NSObject
+
 + (MovesAPI*)sharedInstance;
 - (void)setShareMovesOauthClientId:(NSString *)oauthClientId oauthClientSecret:(NSString *)oauthClientSecret callbackUrlScheme:(NSString *)callbackUrlScheme;
 - (BOOL)canHandleOpenUrl:(NSURL*)url;
