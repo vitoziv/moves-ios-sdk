@@ -20,6 +20,9 @@
 		5F36EE3117C82A5900FC425E /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2617C82A5900FC425E /* AFURLConnectionOperation.m */; };
 		5F36EE3217C82A5900FC425E /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2817C82A5900FC425E /* AFXMLRequestOperation.m */; };
 		5F36EE3317C82A5900FC425E /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2A17C82A5900FC425E /* UIImageView+AFNetworking.m */; };
+		5FD03FE517F7B253007980D6 /* TMCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03FE017F7B253007980D6 /* TMCache.m */; };
+		5FD03FE617F7B253007980D6 /* TMDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03FE217F7B253007980D6 /* TMDiskCache.m */; };
+		5FD03FE717F7B253007980D6 /* TMMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03FE417F7B253007980D6 /* TMMemoryCache.m */; };
 		5FFB3DEA1794072200B51480 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DE91794072200B51480 /* UIKit.framework */; };
 		5FFB3DEC1794072200B51480 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DEB1794072200B51480 /* Foundation.framework */; };
 		5FFB3DEE1794072200B51480 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DED1794072200B51480 /* CoreGraphics.framework */; };
@@ -82,6 +85,12 @@
 		5F36EE2817C82A5900FC425E /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		5F36EE2917C82A5900FC425E /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		5F36EE2A17C82A5900FC425E /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		5FD03FDF17F7B253007980D6 /* TMCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMCache.h; sourceTree = "<group>"; };
+		5FD03FE017F7B253007980D6 /* TMCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMCache.m; sourceTree = "<group>"; };
+		5FD03FE117F7B253007980D6 /* TMDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMDiskCache.h; sourceTree = "<group>"; };
+		5FD03FE217F7B253007980D6 /* TMDiskCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMDiskCache.m; sourceTree = "<group>"; };
+		5FD03FE317F7B253007980D6 /* TMMemoryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMMemoryCache.h; sourceTree = "<group>"; };
+		5FD03FE417F7B253007980D6 /* TMMemoryCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMMemoryCache.m; sourceTree = "<group>"; };
 		5FFB3DE61794072200B51480 /* MovesSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovesSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FFB3DE91794072200B51480 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5FFB3DEB1794072200B51480 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -196,6 +205,19 @@
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
+		5FD03FDE17F7B253007980D6 /* TMCache */ = {
+			isa = PBXGroup;
+			children = (
+				5FD03FDF17F7B253007980D6 /* TMCache.h */,
+				5FD03FE017F7B253007980D6 /* TMCache.m */,
+				5FD03FE117F7B253007980D6 /* TMDiskCache.h */,
+				5FD03FE217F7B253007980D6 /* TMDiskCache.m */,
+				5FD03FE317F7B253007980D6 /* TMMemoryCache.h */,
+				5FD03FE417F7B253007980D6 /* TMMemoryCache.m */,
+			);
+			path = TMCache;
+			sourceTree = "<group>";
+		};
 		5FFB3DDD1794072200B51480 = {
 			isa = PBXGroup;
 			children = (
@@ -270,6 +292,7 @@
 		5FFB3E0D179407EE00B51480 /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				5FD03FDE17F7B253007980D6 /* TMCache */,
 				5F36EE1717C82A5900FC425E /* AFNetworking */,
 			);
 			path = 3rdParty;
@@ -458,14 +481,17 @@
 				5FFB3E35179407EE00B51480 /* MVTrackPoint.m in Sources */,
 				5FFB3E36179407EE00B51480 /* MVUser.m in Sources */,
 				5FFB3E37179407EE00B51480 /* MovesAPI.m in Sources */,
+				5FD03FE517F7B253007980D6 /* TMCache.m in Sources */,
 				5F36EE2B17C82A5900FC425E /* AFHTTPClient.m in Sources */,
 				5F36EE2C17C82A5900FC425E /* AFHTTPRequestOperation.m in Sources */,
 				5F36EE2D17C82A5900FC425E /* AFImageRequestOperation.m in Sources */,
+				5FD03FE717F7B253007980D6 /* TMMemoryCache.m in Sources */,
 				5F36EE2E17C82A5900FC425E /* AFJSONRequestOperation.m in Sources */,
 				5F36EE2F17C82A5900FC425E /* AFNetworkActivityIndicatorManager.m in Sources */,
 				5F36EE3017C82A5900FC425E /* AFPropertyListRequestOperation.m in Sources */,
 				5F36EE3117C82A5900FC425E /* AFURLConnectionOperation.m in Sources */,
 				5F36EE3217C82A5900FC425E /* AFXMLRequestOperation.m in Sources */,
+				5FD03FE617F7B253007980D6 /* TMDiskCache.m in Sources */,
 				5F36EE3317C82A5900FC425E /* UIImageView+AFNetworking.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

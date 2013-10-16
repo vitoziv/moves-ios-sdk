@@ -6,8 +6,9 @@
 //  Copyright (c) 2013 vito. All rights reserved.
 //
 
-#import "AFNetworking.h"
 #import "MovesAPI.h"
+#import "AFNetworking.h"
+#import "TMCache.h"
 
 #define BASE_DOMAIN @"https://api.moves-app.com"
 
@@ -333,6 +334,13 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 //    }
 //    return NO;
 //}
+- (NSString *)cacheETagKeyWithUrl:(NSString *)url {
+    return [NSString stringWithFormat:@"ETAG_CACHE_ETAG_%@", url];
+}
+
+- (NSString *)cacheObjectKeyWithUrl:(NSString *)url {
+    return [NSString stringWithFormat:@"ETAG_CACHE_OBJECT_%@", url];
+}
 
 #pragma mark - API
 
@@ -353,7 +361,7 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
                                       failure:failure];
         } else {
             // Step 3. Everthing is right, now try to getting data
-            NSLog(@"%@", url);
+            NSLog(@"Moves demo request url: %@", url);
             
             NSRange range = [url rangeOfString:@"?" options:NSCaseInsensitiveSearch];
             if (range.location != NSNotFound) {
@@ -362,13 +370,30 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
                 url = [url stringByAppendingFormat:@"?access_token=%@", self.accessToken];
             }
             
-            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]
-                                                     cachePolicy:NSURLRequestReloadRevalidatingCacheData
-                                                 timeoutInterval:25];
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
+                                                                   cachePolicy:NSURLRequestReloadRevalidatingCacheData
+                                                               timeoutInterval:25];
+            
+            // Add ETag head
+            NSString *ETagCacheKey = [[TMCache sharedCache] objectForKey:[self cacheETagKeyWithUrl:url]];
+            if (ETagCacheKey) {
+                [request setAllHTTPHeaderFields:@{@"If-None-Match":ETagCacheKey}];
+            }
+            
             AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                
+                // Cache ETag and JSON object
+                [[TMCache sharedCache] setObject:response.allHeaderFields[@"ETag"] forKey:[self cacheETagKeyWithUrl:url]];
+                [[TMCache sharedCache] setObject:JSON forKey:[self cacheObjectKeyWithUrl:url]];
+                
                 if (success) success(JSON);
             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                if (failure) {
+                if (response.statusCode == 304) {
+                    // 304 Not Modified, return the cache value
+                    JSON = [[TMCache sharedCache] objectForKey:[self cacheObjectKeyWithUrl:url]];
+                    
+                    if (success) success(JSON);
+                } else if (failure) {
                     // Cause your app was revoked in Moves app.
                     if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
                         NSLog(@"expired_access_token");
