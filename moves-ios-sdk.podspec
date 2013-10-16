@@ -11,5 +11,6 @@ Pod::Spec.new do |s|
   s.source_files = 'moves-ios-sdk/*.{h,m}',
     'moves-ios-sdk/models/**/*.{h,m}'
 
-  s.dependency 'AFNetworking', '~> 1.3.2'
+  s.dependency 'AFNetworking', '~> 1.3.3'
+  s.dependency 'TMCache', '~> 1.2.0'
 end
