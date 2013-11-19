@@ -7,6 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
+
+#define EXP_SHORTHAND YES
+#import "Expecta.h"
+
 #import "MovesAPI.h"
 
 @interface MovesSDKDemoTests : XCTestCase
@@ -18,7 +22,7 @@
 - (void)setUp
 {
     [super setUp];
-    
+    [Expecta setAsynchronousTestTimeout:5.0];
     // Set-up code here.
 }
 
@@ -29,17 +33,18 @@
     [super tearDown];
 }
 
-- (void)testExample
-{
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
-}
-
 - (void)testGetUser {
+    __block id blockResponseObject = nil;
+    
     [[MovesAPI sharedInstance] getUserSuccess:^(MVUser *user) {
-        XCTAssertNotNil(user, @"User not nil");
+        NSLog(@"user: %@", user);
+        blockResponseObject = user;
     } failure:^(NSError *error) {
+        NSLog(@"error: %@", error);
         XCTAssertNotNil(error, @"error not nil");
     }];
+    
+    expect(blockResponseObject).willNot.beNil();
 }
 
 @end

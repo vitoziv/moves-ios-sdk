@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E39FD3183BF4055A2ACD5FE /* libPods-MovesSDKDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C12269931C34535A7FAC8DD /* libPods-MovesSDKDemoTests.a */; };
 		5F23E202179CD802007BBB8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DEB1794072200B51480 /* Foundation.framework */; };
 		5F23E203179CD802007BBB8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DE91794072200B51480 /* UIKit.framework */; };
 		5F23E209179CD802007BBB8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5F23E207179CD802007BBB8B /* InfoPlist.strings */; };
@@ -133,6 +134,8 @@
 		5FFB3E2A179407EE00B51480 /* MovesAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovesAPI.m; sourceTree = "<group>"; };
 		5FFB3E381794081700B51480 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		5FFB3E3A1794081C00B51480 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		6C12269931C34535A7FAC8DD /* libPods-MovesSDKDemoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MovesSDKDemoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C8A9A28E2B14C08A0FFD998 /* Pods-MovesSDKDemoTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovesSDKDemoTests.xcconfig"; path = "Pods/Pods-MovesSDKDemoTests.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +145,7 @@
 			files = (
 				5F23E203179CD802007BBB8B /* UIKit.framework in Frameworks */,
 				5F23E202179CD802007BBB8B /* Foundation.framework in Frameworks */,
+				4E39FD3183BF4055A2ACD5FE /* libPods-MovesSDKDemoTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,6 +227,7 @@
 				5F23E204179CD802007BBB8B /* MovesSDKDemoTests */,
 				5FFB3DE81794072200B51480 /* Frameworks */,
 				5FFB3DE71794072200B51480 /* Products */,
+				9C8A9A28E2B14C08A0FFD998 /* Pods-MovesSDKDemoTests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -243,6 +248,7 @@
 				5FFB3DE91794072200B51480 /* UIKit.framework */,
 				5FFB3DEB1794072200B51480 /* Foundation.framework */,
 				5FFB3DED1794072200B51480 /* CoreGraphics.framework */,
+				6C12269931C34535A7FAC8DD /* libPods-MovesSDKDemoTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -334,9 +340,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5F23E211179CD802007BBB8B /* Build configuration list for PBXNativeTarget "MovesSDKDemoTests" */;
 			buildPhases = (
+				AB3A4DE23BDB493CAD0814C9 /* Check Pods Manifest.lock */,
 				5F23E1FB179CD802007BBB8B /* Sources */,
 				5F23E1FC179CD802007BBB8B /* Frameworks */,
 				5F23E1FD179CD802007BBB8B /* Resources */,
+				53B1918502DD47C5A8631CD5 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -423,6 +431,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		53B1918502DD47C5A8631CD5 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-MovesSDKDemoTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		96B4AB0EAB5A49AA9E2AFC9A /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -436,6 +459,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "";
+		};
+		AB3A4DE23BDB493CAD0814C9 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 		B00BACC6A68B41DFA567E34C /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -536,6 +574,7 @@
 /* Begin XCBuildConfiguration section */
 		5F23E20F179CD802007BBB8B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C8A9A28E2B14C08A0FFD998 /* Pods-MovesSDKDemoTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MovesSDKDemo.app/MovesSDKDemo";
 				CLANG_ENABLE_MODULES = YES;
@@ -566,6 +605,7 @@
 		};
 		5F23E210179CD802007BBB8B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C8A9A28E2B14C08A0FFD998 /* Pods-MovesSDKDemoTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MovesSDKDemo.app/MovesSDKDemo";
 				CLANG_ENABLE_MODULES = YES;
