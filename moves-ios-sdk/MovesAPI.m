@@ -39,13 +39,14 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 @interface MovesAPI()
 
-@property (strong, nonatomic) NSString *accessToken;
-@property (strong, nonatomic) NSString *refreshToken;
-@property (strong, nonatomic) NSDate *fetchTime;
-@property (strong, nonatomic) NSNumber *expiry;
+@property (nonatomic, strong) NSString *accessToken;
+@property (nonatomic, strong) NSString *refreshToken;
+@property (nonatomic, strong) NSDate *fetchTime;
+@property (nonatomic, strong) NSNumber *expiry;
 @property (nonatomic, strong) NSString *oauthClientId;
 @property (nonatomic, strong) NSString *oauthClientSecret;
 @property (nonatomic, strong) NSString *callbackUrlScheme;
+@property (nonatomic) MVScopeType scope;
 
 @property (nonatomic) BOOL serverStarted;
 
@@ -66,8 +67,7 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     return _sharedClient;
 }
 
-- (id) init
-{
+- (id)init {
     if(self = [super init]) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         self.accessToken = [defaults objectForKey:MV_AUTH_ACCESS_TOKEN];
@@ -79,14 +79,17 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 #pragma mark - Setup
-- (void)setShareMovesOauthClientId:(NSString *)oauthClientId oauthClientSecret:(NSString *)oauthClientSecret callbackUrlScheme:(NSString *)callbackUrlScheme {
-    [MovesAPI sharedInstance].oauthClientId = oauthClientId;
-    [MovesAPI sharedInstance].oauthClientSecret = oauthClientSecret;
-    [MovesAPI sharedInstance].callbackUrlScheme = callbackUrlScheme;
+- (void)setShareMovesOauthClientId:(NSString *)oauthClientId
+                 oauthClientSecret:(NSString *)oauthClientSecret
+                 callbackUrlScheme:(NSString *)callbackUrlScheme
+                             scope:(MVScopeType)scope {
+    _oauthClientId = oauthClientId;
+    _oauthClientSecret = oauthClientSecret;
+    _callbackUrlScheme = callbackUrlScheme;
+    _scope = scope;
 }
 
-- (BOOL)canHandleOpenUrl:(NSURL*)url
-{
+- (BOOL)canHandleOpenUrl:(NSURL *)url {
     BOOL canHandle = NO;
     NSArray *keysAndObjs = [[url.query stringByReplacingOccurrencesOfString:@"=" withString:@"&"] componentsSeparatedByString:@"&"];
     
@@ -95,7 +98,7 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
         NSString *value = keysAndObjs[i+1];
         
         if([key isEqualToString:@"code"]) {
-            [self requestOrRefreshAccessToken:value complete:^{
+            [self requestOrRefreshAccessToken:value success:^{
                 if (self.authorizationSuccessCallback) {
                     if (self.authorizationSuccessCallback) self.authorizationSuccessCallback();
                     self.authorizationSuccessCallback = nil;
@@ -126,19 +129,29 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 #pragma mark - OAuth2 authentication with Moves app
 
-- (void)authorizationSuccess:(void (^)(void))success failure:(void (^)(NSError *reason))failure
-{
+- (void)authorizationSuccess:(void (^)(void))success
+                     failure:(void (^)(NSError *reason))failure {
     if(self.isAuthenticated) {
         if (success) success();
     } else {
-        self.authorizationSuccessCallback = success;
-        self.authorizationFailureCallback = failure;
-        NSURL *authUrl = [NSURL URLWithString:[NSString stringWithFormat:@"moves://app/authorize?client_id=%@&redirect_uri=%@&scope=activity%%20location", self.oauthClientId, self.oauthRedirectUri]];
-        [[UIApplication sharedApplication] openURL:authUrl];
+        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"moves://"]]) {
+            self.authorizationSuccessCallback = success;
+            self.authorizationFailureCallback = failure;
+            NSURL *authUrl = [NSURL URLWithString:[NSString stringWithFormat:@"moves://app/authorize?client_id=%@&redirect_uri=%@&scope=%@",
+                                                   self.oauthClientId,
+                                                   self.oauthRedirectUri,
+                                                   [self scopeStringByScopeType:self.scope]]];
+            [[UIApplication sharedApplication] openURL:authUrl];
+        } else {
+            // TODO: Show a ViewController
+            
+        }
     }
 }
 
-- (void)updateUserDefaultsWithAccessToken:(NSString*)accessToken refreshToken:(NSString*)refreshToken andExpiry:(NSNumber*)expiry {
+- (void)updateUserDefaultsWithAccessToken:(NSString *)accessToken
+                             refreshToken:(NSString *)refreshToken
+                                andExpiry:(NSNumber *)expiry {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     [defaults setObject:accessToken forKey:MV_AUTH_ACCESS_TOKEN];
@@ -155,7 +168,9 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     self.fetchTime = fetchTime;
 }
 
-- (void)requestOrRefreshAccessToken:(NSString*)code complete:(void (^)())complete failure:(void (^)(NSError* reason))failure
+- (void)requestOrRefreshAccessToken:(NSString *)code
+                            success:(void(^)(void))success
+                            failure:(void(^)(NSError *reason))failure
 {
     NSDictionary *params;
     NSString *path = @"/oauth/v1/access_token";
@@ -182,7 +197,7 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
         [self updateUserDefaultsWithAccessToken:responseDic[@"access_token"]
                                    refreshToken:responseDic[@"refresh_token"]
                                       andExpiry:responseDic[@"expires_in"]];
-        if (complete) complete();
+        if (success) success();
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error.userInfo);
         if (failure) failure(error);
@@ -198,7 +213,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     return NO;
 }
 
-- (void)logout {
+- (void)logout
+{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:MV_AUTH_ACCESS_TOKEN];
     [defaults removeObjectForKey:MV_AUTH_REFRESH_TOKEN];
@@ -213,7 +229,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 #pragma mark - Helper
 
-- (BOOL)isAccessTokenExpiry {
+- (BOOL)isAccessTokenExpiry
+{
     // Expiry time
     if ([[NSDate date] timeIntervalSinceDate:[self.fetchTime dateByAddingTimeInterval:[self.expiry doubleValue]]] <= 0) {
         return NO;
@@ -239,12 +256,27 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     return [dateFormatter stringFromDate:date];
 }
 
-- (NSString *)encodingUrlString:(NSString *)url {
-    return [url stringByAddingPercentEscapesUsingEncoding:
-            NSUTF8StringEncoding];
+- (NSString *)scopeStringByScopeType:(MVScopeType)scopeType {
+    NSMutableString *scope = [[NSMutableString alloc] init];
+    if (scopeType == MVScopeTypeDefault) {
+        [scope appendString:@"default"];
+    } else {
+        if (scopeType & MVScopeTypeActivity) {
+            [scope appendString:@"activity"];
+        }
+        
+        if (scopeType & MVScopeTypeLocation) {
+            if (scope.length > 0) [scope appendString:@"%%20"];
+            [scope appendString:@"location"];
+        }
+    }
+    
+    return scope;
 }
 
-- (NSString *)urlByMVUrl:(NSString *)MVUrl date:(NSDate *)date dateFormatType:(MVDateFormatType)dateFormatType {
+- (NSString *)urlByMVUrl:(NSString *)MVUrl
+                    date:(NSDate *)date
+          dateFormatType:(MVDateFormatType)dateFormatType {
     NSString *url = @"";
     if (!date) {
         url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN, MVUrl];
@@ -255,7 +287,9 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     return url;
 }
 
-- (NSString *)urlByMVUrl:(NSString *)MVUrl fromDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
+- (NSString *)urlByMVUrl:(NSString *)MVUrl
+                fromDate:(NSDate *)fromDate
+                  toDate:(NSDate *)toDate {
     NSString *url = [NSString stringWithFormat:@"%@%@?from=%@&to=%@",
                      BASE_DOMAIN,
                      MVUrl,
@@ -292,7 +326,7 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     }
 }
 
-- (NSArray *)arrayByJson:(id)json modelType:(MVModelType)modelType{
+- (NSArray *)arrayByJson:(id)json modelType:(MVModelType)modelType {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (NSDictionary *dic in json) {
         NSObject *obj = nil;
@@ -355,9 +389,9 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
         // Step 2. If accessToken is out of date, try to get a new one
         if ([self isAccessTokenExpiry]) {
             [self requestOrRefreshAccessToken:self.accessToken
-                                     complete:^{
-                                         [self getJsonByUrl:url success:success failure:failure];
-                                     }
+                                      success:^{
+                                          [self getJsonByUrl:url success:success failure:failure];
+                                      }
                                       failure:failure];
         } else {
             // Step 3. Everthing is right, now try to getting data
@@ -397,12 +431,9 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
                     // Cause your app was revoked in Moves app.
                     if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
                         NSLog(@"expired_access_token");
-                        
-                        NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
-                        failure(expiredError);
-                    } else {
-                        failure(error);
                     }
+                    
+                    failure(error);
                 }
             }];
             
@@ -414,8 +445,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 #pragma mark User
 
-- (void)getUserSuccess:(void (^)(MVUser *user))success
-               failure:(void (^)(NSError *error))failure {
+- (void)getUserSuccess:(void(^)(MVUser *user))success
+               failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeProfile] date:nil dateFormatType:MVDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -428,8 +459,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 #pragma mark MVSummary
 
 - (void)getDayDailySummariesByDate:(NSDate *)date
-                           success:(void (^)(NSArray *dailySummaries))success
-                           failure:(void (^)(NSError *error))failure {
+                           success:(void(^)(NSArray *dailySummaries))success
+                           failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -439,8 +470,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getWeekDailySummariesByDate:(NSDate *)date
-                            success:(void (^)(NSArray *dailySummaries))success
-                            failure:(void (^)(NSError *error))failure {
+                            success:(void(^)(NSArray *dailySummaries))success
+                            failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -450,8 +481,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getMonthDailySummariesByDate:(NSDate *)date
-                             success:(void (^)(NSArray *dailySummaries))success
-                             failure:(void (^)(NSError *error))failure {
+                             success:(void(^)(NSArray *dailySummaries))success
+                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] date:date dateFormatType:MVDateFormatTypeMonth];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -462,8 +493,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 - (void)getDailySummariesFromDate:(NSDate *)fromDate
                            toDate:(NSDate *)toDate
-                          success:(void (^)(NSArray *dailySummaries))success
-                          failure:(void (^)(NSError *error))failure {
+                          success:(void(^)(NSArray *dailySummaries))success
+                          failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -473,8 +504,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getDailySummariesByPastDays:(NSInteger)pastDays
-                            success:(void (^)(NSArray *dailySummaries))success
-                            failure:(void (^)(NSError *error))failure {
+                            success:(void(^)(NSArray *dailySummaries))success
+                            failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeSummary] pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -485,8 +516,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 #pragma mark MVActivity
 - (void)getDayDailyActivitiesByDate:(NSDate *)date
-                            success:(void (^)(NSArray *dailyActivities))success
-                            failure:(void (^)(NSError *error))failure {
+                            success:(void(^)(NSArray *dailyActivities))success
+                            failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] date:date dateFormatType:MVDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -496,8 +527,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getWeekDailyActivitiesByDate:(NSDate *)date
-                             success:(void (^)(NSArray *dailyActivities))success
-                             failure:(void (^)(NSError *error))failure {
+                             success:(void(^)(NSArray *dailyActivities))success
+                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] date:date dateFormatType:MVDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -508,8 +539,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 - (void)getDailyActivitiesFromDate:(NSDate *)fromDate
                             toDate:(NSDate *)toDate
-                           success:(void (^)(NSArray *dailyActivities))success
-                           failure:(void (^)(NSError *error))failure {
+                           success:(void(^)(NSArray *dailyActivities))success
+                           failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -519,8 +550,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getDailyActivitiesByPastDays:(NSInteger)pastDays
-                             success:(void (^)(NSArray *dailyActivities))success
-                             failure:(void (^)(NSError *error))failure {
+                             success:(void(^)(NSArray *dailyActivities))success
+                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeActivity] pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -532,8 +563,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 #pragma mark MVPlace
 - (void)getDayDailyPlacesByDate:(NSDate *)date
-                        success:(void (^)(NSArray *dailyPlaces))success
-                        failure:(void (^)(NSError *error))failure {
+                        success:(void(^)(NSArray *dailyPlaces))success
+                        failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypePlace] date:date dateFormatType:MVDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -542,8 +573,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getWeekDailyPlacesByDate:(NSDate *)date
-                         success:(void (^)(NSArray *dailyPlaces))success
-                         failure:(void (^)(NSError *error))failure {
+                         success:(void(^)(NSArray *dailyPlaces))success
+                         failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypePlace] date:date dateFormatType:MVDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -554,8 +585,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 - (void)getDailyPlacesFromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate
-                       success:(void (^)(NSArray *dailyPlaces))success
-                       failure:(void (^)(NSError *error))failure {
+                       success:(void(^)(NSArray *dailyPlaces))success
+                       failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypePlace] fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -565,8 +596,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getDailyPlacesByPastDays:(NSInteger)pastDays
-                         success:(void (^)(NSArray *dailyPlaces))success
-                         failure:(void (^)(NSError *error))failure {
+                         success:(void(^)(NSArray *dailyPlaces))success
+                         failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypePlace] pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -578,8 +609,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 #pragma mark - MVStoryLine
 - (void)getDayStoryLineByDate:(NSDate *)date
                   trackPoints:(BOOL)trackPoints
-                      success:(void (^)(NSArray *storyLines))success
-                      failure:(void (^)(NSError *error))failure {
+                      success:(void(^)(NSArray *storyLines))success
+                      failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] date:date dateFormatType:MVDateFormatTypeDay];
     if (trackPoints) {
         urlString = [urlString stringByAppendingFormat:@"%@", @"?trackPoints=true"];
@@ -592,8 +623,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getWeekStoryLineByDate:(NSDate *)date
-                       success:(void (^)(NSArray *storyLines))success
-                       failure:(void (^)(NSError *error))failure {
+                       success:(void(^)(NSArray *storyLines))success
+                       failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] date:date dateFormatType:MVDateFormatTypeWeek];
     [self getJsonByUrl:urlString
                success:^(id json) {
@@ -604,8 +635,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 - (void)getDailyStoryLineFromDate:(NSDate *)fromDate
                            toDate:(NSDate *)toDate
-                          success:(void (^)(NSArray *storyLines))success
-                          failure:(void (^)(NSError *error))failure {
+                          success:(void(^)(NSArray *storyLines))success
+                          failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
@@ -615,8 +646,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 }
 
 - (void)getDailyStoryLineByPastDays:(NSInteger)pastDays
-                            success:(void (^)(NSArray *storyLines))success
-                            failure:(void (^)(NSError *error))failure {
+                            success:(void(^)(NSArray *storyLines))success
+                            failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:[self urlByModelType:MVModelTypeStoryLine] pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
