@@ -9,6 +9,7 @@
 #import "MovesAPI.h"
 #import "AFNetworking.h"
 #import "TMCache.h"
+#import "MVOAuthViewController.h"
 
 #define BASE_DOMAIN @"https://api.moves-app.com"
 
@@ -37,7 +38,7 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     MVDateFormatTypeMonth
 };
 
-@interface MovesAPI()
+@interface MovesAPI() <MVOAuthViewControllerDelegate>
 
 @property (nonatomic, strong) NSString *accessToken;
 @property (nonatomic, strong) NSString *refreshToken;
@@ -50,8 +51,10 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 
 @property (nonatomic) BOOL serverStarted;
 
-@property (nonatomic, copy) void (^authorizationSuccessCallback)(void);
-@property (nonatomic, copy) void (^authorizationFailureCallback)(NSError *reason);
+@property (nonatomic, copy) MVAuthorizationSuccessBlock authorizationSuccessCallback;
+@property (nonatomic, copy) MVAuthorizationFailureBlock authorizationFailureCallback;
+
+@property (nonatomic, strong) MVOAuthViewController *oauthViewController;
 
 @end
 
@@ -89,64 +92,93 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     _scope = scope;
 }
 
+- (void)setShareMovesOauthClientId:(NSString *)oauthClientId
+                 oauthClientSecret:(NSString *)oauthClientSecret
+                 callbackUrlScheme:(NSString *)callbackUrlScheme {
+    [self setShareMovesOauthClientId:oauthClientId
+                   oauthClientSecret:oauthClientSecret
+                   callbackUrlScheme:callbackUrlScheme
+                               scope:MVScopeTypeActivity | MVScopeTypeLocation];
+}
+
 - (BOOL)canHandleOpenUrl:(NSURL *)url {
     BOOL canHandle = NO;
-    NSArray *keysAndObjs = [[url.query stringByReplacingOccurrencesOfString:@"=" withString:@"&"] componentsSeparatedByString:@"&"];
     
-    for(NSUInteger i=0, len=keysAndObjs.count; i<len; i+=2) {
-        NSString *key = keysAndObjs[i];
-        NSString *value = keysAndObjs[i+1];
-        
-        if([key isEqualToString:@"code"]) {
-            [self requestOrRefreshAccessToken:value success:^{
-                if (self.authorizationSuccessCallback) {
-                    if (self.authorizationSuccessCallback) self.authorizationSuccessCallback();
-                    self.authorizationSuccessCallback = nil;
-                    self.authorizationFailureCallback = nil;
-                }
-            } failure:^(NSError *reason) {
-                if (self.authorizationFailureCallback) {
-                    self.authorizationFailureCallback(reason);
-                    self.authorizationFailureCallback = nil;
-                    self.authorizationSuccessCallback = nil;
-                }
-            }];
-            canHandle = YES;
-            break;
-        } else if([key isEqualToString:@"error"]) {
-            if (self.authorizationFailureCallback) {
-                self.authorizationFailureCallback([NSError errorWithDomain:@"moves-ios-sdk" code:0 userInfo:@{@"description": value}]);
-                self.authorizationSuccessCallback = nil;
-                self.authorizationFailureCallback = nil;
-            }
-            canHandle = NO;
-            break;
-        }
+    if ([url.absoluteString hasPrefix:BASE_DOMAIN]) {
+        [self handleOpenUrl:url completion:nil];
+        canHandle = YES;
     }
     
     return canHandle;
 }
 
+- (void)handleOpenUrl:(NSURL *)url completion:(void(^)(BOOL success))completion {
+    NSString *value = [self valueForKey:@"code" inUrl:url];
+    NSString *errorValue = [self valueForKey:@"error" inUrl:url];
+    if (value) {
+        [self requestOrRefreshAccessToken:value success:^{
+            if (completion) completion(YES);
+            
+            if (self.authorizationSuccessCallback) {
+                if (self.authorizationSuccessCallback) self.authorizationSuccessCallback();
+                self.authorizationSuccessCallback = nil;
+                self.authorizationFailureCallback = nil;
+            }
+        } failure:^(NSError *reason) {
+            if (completion) completion(NO);
+            
+            if (self.authorizationFailureCallback) {
+                self.authorizationFailureCallback(reason);
+                self.authorizationFailureCallback = nil;
+                self.authorizationSuccessCallback = nil;
+            }
+        }];
+    } else if(errorValue) {
+        if (completion) completion(NO);
+        if (self.authorizationFailureCallback) {
+            self.authorizationFailureCallback([NSError errorWithDomain:@"moves-ios-sdk" code:0 userInfo:@{@"description": errorValue}]);
+            self.authorizationSuccessCallback = nil;
+            self.authorizationFailureCallback = nil;
+        }
+    } else {
+        if (completion) completion(NO);
+        if (self.authorizationFailureCallback) self.authorizationFailureCallback([NSError errorWithDomain:@"moves-ios-sdk" code:0 userInfo:@{@"description": @"Unknown_error"}]);
+        self.authorizationSuccessCallback = nil;
+        self.authorizationFailureCallback = nil;
+    }
+}
+
 #pragma mark - OAuth2 authentication with Moves app
 
-- (void)authorizationSuccess:(void (^)(void))success
-                     failure:(void (^)(NSError *reason))failure {
+- (void)authorizationWithViewController:(UIViewController *)viewController
+                                success:(MVAuthorizationSuccessBlock)success
+                                failure:(MVAuthorizationFailureBlock)failure {
     if(self.isAuthenticated) {
         if (success) success();
     } else {
+        self.authorizationSuccessCallback = success;
+        self.authorizationFailureCallback = failure;
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"moves://"]]) {
-            self.authorizationSuccessCallback = success;
-            self.authorizationFailureCallback = failure;
-            NSURL *authUrl = [NSURL URLWithString:[NSString stringWithFormat:@"moves://app/authorize?client_id=%@&redirect_uri=%@&scope=%@",
-                                                   self.oauthClientId,
-                                                   self.oauthRedirectUri,
-                                                   [self scopeStringByScopeType:self.scope]]];
-            [[UIApplication sharedApplication] openURL:authUrl];
+            NSString *urlString = [NSString stringWithFormat:@"moves://app/authorize?client_id=%@&redirect_uri=%@&scope=%@",
+                                   self.oauthClientId,
+                                   self.oauthRedirectUri,
+                                   [self scopeStringByScopeType:self.scope]];
+            urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
         } else {
-            // TODO: Show a ViewController
+            NSString *urlString = [NSString stringWithFormat:@"%@/oauth/v1/authorize?response_type=code&client_id=%@&scope=%@", BASE_DOMAIN, self.oauthClientId, [self scopeStringByScopeType:self.scope]];
+            urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
+            self.oauthViewController = [[MVOAuthViewController alloc] initWithAuthorizationURL:[NSURL URLWithString:urlString]
+                                                                                      delegate:self];
+            UINavigationController *oauthNavController = [[UINavigationController alloc] initWithRootViewController:self.oauthViewController];
+            
+            [viewController presentViewController:oauthNavController
+                                         animated:YES
+                                       completion:nil];
         }
     }
+    
 }
 
 - (void)updateUserDefaultsWithAccessToken:(NSString *)accessToken
@@ -266,13 +298,42 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
         }
         
         if (scopeType & MVScopeTypeLocation) {
-            if (scope.length > 0) [scope appendString:@"%%20"];
+            if (scope.length > 0) [scope appendString:@" "];
             [scope appendString:@"location"];
         }
     }
     
     return scope;
 }
+
+- (NSString *)valueForKey:(NSString *)key inUrl:(NSURL *)url {
+    NSArray *keysAndObjs = [[url.query stringByReplacingOccurrencesOfString:@"=" withString:@"&"] componentsSeparatedByString:@"&"];
+    
+    for(NSUInteger i = 0, len = keysAndObjs.count; i < len; i += 2) {
+        NSString *aKey = keysAndObjs[i];
+        NSString *aValue = keysAndObjs[i+1];
+        if ([aKey isEqualToString:key]) {
+            return aValue;
+        }
+    }
+    
+    return nil;
+}
+
+- (BOOL)key:(NSString *)key existingInUrl:(NSURL *)url {
+    NSArray *keysAndObjs = [[url.query stringByReplacingOccurrencesOfString:@"=" withString:@"&"] componentsSeparatedByString:@"&"];
+    
+    for(NSUInteger i = 0, len = keysAndObjs.count; i < len; i += 2) {
+        NSString *aKey = keysAndObjs[i];
+        if ([aKey isEqualToString:key]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+#pragma mark Url Creator
 
 - (NSString *)urlByMVUrl:(NSString *)MVUrl
                     date:(NSDate *)date
@@ -302,6 +363,8 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
     NSString *url = [NSString stringWithFormat:@"%@%@?pastDays=%i", BASE_DOMAIN, MVUrl, days];
     return url;
 }
+
+#pragma mark Objects
 
 - (NSString *)urlByModelType:(MVModelType)modelType {
     switch (modelType) {
@@ -368,13 +431,6 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
 //    }
 //    return NO;
 //}
-- (NSString *)cacheETagKeyWithUrl:(NSString *)url {
-    return [NSString stringWithFormat:@"ETAG_CACHE_ETAG_%@", url];
-}
-
-- (NSString *)cacheObjectKeyWithUrl:(NSString *)url {
-    return [NSString stringWithFormat:@"ETAG_CACHE_OBJECT_%@", url];
-}
 
 #pragma mark - API
 
@@ -383,7 +439,7 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
              failure:(void (^)(NSError *error))failure {
     // Step 1.
     if (!self.accessToken) {
-        NSError *authError = [NSError errorWithDomain:@"MovesAPI Auth Error" code:1001 userInfo:@{@"ErrorReason": @"no_access_token"}];
+        NSError *authError = [NSError errorWithDomain:@"MovesAPI Auth Error" code:401 userInfo:@{@"ErrorReason": @"no_access_token"}];
         failure(authError);
     } else {
         // Step 2. If accessToken is out of date, try to get a new one
@@ -408,31 +464,16 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
                                                                    cachePolicy:NSURLRequestReloadRevalidatingCacheData
                                                                timeoutInterval:25];
             
-            // Add ETag head
-            NSString *ETagCacheKey = [[TMCache sharedCache] objectForKey:[self cacheETagKeyWithUrl:url]];
-            if (ETagCacheKey) {
-                [request setAllHTTPHeaderFields:@{@"If-None-Match":ETagCacheKey}];
-            }
-            
             AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                
-                // Cache ETag and JSON object
-                [[TMCache sharedCache] setObject:response.allHeaderFields[@"ETag"] forKey:[self cacheETagKeyWithUrl:url]];
-                [[TMCache sharedCache] setObject:JSON forKey:[self cacheObjectKeyWithUrl:url]];
-                
                 if (success) success(JSON);
             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                if (response.statusCode == 304) {
-                    // 304 Not Modified, return the cache value
-                    JSON = [[TMCache sharedCache] objectForKey:[self cacheObjectKeyWithUrl:url]];
+                // Cause your app was revoked in Moves app.
+                if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
+                    NSLog(@"expired_access_token");
                     
-                    if (success) success(JSON);
-                } else if (failure) {
-                    // Cause your app was revoked in Moves app.
-                    if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
-                        NSLog(@"expired_access_token");
-                    }
-                    
+                    NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
+                    failure(expiredError);
+                } else {
                     failure(error);
                 }
             }];
@@ -654,6 +695,32 @@ typedef NS_ENUM(NSInteger, MVDateFormatType) {
                    if (success) success([self arrayByJson:json modelType:MVModelTypeStoryLine]);
                }
                failure:failure];
+}
+
+#pragma mark - MVOAuthViewControllerDelegate
+
+- (void)oauthViewControllerDidCancel:(MVOAuthViewController *)sender {
+    [sender dismissViewControllerAnimated:YES completion:nil];
+    
+    if (self.authorizationFailureCallback) self.authorizationFailureCallback(nil);
+    self.authorizationSuccessCallback = nil;
+    self.authorizationFailureCallback = nil;
+}
+
+- (void)oauthViewController:(MVOAuthViewController *)sender didFailWithError:(NSError *)error {
+    [sender dismissViewControllerAnimated:YES completion:nil];
+    
+    if (self.authorizationFailureCallback) self.authorizationFailureCallback(error);
+    self.authorizationSuccessCallback = nil;
+    self.authorizationFailureCallback = nil;
+}
+
+- (void)oauthViewController:(MVOAuthViewController *)sender receivedOAuthCallbackURL:(NSURL *)url {
+    [self handleOpenUrl:url
+             completion:^(BOOL success) {
+                 [sender dismissViewControllerAnimated:YES completion:nil];
+                }];
+    
 }
 
 @end

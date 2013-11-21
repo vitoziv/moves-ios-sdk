@@ -20,6 +20,7 @@
 		5F36EE3117C82A5900FC425E /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2617C82A5900FC425E /* AFURLConnectionOperation.m */; };
 		5F36EE3217C82A5900FC425E /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2817C82A5900FC425E /* AFXMLRequestOperation.m */; };
 		5F36EE3317C82A5900FC425E /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2A17C82A5900FC425E /* UIImageView+AFNetworking.m */; };
+		5FC3C665183BAF2600D7951F /* MVOAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */; };
 		5FD03FE517F7B253007980D6 /* TMCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03FE017F7B253007980D6 /* TMCache.m */; };
 		5FD03FE617F7B253007980D6 /* TMDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03FE217F7B253007980D6 /* TMDiskCache.m */; };
 		5FD03FE717F7B253007980D6 /* TMMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD03FE417F7B253007980D6 /* TMMemoryCache.m */; };
@@ -85,6 +86,8 @@
 		5F36EE2817C82A5900FC425E /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		5F36EE2917C82A5900FC425E /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		5F36EE2A17C82A5900FC425E /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		5FC3C663183BAF2600D7951F /* MVOAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVOAuthViewController.h; sourceTree = "<group>"; };
+		5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVOAuthViewController.m; sourceTree = "<group>"; };
 		5FD03FDF17F7B253007980D6 /* TMCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMCache.h; sourceTree = "<group>"; };
 		5FD03FE017F7B253007980D6 /* TMCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMCache.m; sourceTree = "<group>"; };
 		5FD03FE117F7B253007980D6 /* TMDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMDiskCache.h; sourceTree = "<group>"; };
@@ -284,6 +287,8 @@
 				5FFB3E11179407EE00B51480 /* models */,
 				5FFB3E29179407EE00B51480 /* MovesAPI.h */,
 				5FFB3E2A179407EE00B51480 /* MovesAPI.m */,
+				5FC3C663183BAF2600D7951F /* MVOAuthViewController.h */,
+				5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */,
 			);
 			name = "moves-ios-sdk";
 			path = "../../moves-ios-sdk";
@@ -487,6 +492,7 @@
 				5F36EE2D17C82A5900FC425E /* AFImageRequestOperation.m in Sources */,
 				5FD03FE717F7B253007980D6 /* TMMemoryCache.m in Sources */,
 				5F36EE2E17C82A5900FC425E /* AFJSONRequestOperation.m in Sources */,
+				5FC3C665183BAF2600D7951F /* MVOAuthViewController.m in Sources */,
 				5F36EE2F17C82A5900FC425E /* AFNetworkActivityIndicatorManager.m in Sources */,
 				5F36EE3017C82A5900FC425E /* AFPropertyListRequestOperation.m in Sources */,
 				5F36EE3117C82A5900FC425E /* AFURLConnectionOperation.m in Sources */,

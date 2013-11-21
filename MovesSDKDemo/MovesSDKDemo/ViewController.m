@@ -27,13 +27,14 @@
 
 - (IBAction)authPress:(id)sender {
     [self.indicatorView startAnimating];
-    [[MovesAPI sharedInstance] authorizationSuccess:^{
-        self.resultTextView.text = @"Auth successed!";
-        [self.indicatorView stopAnimating];
-    } failure:^(NSError *reason) {
-        self.resultTextView.text = @"Auth failed!";
-        [self.indicatorView stopAnimating];
-    }];
+    [[MovesAPI sharedInstance] authorizationWithViewController:self
+                                                       success:^{
+                                                           self.resultTextView.text = @"Auth successed!";
+                                                           [self.indicatorView stopAnimating];
+                                                       } failure:^(NSError *error) {
+                                                           self.resultTextView.text = @"Auth failed!";
+                                                           [self.indicatorView stopAnimating];
+                                                       }];
 }
 
 - (IBAction)dayUrl:(id)sender {

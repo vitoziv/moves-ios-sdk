@@ -20,18 +20,29 @@ typedef NS_ENUM(NSUInteger, MVScopeType) {
     MVScopeTypeLocation
 };
 
+typedef void(^MVAuthorizationSuccessBlock)(void);
+typedef void(^MVAuthorizationFailureBlock)(NSError *reason);
+
 @interface MovesAPI : NSObject
 
 + (MovesAPI *)sharedInstance;
+
+- (void)setShareMovesOauthClientId:(NSString *)oauthClientId
+                 oauthClientSecret:(NSString *)oauthClientSecret
+                 callbackUrlScheme:(NSString *)callbackUrlScheme;
+
 - (void)setShareMovesOauthClientId:(NSString *)oauthClientId
                  oauthClientSecret:(NSString *)oauthClientSecret
                  callbackUrlScheme:(NSString *)callbackUrlScheme
                              scope:(MVScopeType)scope;
+
 - (BOOL)canHandleOpenUrl:(NSURL *)url;
 
 #pragma mark - Authorization
-- (void)authorizationSuccess:(void(^)(void))success
-                     failure:(void(^)(NSError *reason))failure;
+- (void)authorizationWithViewController:(UIViewController *)viewController
+                                success:(MVAuthorizationSuccessBlock)success
+                                failure:(MVAuthorizationFailureBlock)failure;
+
 - (void)logout;
 
 - (BOOL)isAuthenticated;
