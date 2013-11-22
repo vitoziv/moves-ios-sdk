@@ -6,7 +6,7 @@
 //  Copyright (c) 2013年 vito. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "MVBaseDataModel.h"
 #import "MVPlace.h"
 #import "MVActivity.h"
 
@@ -15,7 +15,7 @@ typedef NS_ENUM(NSInteger, MVSegmentType) {
     MVSegmentTypePlace
 };
 
-@interface MVSegment : NSObject
+@interface MVSegment : MVBaseDataModel
 
 @property (nonatomic) MVSegmentType type;
 @property (nonatomic, strong) NSDate *startTime;

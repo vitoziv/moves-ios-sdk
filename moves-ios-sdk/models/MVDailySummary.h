@@ -6,9 +6,9 @@
 //  Copyright (c) 2013年 vito. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "MVBaseDataModel.h"
 
-@interface MVDailySummary : NSObject
+@interface MVDailySummary : MVBaseDataModel
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSArray *summaries;

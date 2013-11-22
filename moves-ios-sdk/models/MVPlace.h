@@ -6,10 +6,10 @@
 //  Copyright (c) 2013年 vito. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "MVBaseDataModel.h"
 #import "MVLocation.h"
 
-@interface MVPlace : NSObject
+@interface MVPlace : MVBaseDataModel
 
 @property (nonatomic, strong) NSString *placeId;
 @property (nonatomic, strong) NSString *name;

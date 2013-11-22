@@ -20,6 +20,8 @@
 		5F36EE3117C82A5900FC425E /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2617C82A5900FC425E /* AFURLConnectionOperation.m */; };
 		5F36EE3217C82A5900FC425E /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2817C82A5900FC425E /* AFXMLRequestOperation.m */; };
 		5F36EE3317C82A5900FC425E /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F36EE2A17C82A5900FC425E /* UIImageView+AFNetworking.m */; };
+		5F3D59E7183ED58A00A7D3AF /* DFDateFormatterFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F3D59E6183ED58A00A7D3AF /* DFDateFormatterFactory.m */; };
+		5F3D59EA183EF88000A7D3AF /* MVBaseDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F3D59E9183EF88000A7D3AF /* MVBaseDataModel.m */; };
 		5FC3C665183BAF2600D7951F /* MVOAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */; };
 		5FFB3DEA1794072200B51480 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DE91794072200B51480 /* UIKit.framework */; };
 		5FFB3DEC1794072200B51480 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DEB1794072200B51480 /* Foundation.framework */; };
@@ -83,6 +85,10 @@
 		5F36EE2817C82A5900FC425E /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		5F36EE2917C82A5900FC425E /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		5F36EE2A17C82A5900FC425E /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		5F3D59E5183ED58A00A7D3AF /* DFDateFormatterFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DFDateFormatterFactory.h; sourceTree = "<group>"; };
+		5F3D59E6183ED58A00A7D3AF /* DFDateFormatterFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DFDateFormatterFactory.m; sourceTree = "<group>"; };
+		5F3D59E8183EF88000A7D3AF /* MVBaseDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVBaseDataModel.h; sourceTree = "<group>"; };
+		5F3D59E9183EF88000A7D3AF /* MVBaseDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVBaseDataModel.m; sourceTree = "<group>"; };
 		5FC3C663183BAF2600D7951F /* MVOAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVOAuthViewController.h; sourceTree = "<group>"; };
 		5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVOAuthViewController.m; sourceTree = "<group>"; };
 		5FFB3DE61794072200B51480 /* MovesSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovesSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -199,6 +205,17 @@
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
+		5F3D59E4183ED46200A7D3AF /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				5F3D59E5183ED58A00A7D3AF /* DFDateFormatterFactory.h */,
+				5F3D59E6183ED58A00A7D3AF /* DFDateFormatterFactory.m */,
+				5FC3C663183BAF2600D7951F /* MVOAuthViewController.h */,
+				5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */,
+			);
+			path = internal;
+			sourceTree = "<group>";
+		};
 		5FFB3DDD1794072200B51480 = {
 			isa = PBXGroup;
 			children = (
@@ -261,12 +278,11 @@
 		5FFB3E0C179407EE00B51480 /* moves-ios-sdk */ = {
 			isa = PBXGroup;
 			children = (
+				5F3D59E4183ED46200A7D3AF /* internal */,
 				5FFB3E0D179407EE00B51480 /* 3rdParty */,
 				5FFB3E11179407EE00B51480 /* models */,
 				5FFB3E29179407EE00B51480 /* MovesAPI.h */,
 				5FFB3E2A179407EE00B51480 /* MovesAPI.m */,
-				5FC3C663183BAF2600D7951F /* MVOAuthViewController.h */,
-				5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */,
 			);
 			name = "moves-ios-sdk";
 			path = "../../moves-ios-sdk";
@@ -305,6 +321,8 @@
 				5FFB3E25179407EE00B51480 /* MVTrackPoint.m */,
 				5FFB3E26179407EE00B51480 /* MVUser.h */,
 				5FFB3E27179407EE00B51480 /* MVUser.m */,
+				5F3D59E8183EF88000A7D3AF /* MVBaseDataModel.h */,
+				5F3D59E9183EF88000A7D3AF /* MVBaseDataModel.m */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -455,6 +473,7 @@
 				5FFB3E2D179407EE00B51480 /* MVDailyActivity.m in Sources */,
 				5FFB3E2E179407EE00B51480 /* MVDailyPlace.m in Sources */,
 				5FFB3E2F179407EE00B51480 /* MVDailySummary.m in Sources */,
+				5F3D59E7183ED58A00A7D3AF /* DFDateFormatterFactory.m in Sources */,
 				5FFB3E30179407EE00B51480 /* MVLocation.m in Sources */,
 				5FFB3E31179407EE00B51480 /* MVPlace.m in Sources */,
 				5FFB3E32179407EE00B51480 /* MVSegment.m in Sources */,
@@ -472,6 +491,7 @@
 				5F36EE3017C82A5900FC425E /* AFPropertyListRequestOperation.m in Sources */,
 				5F36EE3117C82A5900FC425E /* AFURLConnectionOperation.m in Sources */,
 				5F36EE3217C82A5900FC425E /* AFXMLRequestOperation.m in Sources */,
+				5F3D59EA183EF88000A7D3AF /* MVBaseDataModel.m in Sources */,
 				5F36EE3317C82A5900FC425E /* UIImageView+AFNetworking.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

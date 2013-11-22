@@ -6,9 +6,9 @@
 //  Copyright (c) 2013年 vito. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "MVBaseDataModel.h"
 
-@interface MVTrackPoint : NSObject
+@interface MVTrackPoint : MVBaseDataModel
 
 @property (nonatomic) CGFloat lat;
 @property (nonatomic) CGFloat lon;

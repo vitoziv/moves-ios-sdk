@@ -6,9 +6,9 @@
 //  Copyright (c) 2013年 vito. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "MVBaseDataModel.h"
 
-@interface MVUser : NSObject
+@interface MVUser : MVBaseDataModel
 
 @property (nonatomic, strong) NSString *userId;
 @property (nonatomic, strong) NSDate *firstDate;

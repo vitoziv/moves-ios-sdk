@@ -6,7 +6,7 @@
 //  Copyright (c) 2013年 vito. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "MVBaseDataModel.h"
 
 typedef NS_ENUM(NSInteger, MVActivityType) {
     MVActivityTypeWalking = 0,
@@ -15,7 +15,7 @@ typedef NS_ENUM(NSInteger, MVActivityType) {
     MVActivityTypeTransport
 };
 
-@interface MVSummary : NSObject
+@interface MVSummary : MVBaseDataModel
 
 @property (nonatomic) MVActivityType activity;
 @property (nonatomic) NSUInteger duration;
