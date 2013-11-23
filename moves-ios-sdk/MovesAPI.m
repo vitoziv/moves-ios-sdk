@@ -100,7 +100,7 @@
 - (BOOL)canHandleOpenUrl:(NSURL *)url {
     BOOL canHandle = NO;
     
-    if ([url.absoluteString hasPrefix:BASE_DOMAIN]) {
+    if ([url.absoluteString hasPrefix:BASE_DOMAIN] || [url.absoluteString hasPrefix:@"MovesSDKDemo://authorization-completed"]) {
         [self handleOpenUrl:url completion:nil];
         canHandle = YES;
     }
