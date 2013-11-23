@@ -39,23 +39,23 @@
 
 - (IBAction)dayUrl:(id)sender {
     [self.indicatorView startAnimating];
-    [[MovesAPI sharedInstance] getDayDailySummariesByDate:[NSDate date]
-                                                  success:^(NSArray *dailySummaries) {
-                                                      [self printDailySummaries:dailySummaries];
-                                                  }
-                                                  failure:^(NSError *error) {
-                                                      [self printErrorWithDescription:[NSString stringWithFormat:@"Get day dailySummaries error: %@", error]];
-                                                  }];
+//    [[MovesAPI sharedInstance] getDayDailySummariesByDate:[NSDate date]
+//                                                  success:^(NSArray *dailySummaries) {
+//                                                      [self printDailySummaries:dailySummaries];
+//                                                  }
+//                                                  failure:^(NSError *error) {
+//                                                      [self printErrorWithDescription:[NSString stringWithFormat:@"Get day dailySummaries error: %@", error]];
+//                                                  }];
     
     
-//    [[MovesAPI sharedInstance] getDayStoryLineByDate:[NSDate date]
-//                                         trackPoints:YES
-//                                             success:^(NSArray *storyLines) {
-//                                                 [self printStoryLine:storyLines];
-//                                             }
-//                                             failure:^(NSError *error) {
-//                                                 [self printErrorWithDescription:[NSString stringWithFormat:@"Get day storyLine error: %@", error]];
-//                                             }];
+    [[MovesAPI sharedInstance] getDayStoryLineByDate:[NSDate date]
+                                         trackPoints:YES
+                                             success:^(NSArray *storyLines) {
+                                                 [self printStoryLine:storyLines];
+                                             }
+                                             failure:^(NSError *error) {
+                                                 [self printErrorWithDescription:[NSString stringWithFormat:@"Get day storyLine error: %@", error]];
+                                             }];
     
 //    [[MovesAPI sharedInstance] getDayDailyPlacesByDate:[NSDate date]
 //                                               success:^(NSArray *dailyPlaces) {
@@ -78,20 +78,20 @@
 - (IBAction)weekUrl:(id)sender {
     [self.indicatorView startAnimating];
     
-    [[MovesAPI sharedInstance] getWeekDailySummariesByDate:[NSDate date]
-                                                   success:^(NSArray *dailySummaries) {
-                                                       [self printDailySummaries:dailySummaries];
-                                                   } failure:^(NSError *error) {
-                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak dailySummaries error: %@", error]];
-                                                   }];
+//    [[MovesAPI sharedInstance] getWeekDailySummariesByDate:[NSDate date]
+//                                                   success:^(NSArray *dailySummaries) {
+//                                                       [self printDailySummaries:dailySummaries];
+//                                                   } failure:^(NSError *error) {
+//                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak dailySummaries error: %@", error]];
+//                                                   }];
     
-//    [[MovesAPI sharedInstance] getWeekStoryLineByDate:[NSDate date]
-//                                              success:^(NSArray *storyLines) {
-//                                                  [self printStoryLine:storyLines];
-//                                              }
-//                                              failure:^(NSError *error) {
-//                                                  [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak StoryLine error: %@", error]];
-//                                              }];
+    [[MovesAPI sharedInstance] getWeekStoryLineByDate:[NSDate date]
+                                              success:^(NSArray *storyLines) {
+                                                  [self printStoryLine:storyLines];
+                                              }
+                                              failure:^(NSError *error) {
+                                                  [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak StoryLine error: %@", error]];
+                                              }];
 
 //    [[MovesAPI sharedInstance] getWeekDailyPlacesByDate:[NSDate date]
 //                                                success:^(NSArray *dailyPlaces) {
@@ -142,14 +142,20 @@
 //                                                        [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays dailyActivities error: %@", error]];
 //                                                    }];
     
-    [[MovesAPI sharedInstance] getDailyPlacesByPastDays:7
-                                                success:^(NSArray *dailyPlaces) {
-                                                    [self printDailyPlaces:dailyPlaces];
-                                                }
-                                                failure:^(NSError *error) {
-                                                    [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays DailyPlaces error: %@", error]];
-                                                }];
-    
+//    [[MovesAPI sharedInstance] getDailyPlacesByPastDays:7
+//                                                success:^(NSArray *dailyPlaces) {
+//                                                    [self printDailyPlaces:dailyPlaces];
+//                                                }
+//                                                failure:^(NSError *error) {
+//                                                    [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays DailyPlaces error: %@", error]];
+//                                                }];
+ 
+    [[MovesAPI sharedInstance] getDailyStoryLineByPastDays:6
+                                                   success:^(NSArray *storyLines) {
+                                                       [self printStoryLine:storyLines];
+                                                   } failure:^(NSError *error) {
+                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo DailyStoryLines error: %@", error]];
+                                                   }];
 }
 
 - (IBAction)fromToUrl:(id)sender {
@@ -175,14 +181,22 @@
 //                                                      [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo dailyActivities error: %@", error]];
 //                                                  }];
     
-    [[MovesAPI sharedInstance] getDailyPlacesFromDate:[[NSDate date] dateByAddingTimeInterval:-6*24*60*60] // Notice: Max range is 7
-                                               toDate:[NSDate date]
-                                              success:^(NSArray *dailyPlaces) {
-                                                  [self printDailyPlaces:dailyPlaces];
-                                              }
-                                              failure:^(NSError *error) {
-                                                  [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo DailyPlaces error: %@", error]];
-                                              }];
+//    [[MovesAPI sharedInstance] getDailyPlacesFromDate:[[NSDate date] dateByAddingTimeInterval:-6*24*60*60] // Notice: Max range is 7
+//                                               toDate:[NSDate date]
+//                                              success:^(NSArray *dailyPlaces) {
+//                                                  [self printDailyPlaces:dailyPlaces];
+//                                              }
+//                                              failure:^(NSError *error) {
+//                                                  [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo DailyPlaces error: %@", error]];
+//                                              }];
+    
+    [[MovesAPI sharedInstance] getDailyStoryLineFromDate:[[NSDate date] dateByAddingTimeInterval:-1*24*60*60]
+                                                  toDate:[NSDate date]
+                                                 success:^(NSArray *storyLines) {
+                                                     [self printStoryLine:storyLines];
+                                                 } failure:^(NSError *error) {
+                                                     [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo DailyStoryLines error: %@", error]];
+                                                 }];
 }
 
 #pragma mark - Helper
