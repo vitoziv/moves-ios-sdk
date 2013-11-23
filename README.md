@@ -9,7 +9,7 @@ moves-ios-sdk
 ##Installing the moves-ios-sdk
 **1. CocoaPods**
 
-- Add the ``pod 'moves-ios-sdk', '~> 0.0.4'`` pod to your **Podfile**. 
+- Add the ``pod 'moves-ios-sdk', '~> 0.1.0'`` pod to your **Podfile**. 
 - Run ``pod install``, and the Moves SDK will be available in your project.
 
 What's [CocoaPods](http://cocoapods.org/).
@@ -77,11 +77,12 @@ Give the SDK an opportunity to handle incoming URLs.
 ```
 #Authorization 
 ```Objc
-[[MovesAPI sharedInstance] authorizationSuccess:^{
-    // Auth successed! Now you can get Moves's data
-} failure:^(NSError *reason) {
-    // Auth failed!
-}];
+[[MovesAPI sharedInstance] authorizationWithViewController:self
+                                                       success:^{
+                                                           // Auth successed! Now you can get Moves's data
+                                                       } failure:^(NSError *error) {
+                                                           // Auth failed!
+                                                       }];
 ```
 #Start get Moves's data
 Get user profile
