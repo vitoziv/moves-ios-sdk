@@ -394,7 +394,7 @@
     // Step 1.
     if (!self.accessToken) {
         NSError *authError = [NSError errorWithDomain:@"MovesAPI Auth Error" code:401 userInfo:@{@"ErrorReason": @"no_access_token"}];
-        failure(authError);
+        if (failure) failure(authError);
     } else {
         // Step 2. If accessToken is out of date, try to get a new one
         if ([self isAccessTokenExpiry]) {
@@ -426,9 +426,9 @@
                     NSLog(@"expired_access_token");
                     
                     NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
-                    failure(expiredError);
+                    if (failure) failure(expiredError);
                 } else {
-                    failure(error);
+                    if (failure) failure(error);
                 }
             }];
             
@@ -608,7 +608,7 @@
                       failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE date:date dateFormat:kDateFormatTypeDay];
     if (trackPoints) {
-        urlString = [urlString stringByAppendingFormat:@"%@", @"?trackPoints=true"];
+        urlString = [urlString stringByAppendingString:@"?trackPoints=true"];
     }
     [self getJsonByUrl:urlString
                success:^(id json) {
@@ -632,8 +632,8 @@
                            toDate:(NSDate *)toDate
                           success:(void(^)(NSArray *storyLines))success
                           failure:(void(^)(NSError *error))failure {
-    NSString *url = [self urlByMVUrl:MV_URL_STORYLINE fromDate:fromDate toDate:toDate];
-    [self getJsonByUrl:url
+    NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE fromDate:fromDate toDate:toDate];
+    [self getJsonByUrl:urlString
                success:^(id json) {
                    if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
                }
@@ -643,8 +643,8 @@
 - (void)getDailyStoryLineByPastDays:(NSInteger)pastDays
                             success:(void(^)(NSArray *storyLines))success
                             failure:(void(^)(NSError *error))failure {
-    NSString *url = [self urlByMVUrl:MV_URL_STORYLINE pastDays:pastDays];
-    [self getJsonByUrl:url
+    NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE pastDays:pastDays];
+    [self getJsonByUrl:urlString
                success:^(id json) {
                    if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
                }

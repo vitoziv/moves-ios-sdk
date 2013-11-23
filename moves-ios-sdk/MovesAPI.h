@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, MVScopeType) {
 };
 
 typedef void(^MVAuthorizationSuccessBlock)(void);
-typedef void(^MVAuthorizationFailureBlock)(NSError *reason);
+typedef void(^MVAuthorizationFailureBlock)(NSError *error);
 
 @interface MovesAPI : NSObject
 
