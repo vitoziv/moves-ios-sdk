@@ -7,6 +7,7 @@
 //
 
 #import "MVSegment.h"
+#import "DFDateFormatterFactory.h"
 
 @implementation MVSegment
 
@@ -28,11 +29,12 @@
         }
     }
     
+    NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
     if (dic[@"startTime"]) {
-        self.startTime = dic[@"startTime"];
+        self.startTime = [formatter dateFromString:dic[@"startTime"]];
     }
     if (dic[@"endTime"]) {
-        self.endTime = dic[@"endTime"];
+        self.endTime = [formatter dateFromString:dic[@"endTime"]];
     }
     if (dic[@"place"]) {
         self.place = [[MVPlace alloc] initWithDictionary:dic[@"place"]];

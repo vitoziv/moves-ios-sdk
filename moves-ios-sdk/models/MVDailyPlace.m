@@ -7,6 +7,7 @@
 //
 
 #import "MVDailyPlace.h"
+#import "DFDateFormatterFactory.h"
 
 @implementation MVDailyPlace
 
@@ -19,8 +20,8 @@
 - (MVDailyPlace *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (dic[@"date"]) {
-        self.date = dic[@"date"];
+    if (dic[@"date"]) {NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
+        self.date = [formatter dateFromString:dic[@"date"]];
     }
     
     if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {

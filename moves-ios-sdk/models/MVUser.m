@@ -7,6 +7,7 @@
 //
 
 #import "MVUser.h"
+#import "DFDateFormatterFactory.h"
 
 @implementation MVUser
 
@@ -24,7 +25,8 @@
     }
     if (dic[@"profile"]) {
         if (dic[@"profile"][@"firstDate"]) {
-            self.firstDate = dic[@"profile"][@"firstDate"];
+            NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
+            self.firstDate = [formatter dateFromString:dic[@"profile"][@"firstDate"]];
         }
         if (dic[@"profile"][@"caloriesAvailable"]) {
             self.caloriesAvailable = (BOOL)dic[@"profile"][@"caloriesAvailable"];

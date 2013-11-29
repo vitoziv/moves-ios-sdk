@@ -7,6 +7,7 @@
 //
 
 #import "MVActivity.h"
+#import "DFDateFormatterFactory.h"
 
 @implementation MVActivity
 
@@ -32,11 +33,12 @@
         self.activity = activityType;
     }
     
+    NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
     if (dic[@"startTime"]) {
-        self.startTime = dic[@"startTime"];
+        self.startTime = [formatter dateFromString:dic[@"startTime"]];
     }
     if (dic[@"endTime"]) {
-        self.endTime = dic[@"endTime"];
+        self.endTime = [formatter dateFromString:dic[@"endTime"]];
     }
     if (dic[@"distance"]) {
         self.distance = [dic[@"distance"] integerValue];

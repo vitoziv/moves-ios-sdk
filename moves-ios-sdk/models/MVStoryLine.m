@@ -7,6 +7,7 @@
 //
 
 #import "MVStoryLine.h"
+#import "DFDateFormatterFactory.h"
 
 @implementation MVStoryLine
 
@@ -20,7 +21,8 @@
     self = [super init];
     
     if (dic[@"date"]) {
-        self.date = dic[@"date"];
+        NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
+        self.date = [formatter dateFromString:dic[@"date"]];
     }
     if (dic[@"caloriesIdle"]) {
         self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
