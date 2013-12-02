@@ -108,3 +108,7 @@ The **moves-ios-sdk** uses the following open source software:
 #License
 
 See the [MIT license](https://github.com/vitoziv/moves-ios-sdk/blob/master/LICENSE).
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/vitoziv/moves-ios-sdk/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
