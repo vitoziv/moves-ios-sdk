@@ -2,7 +2,7 @@ moves-ios-sdk
 =============
 [Moves App](http://moves-app.com) SDK For iOS. 
 
-![Moves App Integration](https://dev.moves-app.com/assets/images/moves-api.png)
+![Moves App Integration](https://apps.moves-app.com/assets/images/moves-connected-apps-logo-2.png)
 
 #Getting Started
 
@@ -12,14 +12,11 @@ moves-ios-sdk
 - Add the ``pod 'moves-ios-sdk', '~> 0.1.0'`` pod to your **Podfile**. 
 - Run ``pod install``, and the Moves SDK will be available in your project.
 
-What's [CocoaPods](http://cocoapods.org/).
-See the documentation on the CocoaPods website if you want to set up a new or existing project.
-
 **2. Add the moves-ios-sdk to your project**
+
 - Open your existing project.
 - Drag the **moves-ios-sdk** folder from the example project into your Xcode project.
 - Make sure the “Copy items into destination group’s folder (if needed)” checkbox is checked.
-- In this case you need to add [AFNetworking](https://github.com/AFNetworking/AFNetworking) to your project.
 
 ##Get ClientId and ClientSecret
 When you register your app with Moves, it will provide you with a **Client ID** and **Client secret**. They identify your app to Moves's API. 
