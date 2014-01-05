@@ -7,7 +7,6 @@
 //
 
 #import "MovesAPI.h"
-#import "AFNetworking.h"
 #import "MVOAuthViewController.h"
 #import "DFDateFormatterFactory.h"
 
@@ -200,36 +199,50 @@
                             success:(void(^)(void))success
                             failure:(void(^)(NSError *reason))failure
 {
-    NSDictionary *params;
+    NSString *params;
     NSString *path = @"/oauth/v1/access_token";
     
     if(self.accessToken) {
-        params = @{@"grant_type":@"refresh_token",
-                   @"refresh_token":self.refreshToken,
-                   @"client_id":self.oauthClientId,
-                   @"client_secret":self.oauthClientSecret};
+        params = [NSString stringWithFormat:@"grant_type=refresh_token&refresh_token=%@&client_id=%@&client_secret=%@",
+                  self.refreshToken,
+                  self.oauthClientId,
+                  self.oauthClientSecret];
     } else {
-        params = @{@"grant_type":@"authorization_code",
-                   @"code":code,
-                   @"client_id":self.oauthClientId,
-                   @"client_secret":self.oauthClientSecret,
-                   @"redirect_uri":[self oauthRedirectUri]};
+        params = [NSString stringWithFormat:@"grant_type=authorization_code&code=%@&client_id=%@&client_secret=%@&redirect_uri=%@",
+                  code,
+                  self.oauthClientId,
+                  self.oauthClientSecret,
+                  [self oauthRedirectUri]];
     }
     
-    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:BASE_DOMAIN]];
-    [client postPath:path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:responseObject
-                                                                    options:NSJSONReadingMutableLeaves
-                                                                      error:nil];
-        
-        [self updateUserDefaultsWithAccessToken:responseDic[@"access_token"]
-                                   refreshToken:responseDic[@"refresh_token"]
-                                      andExpiry:responseDic[@"expires_in"]];
-        if (success) success();
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error.userInfo);
-        if (failure) failure(error);
-    }];
+    NSString *url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN, path];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPBody = [params dataUsingEncoding:NSUTF8StringEncoding];
+    request.HTTPMethod = @"POST";
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    [[session dataTaskWithRequest:request
+                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                    
+                    if (!error) {
+                        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data
+                                                                                    options:NSJSONReadingMutableLeaves
+                                                                                      error:nil];
+                        
+                        [self updateUserDefaultsWithAccessToken:responseDic[@"access_token"]
+                                                   refreshToken:responseDic[@"refresh_token"]
+                                                      andExpiry:responseDic[@"expires_in"]];
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^(void) {
+                            if (success) success();
+                        });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^(void) {
+                            if (failure) failure(error);
+                        });
+                    }
+                    
+                }] resume];
 }
 
 - (BOOL)isAuthenticated
@@ -405,7 +418,7 @@
                                       failure:failure];
         } else {
             // Step 3. Everthing is right, now try to getting data
-            NSLog(@"Moves demo request url: %@", url);
+            NSLog(@"Moves request url: %@", url);
             
             NSRange range = [url rangeOfString:@"?" options:NSCaseInsensitiveSearch];
             if (range.location != NSNotFound) {
@@ -418,21 +431,40 @@
                                                                    cachePolicy:NSURLRequestReloadRevalidatingCacheData
                                                                timeoutInterval:25];
             
-            AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                if (success) success(JSON);
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                // Cause your app was revoked in Moves app.
-                if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
-                    NSLog(@"expired_access_token");
-                    
-                    NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
-                    if (failure) failure(expiredError);
-                } else {
-                    if (failure) failure(error);
-                }
-            }];
-            
-            [operation start];
+            NSURLSession *session = [NSURLSession sharedSession];
+            [[session dataTaskWithRequest:request
+                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                            
+                            if (!error) {
+                                NSError *jsonError;
+                                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data
+                                                                                            options:NSJSONReadingMutableLeaves
+                                                                                              error:&jsonError];
+                                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                    if (!jsonError) {
+                                        if (success) success(responseDic);
+                                    } else {
+                                        if (failure) failure(jsonError);
+                                    }
+                                });
+                            } else {
+                                // Cause your app was revoked in Moves app.
+                                if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
+                                    NSLog(@"expired_access_token");
+                                    
+                                    NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
+                                    
+                                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                        if (failure) failure(expiredError);
+                                    });
+                                } else {
+                                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                        if (failure) failure(error);
+                                    });
+                                }
+                            }
+                            
+                        }] resume];
         }
     }
     
