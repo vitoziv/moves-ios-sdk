@@ -13,13 +13,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    [[MovesAPI sharedInstance] setShareMovesOauthClientId:@"[YOUR CLIENT ID]"
-//                                        oauthClientSecret:@"[YOUR CLIENT SECRET]"
-//                                        callbackUrlScheme:@"[URL SCHEME / REDRECT URI]"];
-    
-    [[MovesAPI sharedInstance] setShareMovesOauthClientId:@"avm3AYjrb5xe1dLfOtZnXEhWMvERxS3a"
-                                        oauthClientSecret:@"JwTTP04R3d6Up0vrDNtUZJdlnyI6aLKR7WaioebZ1W9uMnkCy0JO23o0pZnv2NrJ"
-                                        callbackUrlScheme:@"MovesSDKDemo"];
+    [[MovesAPI sharedInstance] setShareMovesOauthClientId:@"[YOUR CLIENT ID]"
+                                        oauthClientSecret:@"[YOUR CLIENT SECRET]"
+                                        callbackUrlScheme:@"[URL SCHEME / REDRECT URI]"];
     return YES;
 }
 
