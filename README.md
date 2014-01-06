@@ -95,7 +95,6 @@ More other API see the ``MovesAPI.h`` file
 #Acknowledgements
 The **moves-ios-sdk** uses the following open source software:
 
-- [AFNetworking](https://github.com/AFNetworking/AFNetworking)
 - [Moves Official API Documents](https://dev.moves-app.com/)
 
 #API Terms
