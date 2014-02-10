@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSArray *segments;
+@property (nonatomic, strong) NSArray *summaries;
 @property (nonatomic) NSInteger caloriesIdle;
 @property (nonatomic, readonly) NSInteger dailyCalories;
 

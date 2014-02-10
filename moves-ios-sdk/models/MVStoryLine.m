@@ -30,6 +30,16 @@
             }
             _segments = segments;
         }
+        
+        if ([dic[@"summary"] isKindOfClass:[NSArray class]]) {
+            NSMutableArray *summaries = [[NSMutableArray alloc] init];
+            for (NSDictionary *summary in dic[@"summary"]) {
+                [summaries addObject:[[MVSummary alloc] initWithDictionary:summary]];
+            }
+            if (summaries.count > 0) {
+                _summaries = summaries;
+            }
+        }
     }
     
     
