@@ -12,9 +12,8 @@
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSArray *summaries;
+@property (nonatomic, strong) NSDate *lastUpdate;
 @property (nonatomic) NSInteger caloriesIdle;
 @property (nonatomic, readonly) NSInteger dailyCalories;
-
-- (MVDailySummary *)initWithDictionary:(NSDictionary *)dic;
 
 @end

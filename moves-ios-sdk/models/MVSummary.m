@@ -10,39 +10,25 @@
 
 @implementation MVSummary
 
-- (id)init {
-    if (self = [super init]) {
-    }
-    return self;
-}
-
 - (MVSummary *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (dic[@"duration"]) {
-        self.duration = [dic[@"duration"] integerValue];
-    }
-    if (dic[@"distance"]) {
-        self.distance = [dic[@"distance"] integerValue];
-    }
-    if (dic[@"steps"]) {
-        self.steps = [dic[@"steps"] integerValue];
-    }
-    if (dic[@"calories"]) {
-        self.calories = [dic[@"calories"] integerValue];
-    }
-    
-    if (dic[@"activity"]) {
-        MVActivityType activityType = MVActivityTypeWalking;
-        NSString *activityName = dic[@"activity"];
-        if ([activityName isEqual: @"run"]) {
-            activityType = MVActivityTypeRunning;
-        } else if ([activityName isEqual: @"cyc"]){
-            activityType = MVActivityTypeCycling;
-        } else if ([activityName isEqual: @"trp"]){
-            activityType = MVActivityTypeTransport;
+    if (self) {
+        if (dic[@"duration"]) {
+            _duration = [dic[@"duration"] integerValue];
         }
-        self.activity = activityType;
+        if (dic[@"distance"]) {
+            _distance = [dic[@"distance"] integerValue];
+        }
+        if (dic[@"steps"]) {
+            _steps = [dic[@"steps"] integerValue];
+        }
+        if (dic[@"calories"]) {
+            _calories = [dic[@"calories"] integerValue];
+        }
+        
+        _activity = dic[@"activity"];
+        _group = dic[@"group"];
     }
     
     return self;

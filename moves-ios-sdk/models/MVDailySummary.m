@@ -12,29 +12,31 @@
 
 @implementation MVDailySummary
 
-- (id)init {
-    if (self = [super init]) {
-    }
-    return self;
-}
-
 - (MVDailySummary *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (dic[@"date"]) {NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
-        self.date = [formatter dateFromString:dic[@"date"]];
-    }
-    if (dic[@"caloriesIdle"]) {
-        self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
-    }
-    
-    if ([dic[@"summary"] isKindOfClass:[NSArray class]]) {
-        NSMutableArray *summaries = [[NSMutableArray alloc] init];
-        for (NSDictionary *summary in dic[@"summary"]) {
-            [summaries addObject:[[MVSummary alloc] initWithDictionary:summary]];
+    if (self) {
+        if (dic[@"date"]) {
+            NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
+            _date = [formatter dateFromString:dic[@"date"]];
         }
-        if (summaries.count>0) {
-            self.summaries = summaries;
+        if (dic[@"caloriesIdle"]) {
+            _caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+        }
+        
+        if (dic[@"lastUpdate"]) {
+            NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
+            _lastUpdate = [formatter dateFromString:dic[@"lastUpdate"]];
+        }
+        
+        if ([dic[@"summary"] isKindOfClass:[NSArray class]]) {
+            NSMutableArray *summaries = [[NSMutableArray alloc] init];
+            for (NSDictionary *summary in dic[@"summary"]) {
+                [summaries addObject:[[MVSummary alloc] initWithDictionary:summary]];
+            }
+            if (summaries.count>0) {
+                _summaries = summaries;
+            }
         }
     }
     

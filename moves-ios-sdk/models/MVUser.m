@@ -11,33 +11,28 @@
 
 @implementation MVUser
 
-- (id)init {
-    if (self = [super init]) {
-    }
-    return self;
-}
-
 - (MVUser *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (dic[@"userId"]) {
-        self.userId = [dic[@"userId"] stringValue];
-    }
-    if (dic[@"profile"]) {
-        if (dic[@"profile"][@"firstDate"]) {
-            NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
-            self.firstDate = [formatter dateFromString:dic[@"profile"][@"firstDate"]];
-        }
-        if (dic[@"profile"][@"caloriesAvailable"]) {
-            self.caloriesAvailable = (BOOL)dic[@"profile"][@"caloriesAvailable"];
-        }
-        if (dic[@"profile"][@"currentTimeZone"]) {
-            if (dic[@"profile"][@"currentTimeZone"][@"id"]) {
-                self.currentTimeZoneId = dic[@"profile"][@"currentTimeZone"][@"id"];
+    if (self) {
+        _userId = dic[@"userId"];
+        NSDictionary *profile = dic[@"profile"];
+        if (profile) {
+            if (profile[@"firstDate"]) {
+                NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
+                _firstDate = [formatter dateFromString:profile[@"firstDate"]];
             }
-            if (dic[@"profile"][@"currentTimeZone"][@"offset"]) {
-                self.currentTimeZoneOffset = [(NSNumber *)dic[@"profile"][@"currentTimeZone"][@"offset"] intValue];
+            if (profile[@"currentTimeZone"]) {
+                _currentTimeZoneId = profile[@"currentTimeZone"][@"id"];
+                if (profile[@"currentTimeZone"][@"offset"]) {
+                    _currentTimeZoneOffset = [profile[@"currentTimeZone"][@"offset"] integerValue];
+                }
             }
+            if (profile[@"localization"]) {
+                _localization = [[MVLocalization alloc] initWithDictionary:profile[@"localization"]];
+            }
+            _caloriesAvailable = [profile[@"caloriesAvailable"] boolValue];
+            _platform = profile[@"platform"];
         }
     }
     

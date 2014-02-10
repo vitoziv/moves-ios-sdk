@@ -10,30 +10,24 @@
 
 @implementation MVPlace
 
-- (id)init {
-    if (self = [super init]) {
-    }
-    
-    return self;
-}
-
 - (MVPlace *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
-    
-    if (dic[@"id"]) {
-        self.placeId = dic[@"id"];
-    }
-    if (dic[@"name"]) {
-        self.name = dic[@"name"];
-    }
-    if (dic[@"type"]) {
-        self.type = dic[@"type"];
-    }
-    if (dic[@"foursquareId"]) {
-        self.foursquareId = dic[@"foursquareId"];
-    }
-    if (dic[@"location"]) {
-        self.location = [[MVLocation alloc] initWithDictionary:dic[@"location"]];
+    if (self) {
+        if (dic[@"id"]) {
+            _placeId = dic[@"id"];
+        }
+        if (dic[@"name"]) {
+            _name = dic[@"name"];
+        }
+        if (dic[@"type"]) {
+            _type = dic[@"type"];
+        }
+        if (dic[@"foursquareId"]) {
+            _foursquareId = dic[@"foursquareId"];
+        }
+        if (dic[@"location"]) {
+            _location = [[MVLocation alloc] initWithDictionary:dic[@"location"]];
+        }
     }
     
     return self;

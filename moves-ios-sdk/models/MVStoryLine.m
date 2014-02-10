@@ -11,30 +11,27 @@
 
 @implementation MVStoryLine
 
-- (id)init {
-    if (self = [super init]) {
-    }
-    return self;
-}
-
 - (MVStoryLine *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (dic[@"date"]) {
-        NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
-        self.date = [formatter dateFromString:dic[@"date"]];
-    }
-    if (dic[@"caloriesIdle"]) {
-        self.caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+    if (self) {
+        if (dic[@"date"]) {
+            NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
+            _date = [formatter dateFromString:dic[@"date"]];
+        }
+        if (dic[@"caloriesIdle"]) {
+            _caloriesIdle = [dic[@"caloriesIdle"] integerValue];
+        }
+        
+        if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {
+            NSMutableArray *segments = [[NSMutableArray alloc] init];
+            for (NSDictionary *segment in dic[@"segments"]) {
+                [segments addObject:[[MVSegment alloc] initWithDictionary:segment]];
+            }
+            _segments = segments;
+        }
     }
     
-    if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {
-        NSMutableArray *segments = [[NSMutableArray alloc] init];
-        for (NSDictionary *segment in dic[@"segments"]) {
-            [segments addObject:[[MVSegment alloc] initWithDictionary:segment]];
-        }
-        self.segments = segments;
-    }
     
     return self;
 }

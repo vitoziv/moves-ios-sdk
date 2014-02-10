@@ -17,6 +17,4 @@
 @property (nonatomic, strong) NSString *foursquareId;
 @property (nonatomic) MVLocation *location;
 
-- (MVPlace *)initWithDictionary:(NSDictionary *)dic;
-
 @end

@@ -12,6 +12,7 @@
 
 @interface MVActivity : MVSummary
 
+@property (nonatomic) BOOL manual;
 @property (nonatomic, strong) NSDate *startTime;
 @property (nonatomic, strong) NSDate *endTime;
 @property (nonatomic, strong) NSArray *trackPoints;

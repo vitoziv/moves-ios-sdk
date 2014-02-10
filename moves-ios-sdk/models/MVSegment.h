@@ -10,19 +10,13 @@
 #import "MVPlace.h"
 #import "MVActivity.h"
 
-typedef NS_ENUM(NSInteger, MVSegmentType) {
-    MVSegmentTypeMove = 0,
-    MVSegmentTypePlace
-};
-
 @interface MVSegment : MVBaseDataModel
 
-@property (nonatomic) MVSegmentType type;
+@property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSDate *startTime;
 @property (nonatomic, strong) NSDate *endTime;
 @property (nonatomic, strong) MVPlace *place;
 @property (nonatomic, strong) NSArray *activities;
-
-- (MVSegment *)initWithDictionary:(NSDictionary *)dic;
+@property (nonatomic, strong) NSDate *lastUpdate;
 
 @end

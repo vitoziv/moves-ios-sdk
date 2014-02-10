@@ -13,6 +13,4 @@
 @property (nonatomic) CGFloat lat;
 @property (nonatomic) CGFloat lon;
 
-- (MVLocation *)initWithDictionary:(NSDictionary *)dic;
-
 @end

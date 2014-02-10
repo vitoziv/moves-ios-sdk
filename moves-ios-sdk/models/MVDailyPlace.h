@@ -13,7 +13,6 @@
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSArray *segments;
-
-- (MVDailyPlace *)initWithDictionary:(NSDictionary *)dic;
+@property (nonatomic, strong) NSDate *lastUpdate;
 
 @end

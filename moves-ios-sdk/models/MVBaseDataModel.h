@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 
 @interface MVBaseDataModel : NSObject
-- (id)initWithDictionary:(NSDictionary *)dic;
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
 @end

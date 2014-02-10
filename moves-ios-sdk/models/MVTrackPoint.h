@@ -12,8 +12,6 @@
 
 @property (nonatomic) CGFloat lat;
 @property (nonatomic) CGFloat lon;
-@property (nonatomic) NSTimeInterval time;
-
-- (MVTrackPoint *)initWithDictionary:(NSDictionary *)dic;
+@property (nonatomic) NSDate *time;
 
 @end

@@ -10,20 +10,17 @@
 
 @implementation MVLocation
 
-- (id)init {
-    if (self = [super init]) {
-    }
-    return self;
-}
-
 - (MVLocation *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (dic[@"lat"]) {
-        self.lat = [dic[@"lat"] floatValue];
-    }
-    if (dic[@"lon"]) {
-        self.lon = [dic[@"lon"] floatValue];
+    if (self) {
+        
+        if (dic[@"lat"]) {
+            _lat = [dic[@"lat"] floatValue];
+        }
+        if (dic[@"lon"]) {
+            _lon = [dic[@"lon"] floatValue];
+        }
     }
     
     return self;

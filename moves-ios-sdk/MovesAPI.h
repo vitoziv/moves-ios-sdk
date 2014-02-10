@@ -47,9 +47,12 @@ typedef void(^MVAuthorizationFailureBlock)(NSError *error);
 
 - (BOOL)isAuthenticated;
 
-#pragma mark - MVUser
+#pragma mark - General
 - (void)getUserSuccess:(void(^)(MVUser *user))success
                failure:(void(^)(NSError *error))failure;
+
+- (void)getActivityListSuccess:(void(^)(NSArray *activityList))success
+                       failure:(void(^)(NSError *error))failure;
 
 #pragma mark - MVSummary
 - (void)getDayDailySummariesByDate:(NSDate *)date
@@ -82,6 +85,10 @@ typedef void(^MVAuthorizationFailureBlock)(NSError *error);
                              success:(void(^)(NSArray *dailyActivities))success
                              failure:(void(^)(NSError *error))failure;
 
+- (void)getMonthDailyActivitiesByDate:(NSDate *)date
+                              success:(void (^)(NSArray *dailyActivities))success
+                              failure:(void (^)(NSError *error))failure;
+
 - (void)getDailyActivitiesFromDate:(NSDate *)fromDate
                             toDate:(NSDate *)toDate
                            success:(void(^)(NSArray *dailyActivities))success
@@ -100,6 +107,10 @@ typedef void(^MVAuthorizationFailureBlock)(NSError *error);
                          success:(void(^)(NSArray *dailyPlaces))success
                          failure:(void(^)(NSError *error))failure;
 
+- (void)getMonthDailyPlacesByDate:(NSDate *)date
+                          success:(void(^)(NSArray *dailyPlaces))success
+                          failure:(void(^)(NSError *error))failure;
+
 - (void)getDailyPlacesFromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate
                        success:(void(^)(NSArray *dailyPlaces))success
@@ -116,15 +127,22 @@ typedef void(^MVAuthorizationFailureBlock)(NSError *error);
                       failure:(void(^)(NSError *error))failure;
 
 - (void)getWeekStoryLineByDate:(NSDate *)date
+                   trackPoints:(BOOL)trackPoints
                        success:(void(^)(NSArray *storyLines))success
                        failure:(void(^)(NSError *error))failure;
 
+- (void)getMonthStoryLineByDate:(NSDate *)date
+                        success:(void(^)(NSArray *storyLines))success
+                        failure:(void(^)(NSError *error))failure;
+
 - (void)getDailyStoryLineFromDate:(NSDate *)fromDate
                            toDate:(NSDate *)toDate
+                      trackPoints:(BOOL)trackPoints
                           success:(void(^)(NSArray *storyLines))success
                           failure:(void(^)(NSError *error))failure;
 
 - (void)getDailyStoryLineByPastDays:(NSInteger)pastDays
+                        trackPoints:(BOOL)trackPoints
                             success:(void(^)(NSArray *storyLines))success
                             failure:(void(^)(NSError *error))failure;
 @end

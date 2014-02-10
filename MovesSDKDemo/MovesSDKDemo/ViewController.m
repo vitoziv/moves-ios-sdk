@@ -8,12 +8,14 @@
 
 #import "ViewController.h"
 #import "MovesAPI.h"
+#import "NSObject+LogProperties.h"
 
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextView *resultTextView;
 @property (weak, nonatomic) IBOutlet UIButton *authBtn;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicatorView;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @end
 
@@ -23,95 +25,90 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [self.scrollView setContentSize:CGSizeMake(self.scrollView.bounds.size.width, 1080)];
+    CGRect frame = self.scrollView.frame;
+    [self.scrollView setFrame:frame];
+    
+    if ([[MovesAPI sharedInstance] isAuthenticated]) {
+        self.authBtn.selected = YES;
+        [self.authBtn setBackgroundColor:[UIColor colorWithRed:237/255.0 green:103/255.0 blue:214/255.0 alpha:1]];
+    }
 }
 
-- (IBAction)authPress:(id)sender {
+- (IBAction)authPress:(UIButton *)sender {
     [self.indicatorView startAnimating];
-    [[MovesAPI sharedInstance] authorizationWithViewController:self
-                                                       success:^{
-                                                           self.resultTextView.text = @"Auth successed!";
-                                                           [self.indicatorView stopAnimating];
-                                                       } failure:^(NSError *error) {
-                                                           self.resultTextView.text = @"Auth failed!";
-                                                           [self.indicatorView stopAnimating];
-                                                       }];
+    if (sender.selected) {
+        [[MovesAPI sharedInstance] logout];
+        sender.selected = NO;
+        [sender setBackgroundColor:[UIColor colorWithRed:0/255.0 green:212/255.0 blue:90/255.0 alpha:1]];
+        [self.indicatorView stopAnimating];
+    } else {
+        [[MovesAPI sharedInstance] authorizationWithViewController:self
+                                                           success:^{
+                                                               sender.selected = YES;
+                                                               [sender setBackgroundColor:[UIColor colorWithRed:237/255.0 green:103/255.0 blue:214/255.0 alpha:1]];
+                                                               self.resultTextView.text = @"Auth successed!";
+                                                               [self.indicatorView stopAnimating];
+                                                           } failure:^(NSError *error) {
+                                                               sender.selected = NO;
+                                                               [sender setBackgroundColor:[UIColor colorWithRed:0/255.0 green:212/255.0 blue:90/255.0 alpha:1]];
+                                                               self.resultTextView.text = @"Auth failed!";
+                                                               [self.indicatorView stopAnimating];
+                                                           }];
+    }
+    
 }
 
-- (IBAction)dayUrl:(id)sender {
+#pragma mark - General
+
+- (IBAction)requestProfile:(id)sender {
     [self.indicatorView startAnimating];
-//    [[MovesAPI sharedInstance] getDayDailySummariesByDate:[NSDate date]
-//                                                  success:^(NSArray *dailySummaries) {
-//                                                      [self printDailySummaries:dailySummaries];
-//                                                  }
-//                                                  failure:^(NSError *error) {
-//                                                      [self printErrorWithDescription:[NSString stringWithFormat:@"Get day dailySummaries error: %@", error]];
-//                                                  }];
-    
-    
-    [[MovesAPI sharedInstance] getDayStoryLineByDate:[NSDate date]
-                                         trackPoints:YES
-                                             success:^(NSArray *storyLines) {
-                                                 [self printStoryLine:storyLines];
-                                             }
-                                             failure:^(NSError *error) {
-                                                 [self printErrorWithDescription:[NSString stringWithFormat:@"Get day storyLine error: %@", error]];
-                                             }];
-    
-//    [[MovesAPI sharedInstance] getDayDailyPlacesByDate:[NSDate date]
-//                                               success:^(NSArray *dailyPlaces) {
-//                                                   [self printDailyPlaces:dailyPlaces];
-//                                               }
-//                                               failure:^(NSError *error) {
-//                                                   [self printErrorWithDescription:[NSString stringWithFormat:@"Get day DailyPlaces error: %@", error]];
-//                                               }];
-
-
-//    [[MovesAPI sharedInstance] getDayDailyActivitiesByDate:[NSDate date]
-//                                                   success:^(NSArray *dailyActivities) {
-//                                                       [self printDailyActivities:dailyActivities];
-//                                                   }
-//                                                   failure:^(NSError *error) {
-//                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get day dailyActivities error: %@", error]];
-//                                                   }];
+    [[MovesAPI sharedInstance] getUserSuccess:^(MVUser *user) {
+        self.resultTextView.text = [user logProperties];
+        [self.indicatorView stopAnimating];
+    } failure:^(NSError *error) {
+        [self printErrorWithDescription:[NSString stringWithFormat:@"Get profile error: %@", error]];
+    }];
 }
 
-- (IBAction)weekUrl:(id)sender {
+- (IBAction)requestActivityList:(id)sender {
     [self.indicatorView startAnimating];
-    
-//    [[MovesAPI sharedInstance] getWeekDailySummariesByDate:[NSDate date]
-//                                                   success:^(NSArray *dailySummaries) {
-//                                                       [self printDailySummaries:dailySummaries];
-//                                                   } failure:^(NSError *error) {
-//                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak dailySummaries error: %@", error]];
-//                                                   }];
-    
-    [[MovesAPI sharedInstance] getWeekStoryLineByDate:[NSDate date]
-                                              success:^(NSArray *storyLines) {
-                                                  [self printStoryLine:storyLines];
-                                              }
-                                              failure:^(NSError *error) {
-                                                  [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak StoryLine error: %@", error]];
-                                              }];
-
-//    [[MovesAPI sharedInstance] getWeekDailyPlacesByDate:[NSDate date]
-//                                                success:^(NSArray *dailyPlaces) {
-//                                                    [self printDailyPlaces:dailyPlaces];
-//                                                }
-//                                                failure:^(NSError *error) {
-//                                                    [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak DailyPlaces error: %@", error]];
-//                                                }];
-
-
-//    [[MovesAPI sharedInstance] getWeekDailyActivitiesByDate:[NSDate date]
-//                                                    success:^(NSArray *dailyActivities) {
-//                                                        [self printDailyActivities:dailyActivities];
-//                                                    }
-//                                                    failure:^(NSError *error) {
-//                                                        [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak dailyActivities error: %@", error]];
-//                                                    }];
+    [[MovesAPI sharedInstance] getActivityListSuccess:^(NSArray *activityList) {
+        NSMutableString *logString = [NSMutableString string];
+        for (id obj in activityList) {
+            [logString appendFormat:@"%@", [obj logProperties]];
+        }
+        self.resultTextView.text = logString;
+        [self.indicatorView stopAnimating];
+    } failure:^(NSError *error) {
+        [self printErrorWithDescription:[NSString stringWithFormat:@"Get activity list error: %@", error]];
+    }];
 }
 
-- (IBAction)monthUrl:(id)sender {
+#pragma mark - Summary
+
+- (IBAction)requestDaySummaryAction:(UIButton *)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDayDailySummariesByDate:[NSDate date]
+                                                  success:^(NSArray *dailySummaries) {
+                                                      [self printDailySummaries:dailySummaries];
+                                                  }
+                                                  failure:^(NSError *error) {
+                                                      [self printErrorWithDescription:[NSString stringWithFormat:@"Get day dailySummaries error: %@", error]];
+                                                  }];
+}
+
+- (IBAction)requestWeekSummaryAction:(UIButton *)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getWeekDailySummariesByDate:[NSDate date]
+                                                   success:^(NSArray *dailySummaries) {
+                                                       [self printDailySummaries:dailySummaries];
+                                                   } failure:^(NSError *error) {
+                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak dailySummaries error: %@", error]];
+                                                   }];
+}
+
+- (IBAction)requestMonthSummaryAction:(UIButton *)sender {
     [self.indicatorView startAnimating];
     
     [[MovesAPI sharedInstance] getMonthDailySummariesByDate:[NSDate date]
@@ -123,34 +120,186 @@
                                                     }];
 }
 
-- (IBAction)pastDaysUrl:(id)sender {
+- (IBAction)requestPastDaysSummaryAction:(UIButton *)sender {
     [self.indicatorView startAnimating];
-    
-//    [[MovesAPI sharedInstance] getDailySummariesByPastDays:10
-//                                                   success:^(NSArray *dailySummaries) {
-//                                                       [self printDailySummaries:dailySummaries];
-//                                                   }
-//                                                   failure:^(NSError *error) {
-//                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays dailySummaries error: %@", error]];
-//                                                   }];
-    
-//    [[MovesAPI sharedInstance] getDailyActivitiesByPastDays:7
-//                                                    success:^(NSArray *dailyActivities) {
-//                                                        [self printDailyActivities:dailyActivities];
-//                                                    }
-//                                                    failure:^(NSError *error) {
-//                                                        [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays dailyActivities error: %@", error]];
-//                                                    }];
-    
-//    [[MovesAPI sharedInstance] getDailyPlacesByPastDays:7
-//                                                success:^(NSArray *dailyPlaces) {
-//                                                    [self printDailyPlaces:dailyPlaces];
-//                                                }
-//                                                failure:^(NSError *error) {
-//                                                    [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays DailyPlaces error: %@", error]];
-//                                                }];
- 
+    [[MovesAPI sharedInstance] getDailySummariesByPastDays:10
+                                                   success:^(NSArray *dailySummaries) {
+                                                       [self printDailySummaries:dailySummaries];
+                                                   }
+                                                   failure:^(NSError *error) {
+                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays dailySummaries error: %@", error]];
+                                                   }];
+}
+
+- (IBAction)requestFromToSummaryAction:(UIButton *)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDailySummariesFromDate:[[NSDate date] dateByAddingTimeInterval:-10*24*60*60] // Notice: Max range is 31
+                                                  toDate:[NSDate date]
+                                                 success:^(NSArray *dailySummaries) {
+                                                     [self printDailySummaries:dailySummaries];
+                                                 }
+                                                 failure:^(NSError *error) {
+                                                     [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo dailySummaries error: %@", error]];
+
+                                                 }];
+}
+
+#pragma mark - Activity
+
+- (IBAction)requestDayActivityAction:(UIButton *)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDayDailyActivitiesByDate:[NSDate date]
+                                                   success:^(NSArray *dailyActivities) {
+                                                       [self printDailyActivities:dailyActivities];
+                                                   }
+                                                   failure:^(NSError *error) {
+                                                       [self printErrorWithDescription:[NSString stringWithFormat:@"Get day dailyActivities error: %@", error]];
+                                                   }];
+}
+
+- (IBAction)requestWeekActivityAction:(UIButton *)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getWeekDailyActivitiesByDate:[NSDate date]
+                                                    success:^(NSArray *dailyActivities) {
+                                                        [self printDailyActivities:dailyActivities];
+                                                    }
+                                                    failure:^(NSError *error) {
+                                                        [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak dailyActivities error: %@", error]];
+                                                    }];
+}
+
+- (IBAction)requestMonthActivityAction:(UIButton *)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getMonthDailyActivitiesByDate:[NSDate date]
+                                                     success:^(NSArray *dailyActivities) {
+                                                         [self printDailyActivities:dailyActivities];
+                                                     } failure:^(NSError *error) {
+                                                         [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak dailyActivities error: %@", error]];
+                                                     }];
+}
+
+- (IBAction)requestPastDaysActivityAction:(UIButton *)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDailyActivitiesByPastDays:7
+                                                    success:^(NSArray *dailyActivities) {
+                                                        [self printDailyActivities:dailyActivities];
+                                                    }
+                                                    failure:^(NSError *error) {
+                                                        [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays dailyActivities error: %@", error]];
+                                                    }];
+}
+
+- (IBAction)requestFromToActivityAction:(UIButton *)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDailyActivitiesFromDate:[[NSDate date] dateByAddingTimeInterval:-11*24*60*60] // Notice: Max range is 31
+                                                   toDate:[NSDate date]
+                                                  success:^(NSArray *dailyActivities) {
+                                                      [self printDailyActivities:dailyActivities];
+                                                  }
+                                                  failure:^(NSError *error) {
+                                                      [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo dailyActivities error: %@", error]];
+                                                  }];
+}
+
+#pragma mark - Places
+
+- (IBAction)requestDayPlacesAction:(id)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDayDailyPlacesByDate:[NSDate date]
+                                               success:^(NSArray *dailyPlaces) {
+                                                   [self printDailyPlaces:dailyPlaces];
+                                               }
+                                               failure:^(NSError *error) {
+                                                   [self printErrorWithDescription:[NSString stringWithFormat:@"Get day DailyPlaces error: %@", error]];
+                                               }];
+}
+
+- (IBAction)requestWeekPlacesAction:(id)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getWeekDailyPlacesByDate:[NSDate date]
+                                                success:^(NSArray *dailyPlaces) {
+                                                    [self printDailyPlaces:dailyPlaces];
+                                                }
+                                                failure:^(NSError *error) {
+                                                    [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak DailyPlaces error: %@", error]];
+                                                }];
+}
+
+- (IBAction)requestMonthPlacesAction:(id)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getMonthDailyPlacesByDate:[NSDate date]
+                                                 success:^(NSArray *dailyPlaces) {
+                                                     [self printDailyPlaces:dailyPlaces];
+                                                 }
+                                                 failure:^(NSError *error) {
+                                                     [self printErrorWithDescription:[NSString stringWithFormat:@"Get month DailyPlaces error: %@", error]];
+                                                 }];
+}
+
+- (IBAction)requestPastDaysPlacesAction:(id)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDailyPlacesByPastDays:7
+                                                success:^(NSArray *dailyPlaces) {
+                                                    [self printDailyPlaces:dailyPlaces];
+                                                }
+                                                failure:^(NSError *error) {
+                                                    [self printErrorWithDescription:[NSString stringWithFormat:@"Get PastDays DailyPlaces error: %@", error]];
+                                                }];
+}
+
+- (IBAction)requestFromToPlacesAction:(id)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDailyPlacesFromDate:[[NSDate date] dateByAddingTimeInterval:-6*24*60*60] // Notice: Max range is 7
+                                               toDate:[NSDate date]
+                                              success:^(NSArray *dailyPlaces) {
+                                                  [self printDailyPlaces:dailyPlaces];
+                                              }
+                                              failure:^(NSError *error) {
+                                                  [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo DailyPlaces error: %@", error]];
+                                              }];
+}
+
+#pragma mark - Storyline
+
+- (IBAction)requestDayStorylineAction:(id)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getDayStoryLineByDate:[NSDate date]
+                                         trackPoints:YES
+                                             success:^(NSArray *storyLines) {
+                                                 [self printStoryLine:storyLines];
+                                             }
+                                             failure:^(NSError *error) {
+                                                 [self printErrorWithDescription:[NSString stringWithFormat:@"Get day storyLine error: %@", error]];
+                                             }];
+}
+
+- (IBAction)requestWeekStorylineAction:(id)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getWeekStoryLineByDate:[NSDate date]
+                                          trackPoints:YES
+                                              success:^(NSArray *storyLines) {
+                                                  [self printStoryLine:storyLines];
+                                              }
+                                              failure:^(NSError *error) {
+                                                  [self printErrorWithDescription:[NSString stringWithFormat:@"Get weak StoryLine error: %@", error]];
+                                              }];
+}
+
+- (IBAction)requestMonthStorylineAction:(id)sender {
+    [self.indicatorView startAnimating];
+    [[MovesAPI sharedInstance] getMonthStoryLineByDate:[NSDate date]
+                                               success:^(NSArray *storyLines) {
+                                                   [self printStoryLine:storyLines];
+                                               }
+                                               failure:^(NSError *error) {
+                                                   [self printErrorWithDescription:[NSString stringWithFormat:@"Get month StoryLine error: %@", error]];
+                                               }];
+}
+
+- (IBAction)requestPastDaysStorylineAction:(id)sender {
+    [self.indicatorView startAnimating];
     [[MovesAPI sharedInstance] getDailyStoryLineByPastDays:6
+                                               trackPoints:YES
                                                    success:^(NSArray *storyLines) {
                                                        [self printStoryLine:storyLines];
                                                    } failure:^(NSError *error) {
@@ -158,40 +307,11 @@
                                                    }];
 }
 
-- (IBAction)fromToUrl:(id)sender {
+- (IBAction)requestFromToStorylineAction:(id)sender {
     [self.indicatorView startAnimating];
-    
-//    [[MovesAPI sharedInstance] getDailySummariesFromDate:[[NSDate date] dateByAddingTimeInterval:-10*24*60*60] // Notice: Max range is 31
-//                                                  toDate:[NSDate date]
-//                                                 success:^(NSArray *dailySummaries) {
-//                                                     [self printDailySummaries:dailySummaries];
-//                                                 }
-//                                                 failure:^(NSError *error) {
-//                                                     [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo dailySummaries error: %@", error]];
-
-//                                                 }];
-    
-    
-//    [[MovesAPI sharedInstance] getDailyActivitiesFromDate:[[NSDate date] dateByAddingTimeInterval:-6*24*60*60] // Notice: Max range is 7
-//                                                   toDate:[NSDate date]
-//                                                  success:^(NSArray *dailyActivities) {
-//                                                      [self printDailyActivities:dailyActivities];
-//                                                  }
-//                                                  failure:^(NSError *error) {
-//                                                      [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo dailyActivities error: %@", error]];
-//                                                  }];
-    
-//    [[MovesAPI sharedInstance] getDailyPlacesFromDate:[[NSDate date] dateByAddingTimeInterval:-6*24*60*60] // Notice: Max range is 7
-//                                               toDate:[NSDate date]
-//                                              success:^(NSArray *dailyPlaces) {
-//                                                  [self printDailyPlaces:dailyPlaces];
-//                                              }
-//                                              failure:^(NSError *error) {
-//                                                  [self printErrorWithDescription:[NSString stringWithFormat:@"Get fromTo DailyPlaces error: %@", error]];
-//                                              }];
-    
     [[MovesAPI sharedInstance] getDailyStoryLineFromDate:[[NSDate date] dateByAddingTimeInterval:-1*24*60*60]
                                                   toDate:[NSDate date]
+                                             trackPoints:YES
                                                  success:^(NSArray *storyLines) {
                                                      [self printStoryLine:storyLines];
                                                  } failure:^(NSError *error) {
@@ -206,11 +326,7 @@
     [logString appendFormat:@"\n\ndailySummaries count: %i\n", dailySummaries.count];
     
     for (MVDailySummary *dailySummary in dailySummaries) {
-        [logString appendFormat:@"dailySummary: date=%@, caloriesIdle=%i\n", dailySummary.date, dailySummary.caloriesIdle];
-        
-        for (MVSummary *summary in dailySummary.summaries) {
-            [logString appendFormat:@"summary: activity=%i, duration=%i, steps=%i\n", summary.activity, summary.duration, summary.steps];
-        }
+        [logString appendFormat:@"----------\n%@\n----------\n", [dailySummary logProperties]];
     }
     self.resultTextView.text = logString;
     
@@ -222,15 +338,7 @@
     [logString appendFormat:@"dailyActivities count: %i\n", dailyActivities.count];
     
     for (MVDailyActivity *dailyActivity in dailyActivities) {
-        [logString appendFormat:@"\n\ndailyActivity, date: %@, caloriesIdle: %i", dailyActivity.date, dailyActivity.caloriesIdle];
-        
-        for (MVSegment *segment in dailyActivity.segments) {
-            [logString appendFormat:@"\nsegment-------\nstartTime: %@, endTime: %@\n\n", segment.startTime, segment.endTime];
-            
-            for (MVActivity *activity in segment.activities) {
-                [logString appendFormat:@"\nActivity, distabce: %i, duration: %i, steps=%i", activity.distance, activity.duration, activity.steps];
-            }
-        }
+        [logString appendFormat:@"----------\n%@\n----------\n", [dailyActivity logProperties]];
     }
     self.resultTextView.text = logString;
     
@@ -242,12 +350,7 @@
     [logString appendFormat:@"dailyPlaces count: %i\n", dailyPlaces.count];
     
     for (MVDailyPlace *dailyPlace in dailyPlaces) {
-        [logString appendFormat:@"\n\nMVDailyPlace, date: %@\n", dailyPlace.date];
-        
-        for (MVSegment *segment in dailyPlace.segments) {
-            [logString appendFormat:@"\n-------\nsegment, startTime: %@, endTime: %@", segment.startTime, segment.endTime];
-            [logString appendFormat:@"\nPlace, name: %@, type: %@, foursquareId: %@\n", segment.place.name, segment.place.type, segment.place.foursquareId];
-        }
+        [logString appendFormat:@"----------\n%@\n----------\n", [dailyPlace logProperties]];
     }
     self.resultTextView.text = logString;
     
@@ -259,19 +362,7 @@
     [logString appendFormat:@"storyLines count: %i\n", storyLines.count];
     
     for (MVStoryLine *storyLine in storyLines) {
-        [logString appendFormat:@"\n\nstoryLine, date: %@, caloriesIdle: %i", storyLine.date, storyLine.caloriesIdle];
-        
-        for (MVSegment *segment in storyLine.segments) {
-            [logString appendFormat:@"\n-------\nsegment, startTime: %@, endTime: %@", segment.startTime, segment.endTime];
-            [logString appendFormat:@"\nPlace, name: %@, type: %@, foursquareId: %@", segment.place.name, segment.place.type, segment.place.foursquareId];
-            for (MVActivity *activity in segment.activities) {
-                [logString appendFormat:@"\nActivity, distabce: %i, duration: %i, steps=%i\n", activity.distance, activity.duration, activity.steps];
-                
-                for (MVTrackPoint *trackPoint in activity.trackPoints) {
-                    [logString appendFormat:@"\nTrackPoint: lat=%f, lon=%f", trackPoint.lat, trackPoint.lon];
-                }
-            }
-        }
+        [logString appendFormat:@"----------\n%@\n----------\n", [storyLine logProperties]];
     }
     self.resultTextView.text = logString;
     

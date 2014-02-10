@@ -7,6 +7,7 @@
 //
 
 #import "MVBaseDataModel.h"
+#import "MVLocalization.h"
 
 @interface MVUser : MVBaseDataModel
 
@@ -14,8 +15,8 @@
 @property (nonatomic, strong) NSDate *firstDate;
 @property (nonatomic, strong) NSString *currentTimeZoneId;
 @property (nonatomic) NSInteger currentTimeZoneOffset;
+@property (nonatomic, strong) MVLocalization *localization;
 @property (nonatomic) BOOL caloriesAvailable;
-
-- (MVUser *)initWithDictionary:(NSDictionary *)dic;
+@property (nonatomic) NSString *platform;
 
 @end

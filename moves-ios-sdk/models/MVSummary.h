@@ -8,21 +8,13 @@
 
 #import "MVBaseDataModel.h"
 
-typedef NS_ENUM(NSInteger, MVActivityType) {
-    MVActivityTypeWalking = 0,
-    MVActivityTypeRunning,
-    MVActivityTypeCycling,
-    MVActivityTypeTransport
-};
-
 @interface MVSummary : MVBaseDataModel
 
-@property (nonatomic) MVActivityType activity;
+@property (nonatomic, strong) NSString *activity;
+@property (nonatomic, strong) NSString *group;
 @property (nonatomic) NSUInteger duration;
 @property (nonatomic) NSUInteger distance;
 @property (nonatomic) NSUInteger steps;
 @property (nonatomic) NSUInteger calories;
-
-- (MVSummary *)initWithDictionary:(NSDictionary *)dic;
 
 @end

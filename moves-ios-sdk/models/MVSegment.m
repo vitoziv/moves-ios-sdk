@@ -11,43 +11,35 @@
 
 @implementation MVSegment
 
-- (id)init {
-    if (self = [super init]) {
-    }
-    
-    return self;
-}
-
 - (MVSegment *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (dic[@"type"]) {
-        if ([dic[@"type"] isEqual:@"move"]) {
-            self.type = MVSegmentTypeMove;
-        } else {
-            self.type = MVSegmentTypePlace;
+    if (self) {
+        _type = dic[@"type"];
+        
+        NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
+        if (dic[@"startTime"]) {
+            _startTime = [formatter dateFromString:dic[@"startTime"]];
+        }
+        if (dic[@"endTime"]) {
+            _endTime = [formatter dateFromString:dic[@"endTime"]];
+        }
+        if (dic[@"place"]) {
+            _place = [[MVPlace alloc] initWithDictionary:dic[@"place"]];
+        }
+        
+        if ([dic[@"activities"] isKindOfClass:[NSArray class]]) {
+            NSMutableArray *activities = [[NSMutableArray alloc] init];
+            for (NSDictionary *activity in dic[@"activities"]) {
+                [activities addObject:[[MVActivity alloc] initWithDictionary:activity]];
+            }
+            _activities = activities;
+        }
+        
+        if (dic[@"lastUpdate"]) {
+            _lastUpdate = [formatter dateFromString:dic[@"lastUpdate"]];
         }
     }
-    
-    NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
-    if (dic[@"startTime"]) {
-        self.startTime = [formatter dateFromString:dic[@"startTime"]];
-    }
-    if (dic[@"endTime"]) {
-        self.endTime = [formatter dateFromString:dic[@"endTime"]];
-    }
-    if (dic[@"place"]) {
-        self.place = [[MVPlace alloc] initWithDictionary:dic[@"place"]];
-    }
-    
-    if ([dic[@"activities"] isKindOfClass:[NSArray class]]) {
-        NSMutableArray *activities = [[NSMutableArray alloc] init];
-        for (NSDictionary *activity in dic[@"activities"]) {
-            [activities addObject:[[MVActivity alloc] initWithDictionary:activity]];
-        }
-        self.activities = activities;
-    }
-    
     
     return self;
 }

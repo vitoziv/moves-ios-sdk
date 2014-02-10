@@ -7,27 +7,24 @@
 //
 
 #import "MVTrackPoint.h"
+#import "DFDateFormatterFactory.h"
 
 @implementation MVTrackPoint
-
-- (id)init {
-    if (self = [super init]) {
-    }
-    
-    return self;
-}
 
 - (MVTrackPoint *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (dic[@"lat"]) {
-        self.lat = [dic[@"lat"] floatValue];
-    }
-    if (dic[@"lon"]) {
-        self.lon = [dic[@"lon"] floatValue];
-    }
-    if (dic[@"time"]) {
-        self.time = [dic[@"time"] doubleValue];
+    if (self) {
+        if (dic[@"lat"]) {
+            _lat = [dic[@"lat"] floatValue];
+        }
+        if (dic[@"lon"]) {
+            _lon = [dic[@"lon"] floatValue];
+        }
+        if (dic[@"time"]) {
+            NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
+            _time = [formatter dateFromString:dic[@"time"]];
+        }
     }
     
     return self;

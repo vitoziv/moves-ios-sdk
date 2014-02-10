@@ -16,6 +16,4 @@
 @property (nonatomic) NSInteger caloriesIdle;
 @property (nonatomic, readonly) NSInteger dailyCalories;
 
-- (MVStoryLine *)initWithDictionary:(NSDictionary *)dic;
-
 @end
