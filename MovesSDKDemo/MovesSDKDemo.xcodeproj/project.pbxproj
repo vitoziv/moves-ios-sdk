@@ -217,9 +217,9 @@
 				5FFB3E011794072200B51480 /* MainStoryboard.storyboard */,
 				5FFB3E041794072200B51480 /* ViewController.h */,
 				5FFB3E051794072200B51480 /* ViewController.m */,
-				5FFB3DF01794072200B51480 /* Supporting Files */,
 				5F51391A18A640C500B1931A /* NSObject+LogProperties.h */,
 				5F51391B18A640C500B1931A /* NSObject+LogProperties.m */,
+				5FFB3DF01794072200B51480 /* Supporting Files */,
 			);
 			path = MovesSDKDemo;
 			sourceTree = "<group>";

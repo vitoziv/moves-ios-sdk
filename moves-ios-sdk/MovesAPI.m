@@ -10,7 +10,8 @@
 #import "MVOAuthViewController.h"
 #import "DFDateFormatterFactory.h"
 
-#define BASE_DOMAIN @"https://api.moves-app.com/api/1.1"
+#define BASE_DOMAIN @"https://api.moves-app.com"
+#define BASE_DOMAIN_1_1 @"https://api.moves-app.com/api/1.1"
 
 #define MV_URL_USER_PROFILE @"/user/profile"
 #define MV_URL_ACTIVITY_LIST @"/activities"
@@ -166,7 +167,7 @@
             urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
         } else {
-            NSString *urlString = [NSString stringWithFormat:@"%@/authorize?response_type=code&client_id=%@&scope=%@", BASE_DOMAIN, self.oauthClientId, [self scopeStringByScopeType:self.scope]];
+            NSString *urlString = [NSString stringWithFormat:@"%@/oauth/v1/authorize?response_type=code&client_id=%@&scope=%@", BASE_DOMAIN, self.oauthClientId, [self scopeStringByScopeType:self.scope]];
             urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
             self.oauthViewController = [[MVOAuthViewController alloc] initWithAuthorizationURL:[NSURL URLWithString:urlString]
@@ -210,7 +211,6 @@
                             failure:(void(^)(NSError *reason))failure
 {
     NSString *params;
-    NSString *baseDomain = @"https://api.moves-app.com";
     NSString *path = @"/oauth/v1/access_token";
     
     if(self.accessToken) {
@@ -226,7 +226,7 @@
                   [self oauthRedirectUri]];
     }
     
-    NSString *url = [NSString stringWithFormat:@"%@%@", baseDomain, path];
+    NSString *url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN, path];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     request.HTTPBody = [params dataUsingEncoding:NSUTF8StringEncoding];
     request.HTTPMethod = @"POST";
@@ -352,9 +352,9 @@
               dateFormat:(NSString *)dateFormat {
     NSString *url = @"";
     if (!date) {
-        url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN, MVUrl];
+        url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN_1_1, MVUrl];
     } else {
-        url = [NSString stringWithFormat:@"%@%@/%@", BASE_DOMAIN, MVUrl, [self stringFromDate:date byFormat:dateFormat]];
+        url = [NSString stringWithFormat:@"%@%@/%@", BASE_DOMAIN_1_1, MVUrl, [self stringFromDate:date byFormat:dateFormat]];
     }
     
     return url;
@@ -371,7 +371,7 @@
     NSString *toDateString = [dateFormatter stringFromDate:toDate];
     
     NSString *url = [NSString stringWithFormat:@"%@%@?from=%@&to=%@",
-                     BASE_DOMAIN,
+                     BASE_DOMAIN_1_1,
                      MVUrl,
                      fromDateString,
                      toDateString];
@@ -379,7 +379,7 @@
 }
 
 - (NSString *)urlByMVUrl:(NSString *)MVUrl pastDays:(NSInteger)days {
-    NSString *url = [NSString stringWithFormat:@"%@%@?pastDays=%i", BASE_DOMAIN, MVUrl, days];
+    NSString *url = [NSString stringWithFormat:@"%@%@?pastDays=%i", BASE_DOMAIN_1_1, MVUrl, days];
     return url;
 }
 
@@ -433,7 +433,6 @@
                                       failure:failure];
         } else {
             // Step 3. Everthing is right, now try to getting data
-            NSLog(@"Moves request url: %@", url);
             
             NSRange range = [url rangeOfString:@"?" options:NSCaseInsensitiveSearch];
             if (range.location != NSNotFound) {
@@ -441,6 +440,8 @@
             } else {
                 url = [url stringByAppendingFormat:@"?access_token=%@", self.accessToken];
             }
+            
+            NSLog(@"Moves request url: %@", url);
             
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
                                                                    cachePolicy:NSURLRequestReloadRevalidatingCacheData
@@ -456,10 +457,10 @@
                                            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data
                                                                                                        options:NSJSONReadingMutableLeaves
                                                                                                          error:&jsonError];
-                                           if (!jsonError) {
-                                               if (success) success(responseDic);
+                                           if (jsonError) {
+                                               if (failure) {failure(jsonError);}
                                            } else {
-                                               if (failure) failure(jsonError);
+                                               if (success) {success(responseDic);}
                                            }
                                        } else {
                                            // Cause your app was revoked in Moves app.
@@ -468,9 +469,9 @@
                                                
                                                NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
                                                
-                                               if (failure) failure(expiredError);
+                                               if (failure) {failure(expiredError);}
                                            } else {
-                                               if (failure) failure(error);
+                                               if (failure) {failure(error);}
                                            }
                                        }
                                    }];
@@ -494,7 +495,7 @@
 
 - (void)getActivityListSuccess:(void(^)(NSArray *activityList))success
                        failure:(void(^)(NSError *error))failure {
-    NSString *url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN, MV_URL_ACTIVITY_LIST];
+    NSString *url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN_1_1, MV_URL_ACTIVITY_LIST];
     [self getJsonByUrl:url
                success:^(id json) {
                    if (success) {

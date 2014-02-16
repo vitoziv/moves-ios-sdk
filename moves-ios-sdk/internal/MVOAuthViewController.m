@@ -115,7 +115,7 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     [self.activityIndicator startAnimating];
-    if ([[request.URL absoluteString] rangeOfString:@"?code="].length != 0) {
+    if ([[request.URL absoluteString] rangeOfString:@"?code="].length != 0 || [[request.URL absoluteString] rangeOfString:@"?error="].length != 0) {
         if (self.delegate) {
             [self.delegate oauthViewController:self receivedOAuthCallbackURL:request.URL];
         }
