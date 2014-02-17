@@ -48,12 +48,12 @@ At the top of your app delegate source file (and anywhere you call the MovesAPI 
 
 ###Step 1
 
-In AppDelegate. Set Your **[Client ID]**, **[Client secret]** and **[Redirect URI]**.
+In AppDelegate. Set Your **[Client ID]**, **[Client Secret]** and **[Redirect URI]**.
 ```Objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[MovesAPI sharedInstance] setShareMovesOauthClientId:@"[YOUR Client ID]"
-                                        oauthClientSecret:@"[YOUR Client secret]"
+    [[MovesAPI sharedInstance] setShareMovesOauthClientId:@"[YOUR CLIENT ID]"
+                                        oauthClientSecret:@"[YOUR CLIENT SECRET]"
                                         callbackUrlScheme:@"[YOUR URL SCHEME]"];
     return YES;
 }
@@ -62,7 +62,11 @@ In AppDelegate. Set Your **[Client ID]**, **[Client secret]** and **[Redirect UR
 
 Give the SDK an opportunity to handle incoming URLs. 
 ```Objc
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation 
+{
     if ([[MovesAPI sharedInstance] canHandleOpenUrl:url]) {
         return YES;
     }
@@ -93,7 +97,6 @@ Get user profile
 More other API see the ``MovesAPI.h`` file
 
 #Acknowledgements
-The **moves-ios-sdk** uses the following open source software:
 
 - [Moves Official API Documents](https://dev.moves-app.com/)
 
