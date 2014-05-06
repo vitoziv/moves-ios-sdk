@@ -21,7 +21,7 @@ moves-ios-sdk
 ##Get ClientId and ClientSecret
 When you register your app with Moves, it will provide you with a **Client ID** and **Client secret**. They identify your app to Moves's API. 
 
-[Register your app with Moves](https://dev.moves-app.com/clients)
+[Register your app with Moves](https://dev.moves-app.com/apps)
 
 ##Add the Moves URL scheme
 copy and paste the following into the XML Source for the Info.plist:
@@ -107,7 +107,3 @@ More other API see the ``MovesAPI.h`` file
 #License
 
 See the [MIT license](https://github.com/vitoziv/moves-ios-sdk/blob/master/LICENSE).
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/vitoziv/moves-ios-sdk/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
