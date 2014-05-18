@@ -13,6 +13,7 @@
 #import "MVSegment.h"
 #import "MVDailyPlace.h"
 #import "MVStoryLine.h"
+#import "MVSupportedActivity.h"
 
 typedef NS_ENUM(NSUInteger, MVScopeType) {
     MVScopeTypeDefault = 0,
