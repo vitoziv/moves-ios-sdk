@@ -5,5 +5,5 @@ target :MovesSDKDemo do
 end
 
 target :MovesSDKDemoTests do
-  pod 'Expecta',     '~> 0.2.3'   # expecta matchers
+  pod 'Expecta', '~> 0.3.0'   # expecta matchers
 end
