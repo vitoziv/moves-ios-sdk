@@ -40,7 +40,6 @@
 - (void)tearDown
 {
     // Tear-down code here.
-    
     [super tearDown];
 }
 
@@ -217,6 +216,7 @@
     __block id blockResponseObject = nil;
     
     [[MovesAPI sharedInstance] getWeekStoryLineByDate:[[NSDate date] dateByAddingTimeInterval:-ONE_DAY]
+                                          trackPoints:YES
                                               success:^(NSArray *storyLines) {
                                                   blockResponseObject = storyLines;
                                               } failure:nil];
@@ -229,6 +229,7 @@
     
     [[MovesAPI sharedInstance] getDailyStoryLineFromDate:[[NSDate date] dateByAddingTimeInterval:-ONE_WEEK + ONE_DAY]
                                                   toDate:[NSDate date]
+                                             trackPoints:NO
                                                  success:^(NSArray *storyLines) {
                                                      blockResponseObject = storyLines;
                                                  } failure:nil];
@@ -240,6 +241,7 @@
     __block id blockResponseObject = nil;
     
     [[MovesAPI sharedInstance] getDailyStoryLineByPastDays:7
+                                               trackPoints:NO
                                                    success:^(NSArray *storyLines) {
                                                        blockResponseObject = storyLines;
                                                    } failure:nil];
