@@ -8,15 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		4E39FD3183BF4055A2ACD5FE /* libPods-MovesSDKDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C12269931C34535A7FAC8DD /* libPods-MovesSDKDemoTests.a */; };
+		5F23565B1925DF2300BF467A /* MovesModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F23565A1925DF2300BF467A /* MovesModelTests.m */; };
 		5F23E202179CD802007BBB8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DEB1794072200B51480 /* Foundation.framework */; };
 		5F23E203179CD802007BBB8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DE91794072200B51480 /* UIKit.framework */; };
 		5F23E209179CD802007BBB8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5F23E207179CD802007BBB8B /* InfoPlist.strings */; };
 		5F23E20B179CD802007BBB8B /* MovesSDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F23E20A179CD802007BBB8B /* MovesSDKDemoTests.m */; };
 		5F3D59E7183ED58A00A7D3AF /* DFDateFormatterFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F3D59E6183ED58A00A7D3AF /* DFDateFormatterFactory.m */; };
 		5F3D59EA183EF88000A7D3AF /* MVBaseDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F3D59E9183EF88000A7D3AF /* MVBaseDataModel.m */; };
+		5F4CFFEE1926187A00B6CB12 /* VIAPIRebot.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F4CFFED1926187A00B6CB12 /* VIAPIRebot.m */; };
 		5F51391018A6255700B1931A /* MVLocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F51390F18A6255700B1931A /* MVLocalization.m */; };
 		5F51391C18A640C500B1931A /* NSObject+LogProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F51391B18A640C500B1931A /* NSObject+LogProperties.m */; };
 		5F51392418A8C1F800B1931A /* MVSupportedActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F51392318A8C1F800B1931A /* MVSupportedActivity.m */; };
+		5F6A405C192861D000E40606 /* MVJsonFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6A405B192861D000E40606 /* MVJsonFactory.m */; };
 		5FC3C665183BAF2600D7951F /* MVOAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */; };
 		5FFB3DEA1794072200B51480 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DE91794072200B51480 /* UIKit.framework */; };
 		5FFB3DEC1794072200B51480 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FFB3DEB1794072200B51480 /* Foundation.framework */; };
@@ -56,6 +59,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5F23565A1925DF2300BF467A /* MovesModelTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovesModelTests.m; sourceTree = "<group>"; };
 		5F23E1FF179CD802007BBB8B /* MovesSDKDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovesSDKDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F23E206179CD802007BBB8B /* MovesSDKDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MovesSDKDemoTests-Info.plist"; sourceTree = "<group>"; };
 		5F23E208179CD802007BBB8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -65,12 +69,16 @@
 		5F3D59E6183ED58A00A7D3AF /* DFDateFormatterFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DFDateFormatterFactory.m; sourceTree = "<group>"; };
 		5F3D59E8183EF88000A7D3AF /* MVBaseDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVBaseDataModel.h; sourceTree = "<group>"; };
 		5F3D59E9183EF88000A7D3AF /* MVBaseDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVBaseDataModel.m; sourceTree = "<group>"; };
+		5F4CFFEC1926187A00B6CB12 /* VIAPIRebot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIAPIRebot.h; sourceTree = "<group>"; };
+		5F4CFFED1926187A00B6CB12 /* VIAPIRebot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIAPIRebot.m; sourceTree = "<group>"; };
 		5F51390E18A6255700B1931A /* MVLocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVLocalization.h; sourceTree = "<group>"; };
 		5F51390F18A6255700B1931A /* MVLocalization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVLocalization.m; sourceTree = "<group>"; };
 		5F51391A18A640C500B1931A /* NSObject+LogProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+LogProperties.h"; sourceTree = "<group>"; };
 		5F51391B18A640C500B1931A /* NSObject+LogProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+LogProperties.m"; sourceTree = "<group>"; };
 		5F51392218A8C1F800B1931A /* MVSupportedActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVSupportedActivity.h; sourceTree = "<group>"; };
 		5F51392318A8C1F800B1931A /* MVSupportedActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVSupportedActivity.m; sourceTree = "<group>"; };
+		5F6A405A192861D000E40606 /* MVJsonFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVJsonFactory.h; sourceTree = "<group>"; };
+		5F6A405B192861D000E40606 /* MVJsonFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVJsonFactory.m; sourceTree = "<group>"; };
 		5FC3C663183BAF2600D7951F /* MVOAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVOAuthViewController.h; sourceTree = "<group>"; };
 		5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVOAuthViewController.m; sourceTree = "<group>"; };
 		5FFB3DE61794072200B51480 /* MovesSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovesSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,7 +156,9 @@
 		5F23E204179CD802007BBB8B /* MovesSDKDemoTests */ = {
 			isa = PBXGroup;
 			children = (
+				5F6A405D192861DD00E40606 /* Util */,
 				5F23E20A179CD802007BBB8B /* MovesSDKDemoTests.m */,
+				5F23565A1925DF2300BF467A /* MovesModelTests.m */,
 				5F23E205179CD802007BBB8B /* Supporting Files */,
 			);
 			path = MovesSDKDemoTests;
@@ -173,6 +183,25 @@
 				5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */,
 			);
 			path = internal;
+			sourceTree = "<group>";
+		};
+		5F4CFFEB1926186F00B6CB12 /* VIAPIRebot */ = {
+			isa = PBXGroup;
+			children = (
+				5F4CFFEC1926187A00B6CB12 /* VIAPIRebot.h */,
+				5F4CFFED1926187A00B6CB12 /* VIAPIRebot.m */,
+			);
+			path = VIAPIRebot;
+			sourceTree = "<group>";
+		};
+		5F6A405D192861DD00E40606 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				5F4CFFEB1926186F00B6CB12 /* VIAPIRebot */,
+				5F6A405A192861D000E40606 /* MVJsonFactory.h */,
+				5F6A405B192861D000E40606 /* MVJsonFactory.m */,
+			);
+			name = Util;
 			sourceTree = "<group>";
 		};
 		5FFB3DDD1794072200B51480 = {
@@ -448,7 +477,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F23565B1925DF2300BF467A /* MovesModelTests.m in Sources */,
 				5F23E20B179CD802007BBB8B /* MovesSDKDemoTests.m in Sources */,
+				5F4CFFEE1926187A00B6CB12 /* VIAPIRebot.m in Sources */,
+				5F6A405C192861D000E40606 /* MVJsonFactory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
