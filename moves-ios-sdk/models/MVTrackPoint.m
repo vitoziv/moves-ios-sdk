@@ -14,14 +14,14 @@
 - (MVTrackPoint *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self) {
-        if (dic[@"lat"]) {
+    if (self && !isNull(dic)) {
+        if (dic[@"lat"] && !isNull(dic[@"lat"])) {
             _lat = [dic[@"lat"] floatValue];
         }
-        if (dic[@"lon"]) {
+        if (dic[@"lon"] && !isNull(dic[@"lon"])) {
             _lon = [dic[@"lon"] floatValue];
         }
-        if (dic[@"time"]) {
+        if (dic[@"time"] && !isNull(dic[@"time"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
             _time = [formatter dateFromString:dic[@"time"]];
         }

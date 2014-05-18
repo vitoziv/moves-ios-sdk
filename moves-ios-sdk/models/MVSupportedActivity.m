@@ -12,10 +12,15 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)dic {
     self = [super initWithDictionary:dic];
-    if (self) {
+    if (self && !isNull(dic)) {
         _activity = dic[@"activity"];
-        _geo = [dic[@"geo"] boolValue];
-        _place = [dic[@"place"] boolValue];
+        if (!isNull(dic[@"geo"])) {
+            _geo = [dic[@"geo"] boolValue];
+        }
+        
+        if (!isNull(dic[@"place"])) {
+            _place = [dic[@"place"] boolValue];
+        }
         _color = dic[@"color"];
         _units = dic[@"units"];
     }

@@ -13,12 +13,12 @@
 - (MVLocation *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self) {
+    if (self && !isNull(dic)) {
         
-        if (dic[@"lat"]) {
+        if (dic[@"lat"] && !isNull(dic[@"lat"])) {
             _lat = [dic[@"lat"] floatValue];
         }
-        if (dic[@"lon"]) {
+        if (dic[@"lon"] && !isNull(dic[@"lon"])) {
             _lon = [dic[@"lon"] floatValue];
         }
     }

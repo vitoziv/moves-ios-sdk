@@ -15,16 +15,16 @@
 - (MVDailySummary *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self) {
-        if (dic[@"date"]) {
+    if (self && !isNull(dic)) {
+        if (!isNull(dic[@"date"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
             _date = [formatter dateFromString:dic[@"date"]];
         }
-        if (dic[@"caloriesIdle"]) {
+        if (!isNull(dic[@"caloriesIdle"])) {
             _caloriesIdle = [dic[@"caloriesIdle"] integerValue];
         }
         
-        if (dic[@"lastUpdate"]) {
+        if (!isNull(dic[@"lastUpdate"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
             _lastUpdate = [formatter dateFromString:dic[@"lastUpdate"]];
         }

@@ -13,17 +13,17 @@
 - (MVSummary *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self) {
-        if (dic[@"duration"]) {
+    if (self && !isNull(dic)) {
+        if (!isNull(dic[@"duration"])) {
             _duration = [dic[@"duration"] integerValue];
         }
-        if (dic[@"distance"]) {
+        if (!isNull(dic[@"distance"])) {
             _distance = [dic[@"distance"] integerValue];
         }
-        if (dic[@"steps"]) {
+        if (!isNull(dic[@"steps"])) {
             _steps = [dic[@"steps"] integerValue];
         }
-        if (dic[@"calories"]) {
+        if (!isNull(dic[@"calories"])) {
             _calories = [dic[@"calories"] integerValue];
         }
         

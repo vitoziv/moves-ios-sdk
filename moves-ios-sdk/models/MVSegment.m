@@ -14,17 +14,17 @@
 - (MVSegment *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self) {
+    if (self && !isNull(dic)) {
         _type = dic[@"type"];
         
         NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
-        if (dic[@"startTime"]) {
+        if (dic[@"startTime"] && !isNull(dic[@"startTime"])) {
             _startTime = [formatter dateFromString:dic[@"startTime"]];
         }
-        if (dic[@"endTime"]) {
+        if (dic[@"endTime"] && !isNull(dic[@"endTime"])) {
             _endTime = [formatter dateFromString:dic[@"endTime"]];
         }
-        if (dic[@"place"]) {
+        if (dic[@"place"] && !isNull(dic[@"place"])) {
             _place = [[MVPlace alloc] initWithDictionary:dic[@"place"]];
         }
         
@@ -36,7 +36,7 @@
             _activities = activities;
         }
         
-        if (dic[@"lastUpdate"]) {
+        if (dic[@"lastUpdate"] && !isNull(dic[@"lastUpdate"])) {
             _lastUpdate = [formatter dateFromString:dic[@"lastUpdate"]];
         }
     }

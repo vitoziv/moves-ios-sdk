@@ -14,12 +14,12 @@
 - (MVStoryLine *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self) {
-        if (dic[@"date"]) {
+    if (self && !isNull(dic)) {
+        if (dic[@"date"] && !isNull(dic[@"date"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
             _date = [formatter dateFromString:dic[@"date"]];
         }
-        if (dic[@"caloriesIdle"]) {
+        if (dic[@"caloriesIdle"] && !isNull(dic[@"caloriesIdle"])) {
             _caloriesIdle = [dic[@"caloriesIdle"] integerValue];
         }
         

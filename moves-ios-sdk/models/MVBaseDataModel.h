@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define isNull(o) (!o || (NSNull *)o == [NSNull null])
+
 @interface MVBaseDataModel : NSObject
 - (instancetype)initWithDictionary:(NSDictionary *)dic;
 @end

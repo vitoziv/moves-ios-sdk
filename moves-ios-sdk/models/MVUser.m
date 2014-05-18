@@ -14,24 +14,27 @@
 - (MVUser *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self) {
+    if (self && !isNull(dic)) {
         _userId = dic[@"userId"];
         NSDictionary *profile = dic[@"profile"];
-        if (profile) {
-            if (profile[@"firstDate"]) {
+        if (!isNull(profile)) {
+            if (!isNull(profile[@"firstDate"])) {
                 NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
                 _firstDate = [formatter dateFromString:profile[@"firstDate"]];
             }
-            if (profile[@"currentTimeZone"]) {
+            if (!isNull(profile[@"currentTimeZone"])) {
                 _currentTimeZoneId = profile[@"currentTimeZone"][@"id"];
-                if (profile[@"currentTimeZone"][@"offset"]) {
+                if (!isNull(profile[@"currentTimeZone"][@"offset"])) {
                     _currentTimeZoneOffset = [profile[@"currentTimeZone"][@"offset"] integerValue];
                 }
             }
-            if (profile[@"localization"]) {
+            if (!isNull(profile[@"localization"])) {
                 _localization = [[MVLocalization alloc] initWithDictionary:profile[@"localization"]];
             }
-            _caloriesAvailable = [profile[@"caloriesAvailable"] boolValue];
+            
+            if (!isNull(profile[@"caloriesAvailable"])) {
+                _caloriesAvailable = [profile[@"caloriesAvailable"] boolValue];
+            }
             _platform = profile[@"platform"];
         }
     }

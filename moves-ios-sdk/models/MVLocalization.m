@@ -15,12 +15,14 @@
     if (self) {
         _language = dic[@"language"];
         _locale = dic[@"locale"];
-        if (dic[@"firstWeekDay"]) {
+        if (!isNull(dic[@"firstWeekDay"])) {
             _firstWeekDay = [dic[@"firstWeekDay"] integerValue];
         } else {
             _firstWeekDay = MVFirstWeekDayTypeNone;
         }
-        _metric = [dic[@"metric"] boolValue];
+        if (!isNull(dic[@"metric"])) {
+            _metric = [dic[@"metric"] boolValue];
+        }
     }
     
     return self;

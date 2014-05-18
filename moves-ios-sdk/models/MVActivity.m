@@ -14,16 +14,16 @@
 - (MVActivity *)initWithDictionary:(NSDictionary *)dic {
     self = [super initWithDictionary:dic];
     
-    if (self) {
+    if (self && !isNull(dic)) {
         
         NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
-        if (dic[@"startTime"]) {
+        if (dic[@"startTime"] && !isNull(dic[@"startTime"])) {
             _startTime = [formatter dateFromString:dic[@"startTime"]];
         }
-        if (dic[@"endTime"]) {
+        if (dic[@"endTime"] && !isNull(dic[@"endTime"])) {
             _endTime = [formatter dateFromString:dic[@"endTime"]];
         }
-        if (dic[@"manual"]) {
+        if (dic[@"manual"] && !isNull(dic[@"manual"])) {
             _manual = [dic[@"manual"] boolValue];
         }
         

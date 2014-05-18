@@ -13,8 +13,8 @@
 
 - (MVDailyPlace *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
-    if (self) {
-        if (dic[@"date"]) {
+    if (self && !isNull(dic)) {
+        if (dic[@"date"] && !isNull(dic[@"date"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
             _date = [formatter dateFromString:dic[@"date"]];
         }
@@ -29,7 +29,7 @@
             }
         }
         
-        if (dic[@"lastUpdate"]) {
+        if (dic[@"lastUpdate"] && !isNull(dic[@"lastUpdate"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
             _lastUpdate = [formatter dateFromString:dic[@"lastUpdate"]];
         }
