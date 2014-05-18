@@ -323,7 +323,7 @@
 
 - (void)printDailySummaries:(NSArray *)dailySummaries {
     NSMutableString *logString = [[NSMutableString alloc] init];
-    [logString appendFormat:@"\n\ndailySummaries count: %i\n", dailySummaries.count];
+    [logString appendFormat:@"\n\ndailySummaries count: %lu\n", (unsigned long)dailySummaries.count];
     
     for (MVDailySummary *dailySummary in dailySummaries) {
         [logString appendFormat:@"----------\n%@\n----------\n", [dailySummary logProperties]];
@@ -335,7 +335,7 @@
 
 - (void)printDailyActivities:(NSArray *)dailyActivities {
     NSMutableString *logString = [[NSMutableString alloc] init];
-    [logString appendFormat:@"dailyActivities count: %i\n", dailyActivities.count];
+    [logString appendFormat:@"dailyActivities count: %lu\n", (unsigned long)dailyActivities.count];
     
     for (MVDailyActivity *dailyActivity in dailyActivities) {
         [logString appendFormat:@"----------\n%@\n----------\n", [dailyActivity logProperties]];
@@ -347,7 +347,7 @@
 
 - (void)printDailyPlaces:(NSArray *)dailyPlaces {
     NSMutableString *logString = [[NSMutableString alloc] init];
-    [logString appendFormat:@"dailyPlaces count: %i\n", dailyPlaces.count];
+    [logString appendFormat:@"dailyPlaces count: %lu\n", (unsigned long)dailyPlaces.count];
     
     for (MVDailyPlace *dailyPlace in dailyPlaces) {
         [logString appendFormat:@"----------\n%@\n----------\n", [dailyPlace logProperties]];
@@ -359,7 +359,7 @@
 
 - (void)printStoryLine:(NSArray *)storyLines {
     NSMutableString *logString = [[NSMutableString alloc] init];
-    [logString appendFormat:@"storyLines count: %i\n", storyLines.count];
+    [logString appendFormat:@"storyLines count: %lu\n", (unsigned long)storyLines.count];
     
     for (MVStoryLine *storyLine in storyLines) {
         [logString appendFormat:@"----------\n%@\n----------\n", [storyLine logProperties]];

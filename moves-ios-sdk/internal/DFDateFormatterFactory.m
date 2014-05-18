@@ -68,7 +68,7 @@
 
 - (NSDateFormatter *)dateFormatterWithDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle andLocale:(NSLocale *)locale {
     @synchronized(self) {
-        NSString *key = [NSString stringWithFormat:@"d%i|t%i%@", dateStyle, timeStyle, locale.localeIdentifier];
+        NSString *key = [NSString stringWithFormat:@"d%lu|t%lu%@", dateStyle, timeStyle, locale.localeIdentifier];
         
         NSDateFormatter *dateFormatter = [loadedDataFormatters objectForKey:key];
         if (!dateFormatter) {

@@ -379,7 +379,7 @@
 }
 
 - (NSString *)urlByMVUrl:(NSString *)MVUrl pastDays:(NSInteger)days {
-    NSString *url = [NSString stringWithFormat:@"%@%@?pastDays=%i", BASE_DOMAIN_1_1, MVUrl, days];
+    NSString *url = [NSString stringWithFormat:@"%@%@?pastDays=%li", BASE_DOMAIN_1_1, MVUrl, (long)days];
     return url;
 }
 
