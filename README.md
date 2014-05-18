@@ -96,6 +96,15 @@ Get user profile
 ```
 More other API see the ``MovesAPI.h`` file
 
+#Unit Test
+
+You can clone this repo, and test the API.
+
+1. Firstly, you need run the demo app, and authenticate it.
+2. `pod install`
+3. `command` + `U`
+
+
 #Acknowledgements
 
 - [Moves Official API Documents](https://dev.moves-app.com/)
