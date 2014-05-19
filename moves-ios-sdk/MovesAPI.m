@@ -9,6 +9,7 @@
 #import "MovesAPI.h"
 #import "MVOAuthViewController.h"
 #import "DFDateFormatterFactory.h"
+#import "MVCalendarFactory.h"
 
 #define BASE_DOMAIN @"https://api.moves-app.com"
 #define BASE_DOMAIN_1_1 @"https://api.moves-app.com/api/1.1"
@@ -296,6 +297,7 @@
 
 - (NSString *)stringFromDate:(NSDate *)date byFormat:(NSString *)format {
     NSDateFormatter *dateFormatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:format];
+    dateFormatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
     [dateFormatter setDateFormat:format];
     return [dateFormatter stringFromDate:date];
 }

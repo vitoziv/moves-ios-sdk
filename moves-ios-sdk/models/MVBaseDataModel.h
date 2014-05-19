@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #define isNull(o) (!o || (NSNull *)o == [NSNull null])
+#import "MVCalendarFactory.h"
 
 @interface MVBaseDataModel : NSObject
 - (instancetype)initWithDictionary:(NSDictionary *)dic;

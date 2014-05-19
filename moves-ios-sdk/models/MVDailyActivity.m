@@ -18,6 +18,8 @@
     if (self && !isNull(dic)) {
         if (dic[@"date"] && !isNull(dic[@"date"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
+            
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
             _date = [formatter dateFromString:dic[@"date"]];
         }
         if (dic[@"caloriesIdle"] && !isNull(dic[@"caloriesIdle"])) {
@@ -46,6 +48,7 @@
         
         if (dic[@"lastUpdate"] && !isNull(dic[@"lastUpdate"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
             _lastUpdate = [formatter dateFromString:dic[@"lastUpdate"]];
         }
     }

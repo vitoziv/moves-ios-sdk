@@ -17,6 +17,7 @@
     if (self && !isNull(dic)) {
         
         NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
+        formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
         if (dic[@"startTime"] && !isNull(dic[@"startTime"])) {
             _startTime = [formatter dateFromString:dic[@"startTime"]];
         }

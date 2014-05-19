@@ -20,6 +20,7 @@
         if (!isNull(profile)) {
             if (!isNull(profile[@"firstDate"])) {
                 NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
+                formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
                 _firstDate = [formatter dateFromString:profile[@"firstDate"]];
             }
             if (!isNull(profile[@"currentTimeZone"])) {

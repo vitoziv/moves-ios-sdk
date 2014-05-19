@@ -23,6 +23,7 @@
         }
         if (dic[@"time"] && !isNull(dic[@"time"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
             _time = [formatter dateFromString:dic[@"time"]];
         }
     }
