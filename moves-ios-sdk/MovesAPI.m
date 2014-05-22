@@ -174,7 +174,11 @@
             self.oauthViewController = [[MVOAuthViewController alloc] initWithAuthorizationURL:[NSURL URLWithString:urlString]
                                                                                       delegate:self];
             UINavigationController *oauthNavController = [[UINavigationController alloc] initWithRootViewController:self.oauthViewController];
-            
+            // use a formsheet on iPad
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                self.oauthViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+                oauthNavController.modalPresentationStyle = UIModalPresentationFormSheet;
+            }
             [viewController presentViewController:oauthNavController
                                          animated:YES
                                        completion:nil];
