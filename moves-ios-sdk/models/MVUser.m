@@ -36,7 +36,10 @@
             if (!isNull(profile[@"caloriesAvailable"])) {
                 _caloriesAvailable = [profile[@"caloriesAvailable"] boolValue];
             }
-            _platform = profile[@"platform"];
+            
+            if (!isNull(profile[@"platform"])) {
+                _platform = [profile[@"platform"] stringValue];
+            }
         }
     }
     

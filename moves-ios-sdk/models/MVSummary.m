@@ -26,9 +26,12 @@
         if (!isNull(dic[@"calories"])) {
             _calories = [dic[@"calories"] integerValue];
         }
-        
-        _activity = dic[@"activity"];
-        _group = dic[@"group"];
+        if (!isNull(dic[@"activity"])) {
+            _activity = [dic[@"activity"] stringValue];
+        }
+        if (!isNull(dic[@"group"])) {
+            _group = dic[@"group"];
+        }
     }
     
     return self;

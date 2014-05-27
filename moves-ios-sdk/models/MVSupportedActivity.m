@@ -21,8 +21,12 @@
         if (!isNull(dic[@"place"])) {
             _place = [dic[@"place"] boolValue];
         }
-        _color = dic[@"color"];
-        _units = dic[@"units"];
+        if (!isNull(dic[@"color"])) {
+            _color = [dic[@"color"] stringValue];
+        }
+        if (!isNull(dic[@"units"])) {
+            _units = [dic[@"units"] stringValue];
+        }
     }
     
     return self;

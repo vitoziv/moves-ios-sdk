@@ -13,8 +13,12 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        _language = dic[@"language"];
-        _locale = dic[@"locale"];
+        if (!isNull(dic[@"language"])) {
+            _language = [dic[@"language"] stringValue];
+        }
+        if (!isNull(dic[@"locale"])) {
+            _locale = [dic[@"locale"] stringValue];
+        }
         if (!isNull(dic[@"firstWeekDay"])) {
             _firstWeekDay = [dic[@"firstWeekDay"] integerValue];
         } else {
