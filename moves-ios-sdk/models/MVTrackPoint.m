@@ -14,7 +14,7 @@
 - (MVTrackPoint *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self && !isNull(dic)) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         if (dic[@"lat"] && !isNull(dic[@"lat"])) {
             _lat = [dic[@"lat"] floatValue];
         }

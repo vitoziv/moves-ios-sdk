@@ -14,7 +14,7 @@
 - (MVSegment *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self && !isNull(dic)) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         _type = dic[@"type"];
         
         NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];

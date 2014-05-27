@@ -15,7 +15,7 @@
 - (MVDailySummary *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self && !isNull(dic)) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         if (!isNull(dic[@"date"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
             formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];

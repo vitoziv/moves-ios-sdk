@@ -15,7 +15,7 @@
 - (MVDailyActivity *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self && !isNull(dic)) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         if (dic[@"date"] && !isNull(dic[@"date"])) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
             

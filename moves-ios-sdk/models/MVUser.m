@@ -14,16 +14,16 @@
 - (MVUser *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self && !isNull(dic)) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         _userId = dic[@"userId"];
         NSDictionary *profile = dic[@"profile"];
-        if (!isNull(profile)) {
+        if ([profile isKindOfClass:[NSDictionary class]]) {
             if (!isNull(profile[@"firstDate"])) {
                 NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
                 formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
                 _firstDate = [formatter dateFromString:profile[@"firstDate"]];
             }
-            if (!isNull(profile[@"currentTimeZone"])) {
+            if ([profile[@"currentTimeZone"] isKindOfClass:[NSDictionary class]]) {
                 _currentTimeZoneId = profile[@"currentTimeZone"][@"id"];
                 if (!isNull(profile[@"currentTimeZone"][@"offset"])) {
                     _currentTimeZoneOffset = [profile[@"currentTimeZone"][@"offset"] integerValue];

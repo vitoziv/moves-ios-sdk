@@ -13,7 +13,7 @@
 - (MVSummary *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     
-    if (self && !isNull(dic)) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         if (!isNull(dic[@"duration"])) {
             _duration = [dic[@"duration"] integerValue];
         }

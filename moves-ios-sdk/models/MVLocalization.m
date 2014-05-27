@@ -12,7 +12,7 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
-    if (self) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         _language = dic[@"language"];
         _locale = dic[@"locale"];
         if (!isNull(dic[@"firstWeekDay"])) {

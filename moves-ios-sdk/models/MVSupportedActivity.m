@@ -12,7 +12,7 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)dic {
     self = [super initWithDictionary:dic];
-    if (self && !isNull(dic)) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         _activity = dic[@"activity"];
         if (!isNull(dic[@"geo"])) {
             _geo = [dic[@"geo"] boolValue];

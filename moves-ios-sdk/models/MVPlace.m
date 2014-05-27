@@ -12,7 +12,7 @@
 
 - (MVPlace *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
-    if (self) {
+    if (self && [dic isKindOfClass:[NSDictionary class]]) {
         if (dic[@"id"]) {
             _placeId = dic[@"id"];
         }
