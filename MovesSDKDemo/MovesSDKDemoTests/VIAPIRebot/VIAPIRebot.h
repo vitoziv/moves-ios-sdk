@@ -10,7 +10,7 @@
 
 @interface VIAPIRebot : NSObject
 
-+ (void)requestUrl:(NSString *)url forJsonFlower:(void(^)(NSArray *jsonFlower))flower;
-+ (NSArray *)jsonFlowerWithJsonData:(id)jsonData;
++ (void)requestUrl:(NSString *)url convertValueToObject:(id)obj forJsonFlower:(void(^)(NSArray *jsonFlower))flower;
++ (NSArray *)jsonFlowerWithJsonData:(id)jsonData convertValueToObject:(id)obj;
 
 @end
