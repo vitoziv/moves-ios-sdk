@@ -1,5 +1,5 @@
 //
-//  VIAPIRebot.h
+//  VIAPIRobot.h
 //  MovesSDKDemo
 //
 //  Created by Vito on 5/16/14.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface VIAPIRebot : NSObject
+@interface VIAPIRobot : NSObject
 
 + (void)requestUrl:(NSString *)url convertValueToObject:(id)obj forJsonFlower:(void(^)(NSArray *jsonFlower))flower;
 + (NSArray *)jsonFlowerWithJsonData:(id)jsonData convertValueToObject:(id)obj;

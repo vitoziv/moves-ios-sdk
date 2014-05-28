@@ -1,14 +1,14 @@
 //
-//  VIAPIRebot.m
+//  VIAPIRobot.m
 //  MovesSDKDemo
 //
 //  Created by Vito on 5/16/14.
 //  Copyright (c) 2014 vito. All rights reserved.
 //
 
-#import "VIAPIRebot.h"
+#import "VIAPIRobot.h"
 
-@implementation VIAPIRebot
+@implementation VIAPIRobot
 
 + (void)requestUrl:(NSString *)url convertValueToObject:(id)obj forJsonFlower:(void(^)(NSArray *jsonFlower))flower {
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
