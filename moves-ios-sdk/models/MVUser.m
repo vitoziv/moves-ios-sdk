@@ -8,6 +8,7 @@
 
 #import "MVUser.h"
 #import "DFDateFormatterFactory.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVUser
 
@@ -15,31 +16,30 @@
     self = [super init];
     
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        _userId = dic[@"userId"];
+        _userId = [MVJsonValueParser stringValueFromObject:dic[@"userId"]];
         NSDictionary *profile = dic[@"profile"];
         if ([profile isKindOfClass:[NSDictionary class]]) {
-            if (!isNull(profile[@"firstDate"])) {
+            NSString *firstDate = [MVJsonValueParser stringValueFromObject:profile[@"firstDate"]];
+            if (firstDate) {
                 NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
                 formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
-                _firstDate = [formatter dateFromString:profile[@"firstDate"]];
+                _firstDate = [formatter dateFromString:firstDate];
             }
-            if ([profile[@"currentTimeZone"] isKindOfClass:[NSDictionary class]]) {
-                _currentTimeZoneId = profile[@"currentTimeZone"][@"id"];
-                if (!isNull(profile[@"currentTimeZone"][@"offset"])) {
-                    _currentTimeZoneOffset = [profile[@"currentTimeZone"][@"offset"] integerValue];
-                }
+            
+            NSDictionary *currentTimeZone = profile[@"currentTimeZone"];
+            if ([currentTimeZone isKindOfClass:[NSDictionary class]]) {
+                _currentTimeZoneId = [MVJsonValueParser stringValueFromObject:currentTimeZone[@"id"]];
+                _currentTimeZoneOffset = [MVJsonValueParser integerValueFromObject:currentTimeZone[@"offset"]];
             }
-            if (!isNull(profile[@"localization"])) {
+            if ([profile[@"localization"] isKindOfClass:[NSDictionary class]]) {
                 _localization = [[MVLocalization alloc] initWithDictionary:profile[@"localization"]];
             }
             
-            if (!isNull(profile[@"caloriesAvailable"])) {
-                _caloriesAvailable = [profile[@"caloriesAvailable"] boolValue];
+            if (profile[@"caloriesAvailable"]) {
+                _caloriesAvailable = [MVJsonValueParser boolValueFromObject:profile[@"caloriesAvailable"]];
             }
             
-            if (!isNull(profile[@"platform"])) {
-                _platform = [profile[@"platform"] stringValue];
-            }
+            _platform = [MVJsonValueParser stringValueFromObject:dic[@"platform"]];
         }
     }
     

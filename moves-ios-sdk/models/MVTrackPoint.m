@@ -8,6 +8,7 @@
 
 #import "MVTrackPoint.h"
 #import "DFDateFormatterFactory.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVTrackPoint
 
@@ -15,16 +16,18 @@
     self = [super init];
     
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        if (dic[@"lat"] && !isNull(dic[@"lat"])) {
-            _lat = [dic[@"lat"] floatValue];
+        if (dic[@"lat"]) {
+            _lat = [MVJsonValueParser floatValueFromObject:dic[@"lat"]];
         }
-        if (dic[@"lon"] && !isNull(dic[@"lon"])) {
-            _lon = [dic[@"lon"] floatValue];
+        if (dic[@"lon"]) {
+            _lon = [MVJsonValueParser floatValueFromObject:dic[@"lon"]];
         }
-        if (dic[@"time"] && !isNull(dic[@"time"])) {
+        
+        NSString *time = [MVJsonValueParser stringValueFromObject:dic[@"time"]];
+        if (time) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
             formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
-            _time = [formatter dateFromString:dic[@"time"]];
+            _time = [formatter dateFromString:time];
         }
     }
     

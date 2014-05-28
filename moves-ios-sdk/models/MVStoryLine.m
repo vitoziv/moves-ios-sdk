@@ -8,6 +8,7 @@
 
 #import "MVStoryLine.h"
 #import "DFDateFormatterFactory.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVStoryLine
 
@@ -15,34 +16,25 @@
     self = [super init];
     
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        if (dic[@"date"] && !isNull(dic[@"date"])) {
+        NSString *date = [MVJsonValueParser stringValueFromObject:dic[@"date"]];
+        if (date) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
             formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
-            _date = [formatter dateFromString:dic[@"date"]];
+            _date = [formatter dateFromString:date];
         }
-        if (dic[@"caloriesIdle"] && !isNull(dic[@"caloriesIdle"])) {
-            _caloriesIdle = [dic[@"caloriesIdle"] integerValue];
-        }
-        
-        if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {
-            NSMutableArray *segments = [[NSMutableArray alloc] init];
-            for (NSDictionary *segment in dic[@"segments"]) {
-                [segments addObject:[[MVSegment alloc] initWithDictionary:segment]];
-            }
-            _segments = segments;
+        if (dic[@"caloriesIdle"]) {
+            _caloriesIdle = [MVJsonValueParser integerValueFromObject:dic[@"caloriesIdle"]];
         }
         
-        if ([dic[@"summary"] isKindOfClass:[NSArray class]]) {
-            NSMutableArray *summaries = [[NSMutableArray alloc] init];
-            for (NSDictionary *summary in dic[@"summary"]) {
-                [summaries addObject:[[MVSummary alloc] initWithDictionary:summary]];
-            }
-            if (summaries.count > 0) {
-                _summaries = summaries;
-            }
-        }
+        _segments = [MVJsonValueParser arrayValueFromObject:dic[@"segments"]
+                                      withCreateObjectBlock:^MVBaseDataModel *(NSDictionary *dic) {
+                                          return [[MVSegment alloc] initWithDictionary:dic];
+                                      }];
+        _summaries = [MVJsonValueParser arrayValueFromObject:dic[@"summary"]
+                                       withCreateObjectBlock:^MVBaseDataModel *(NSDictionary *dic) {
+                                           return [[MVSummary alloc] initWithDictionary:dic];
+                                       }];
     }
-    
     
     return self;
 }

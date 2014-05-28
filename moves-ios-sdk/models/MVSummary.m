@@ -7,6 +7,7 @@
 //
 
 #import "MVSummary.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVSummary
 
@@ -14,23 +15,23 @@
     self = [super init];
     
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        if (!isNull(dic[@"duration"])) {
-            _duration = [dic[@"duration"] integerValue];
+        if (dic[@"duration"]) {
+            _duration = [MVJsonValueParser integerValueFromObject:dic[@"duration"]];
         }
-        if (!isNull(dic[@"distance"])) {
-            _distance = [dic[@"distance"] integerValue];
+        if (dic[@"distance"]) {
+            _distance = [MVJsonValueParser integerValueFromObject:dic[@"distance"]];
         }
-        if (!isNull(dic[@"steps"])) {
-            _steps = [dic[@"steps"] integerValue];
+        if (dic[@"steps"]) {
+            _steps = [MVJsonValueParser integerValueFromObject:dic[@"steps"]];
         }
-        if (!isNull(dic[@"calories"])) {
-            _calories = [dic[@"calories"] integerValue];
+        if (dic[@"calories"]) {
+            _calories = [MVJsonValueParser integerValueFromObject:dic[@"calories"]];
         }
-        if (!isNull(dic[@"activity"])) {
-            _activity = [dic[@"activity"] stringValue];
+        if (dic[@"activity"]) {
+            _activity = [MVJsonValueParser stringValueFromObject:dic[@"activity"]];
         }
-        if (!isNull(dic[@"group"])) {
-            _group = dic[@"group"];
+        if (dic[@"group"]) {
+            _group = [MVJsonValueParser stringValueFromObject:dic[@"group"]];
         }
     }
     

@@ -7,6 +7,7 @@
 //
 
 #import "MVLocation.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVLocation
 
@@ -14,12 +15,12 @@
     self = [super init];
     
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        
-        if (dic[@"lat"] && !isNull(dic[@"lat"])) {
-            _lat = [dic[@"lat"] floatValue];
+        if (dic[@"lat"]) {
+            _lat = [MVJsonValueParser floatValueFromObject:dic[@"lat"]];
         }
-        if (dic[@"lon"] && !isNull(dic[@"lon"])) {
-            _lon = [dic[@"lon"] floatValue];
+        
+        if (dic[@"lon"]) {
+            _lon = [MVJsonValueParser floatValueFromObject:dic[@"lon"]];
         }
     }
     

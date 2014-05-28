@@ -7,25 +7,26 @@
 //
 
 #import "MVSupportedActivity.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVSupportedActivity
 
 - (instancetype)initWithDictionary:(NSDictionary *)dic {
     self = [super initWithDictionary:dic];
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        _activity = dic[@"activity"];
-        if (!isNull(dic[@"geo"])) {
-            _geo = [dic[@"geo"] boolValue];
+        _activity = [MVJsonValueParser stringValueFromObject:dic[@"activity"]];
+        if (dic[@"geo"]) {
+            _geo = [MVJsonValueParser boolValueFromObject:dic[@"geo"]];
         }
         
-        if (!isNull(dic[@"place"])) {
-            _place = [dic[@"place"] boolValue];
+        if (dic[@"place"]) {
+            _place = [MVJsonValueParser boolValueFromObject:dic[@"place"]];
         }
-        if (!isNull(dic[@"color"])) {
-            _color = [dic[@"color"] stringValue];
+        if (dic[@"color"]) {
+            _color = [MVJsonValueParser stringValueFromObject:dic[@"color"]];
         }
-        if (!isNull(dic[@"units"])) {
-            _units = [dic[@"units"] stringValue];
+        if (dic[@"units"]) {
+            _units = [MVJsonValueParser stringValueFromObject:dic[@"units"]];
         }
     }
     

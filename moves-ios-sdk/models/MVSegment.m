@@ -8,6 +8,7 @@
 
 #import "MVSegment.h"
 #import "DFDateFormatterFactory.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVSegment
 
@@ -15,30 +16,32 @@
     self = [super init];
     
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        _type = dic[@"type"];
+        _type = [MVJsonValueParser stringValueFromObject:dic[@"type"]];
         
         NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
         formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
-        if (dic[@"startTime"] && !isNull(dic[@"startTime"])) {
-            _startTime = [formatter dateFromString:dic[@"startTime"]];
+        NSString *startTime = [MVJsonValueParser stringValueFromObject:dic[@"startTime"]];
+        if (startTime) {
+            _startTime = [formatter dateFromString:startTime];
         }
-        if (dic[@"endTime"] && !isNull(dic[@"endTime"])) {
-            _endTime = [formatter dateFromString:dic[@"endTime"]];
+        
+        NSString *endTime = [MVJsonValueParser stringValueFromObject:dic[@"endTime"]];
+        if (endTime) {
+            _endTime = [formatter dateFromString:endTime];
         }
-        if (dic[@"place"] && !isNull(dic[@"place"])) {
+        
+        if ([dic[@"place"] isKindOfClass:[NSDictionary class]]) {
             _place = [[MVPlace alloc] initWithDictionary:dic[@"place"]];
         }
         
-        if ([dic[@"activities"] isKindOfClass:[NSArray class]]) {
-            NSMutableArray *activities = [[NSMutableArray alloc] init];
-            for (NSDictionary *activity in dic[@"activities"]) {
-                [activities addObject:[[MVActivity alloc] initWithDictionary:activity]];
-            }
-            _activities = activities;
-        }
+        _activities = [MVJsonValueParser arrayValueFromObject:dic[@"activities"]
+                                        withCreateObjectBlock:^MVBaseDataModel *(NSDictionary *dic) {
+                                            return [[MVActivity alloc] initWithDictionary:dic];
+                                        }];
         
-        if (dic[@"lastUpdate"] && !isNull(dic[@"lastUpdate"])) {
-            _lastUpdate = [formatter dateFromString:dic[@"lastUpdate"]];
+        NSString *lastUpdate = [MVJsonValueParser stringValueFromObject:dic[@"lastUpdate"]];
+        if (lastUpdate) {
+            _lastUpdate = [formatter dateFromString:lastUpdate];
         }
     }
     

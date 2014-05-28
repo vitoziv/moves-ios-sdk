@@ -7,25 +7,26 @@
 //
 
 #import "MVLocalization.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVLocalization
 
 - (instancetype)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        if (!isNull(dic[@"language"])) {
-            _language = [dic[@"language"] stringValue];
+        if (dic[@"language"]) {
+            _language = [MVJsonValueParser stringValueFromObject:dic[@"language"]];
         }
-        if (!isNull(dic[@"locale"])) {
-            _locale = [dic[@"locale"] stringValue];
+        if (dic[@"locale"]) {
+            _locale = [MVJsonValueParser stringValueFromObject:dic[@"locale"]];
         }
-        if (!isNull(dic[@"firstWeekDay"])) {
-            _firstWeekDay = [dic[@"firstWeekDay"] integerValue];
+        if (dic[@"firstWeekDay"] && !isNull(dic[@"firstWeekDay"])) {
+            _firstWeekDay = [MVJsonValueParser integerValueFromObject:dic[@"firstWeekDay"]];
         } else {
             _firstWeekDay = MVFirstWeekDayTypeNone;
         }
-        if (!isNull(dic[@"metric"])) {
-            _metric = [dic[@"metric"] boolValue];
+        if (dic[@"metric"]) {
+            _metric = [MVJsonValueParser boolValueFromObject:dic[@"metric"]];
         }
     }
     

@@ -8,32 +8,34 @@
 
 #import "MVDailyPlace.h"
 #import "DFDateFormatterFactory.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVDailyPlace
 
 - (MVDailyPlace *)initWithDictionary:(NSDictionary *)dic {
     self = [super init];
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
-        if (dic[@"date"] && !isNull(dic[@"date"])) {
+        if (dic[@"date"]) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
             formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];;
-            _date = [formatter dateFromString:dic[@"date"]];
-        }
-        
-        if ([dic[@"segments"] isKindOfClass:[NSArray class]]) {
-            NSMutableArray *segments = [[NSMutableArray alloc] init];
-            for (NSDictionary *segment in dic[@"segments"]) {
-                [segments addObject:[[MVSegment alloc] initWithDictionary:segment]];
-            }
-            if (segments.count > 0) {
-                _segments = segments;
+            NSString *dateString = [MVJsonValueParser stringValueFromObject:dic[@"date"]];
+            if (dateString) {
+                _date = [formatter dateFromString:dateString];
             }
         }
         
-        if (dic[@"lastUpdate"] && !isNull(dic[@"lastUpdate"])) {
+        _segments = [MVJsonValueParser arrayValueFromObject:dic[@"segments"]
+                                      withCreateObjectBlock:^MVBaseDataModel *(NSDictionary *dic) {
+                                          return [[MVSegment alloc] initWithDictionary:dic];
+                                      }];
+        
+        if (dic[@"lastUpdate"]) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
             formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
-            _lastUpdate = [formatter dateFromString:dic[@"lastUpdate"]];
+            NSString *dateString = [MVJsonValueParser stringValueFromObject:dic[@"lastUpdate"]];
+            if (dateString) {
+                _lastUpdate = [formatter dateFromString:dateString];
+            }
         }
     }
     

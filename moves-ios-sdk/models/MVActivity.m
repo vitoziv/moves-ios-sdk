@@ -8,6 +8,7 @@
 
 #import "MVActivity.h"
 #import "DFDateFormatterFactory.h"
+#import "MVJsonValueParser.h"
 
 @implementation MVActivity
 
@@ -18,25 +19,19 @@
         
         NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
         formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
-        if (dic[@"startTime"] && !isNull(dic[@"startTime"])) {
-            _startTime = [formatter dateFromString:dic[@"startTime"]];
+        NSString *startTime = [MVJsonValueParser stringValueFromObject:dic[@"startTime"]];
+        if (startTime) {
+            _startTime = [formatter dateFromString:startTime];
         }
-        if (dic[@"endTime"] && !isNull(dic[@"endTime"])) {
-            _endTime = [formatter dateFromString:dic[@"endTime"]];
+        NSString *endTime = [MVJsonValueParser stringValueFromObject:dic[@"endTime"]];
+        if (endTime) {
+            _endTime = [formatter dateFromString:endTime];
         }
-        if (dic[@"manual"] && !isNull(dic[@"manual"])) {
-            _manual = [dic[@"manual"] boolValue];
-        }
-        
-        if ([dic[@"trackPoints"] isKindOfClass:[NSArray class]]) {
-            NSMutableArray *trackPoints = [[NSMutableArray alloc] init];
-            for (NSDictionary *trackPoint in dic[@"trackPoints"]) {
-                [trackPoints addObject:[[MVTrackPoint alloc] initWithDictionary:trackPoint]];
-            }
-            if (trackPoints.count > 0) {
-                _trackPoints = trackPoints;
-            }
-        }
+        _manual = [MVJsonValueParser boolValueFromObject:dic[@"manual"]];
+        _trackPoints = [MVJsonValueParser arrayValueFromObject:dic[@"trackPoints"]
+                                         withCreateObjectBlock:^MVBaseDataModel *(NSDictionary *dic) {
+                                             return [[MVTrackPoint alloc] initWithDictionary:dic];
+                                         }];
 
     }
     
