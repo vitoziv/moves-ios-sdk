@@ -93,6 +93,7 @@
 {
     return @{
              @"activity": @"aerobics",
+             @"group": @"transport",
              @"geo": @NO,
              @"place": @YES,
              @"color": @"bc4fff",
