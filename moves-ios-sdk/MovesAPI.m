@@ -494,8 +494,10 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_USER_PROFILE date:nil dateFormat:nil];
     [self getJsonByUrl:url
                success:^(id json) {
-                   MVUser *user = [[MVUser alloc] initWithDictionary:json];
-                   if (success) success(user);
+                   [MVAPIValidator validateProfileJson:json success:^{
+                       MVUser *user = [[MVUser alloc] initWithDictionary:json];
+                       if (success) success(user);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -505,9 +507,11 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN_1_1, MV_URL_ACTIVITY_LIST];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) {
-                       success([self arrayByJSON:json modelClassName:kModelTypeSupportedActivity]);
-                   }
+                   [MVAPIValidator validateActivityListJson:json success:^{
+                       if (success) {
+                           success([self arrayByJSON:json modelClassName:kModelTypeSupportedActivity]);
+                       }
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -520,7 +524,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   [MVAPIValidator validateSummariesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -531,7 +537,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   [MVAPIValidator validateSummariesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -542,7 +550,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   [MVAPIValidator validateSummariesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -554,7 +564,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   [MVAPIValidator validateSummariesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -565,7 +577,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   [MVAPIValidator validateSummariesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeSummary]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -577,7 +591,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   [MVAPIValidator validateActivitiesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -588,7 +604,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   [MVAPIValidator validateActivitiesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -599,7 +617,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   [MVAPIValidator validateActivitiesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -611,7 +631,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   [MVAPIValidator validateActivitiesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -622,7 +644,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   [MVAPIValidator validateActivitiesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeActivity]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -635,7 +659,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   [MVAPIValidator validatePlacesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   } failure:failure];
                } failure:failure];
 }
 
@@ -645,7 +671,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   [MVAPIValidator validatePlacesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -656,7 +684,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   [MVAPIValidator validatePlacesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -668,7 +698,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_PLACES fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   [MVAPIValidator validatePlacesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -679,7 +711,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *url = [self urlByMVUrl:MV_URL_PLACES pastDays:pastDays];
     [self getJsonByUrl:url
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   [MVAPIValidator validatePlacesJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypePlace]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -695,7 +729,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     }
     [self getJsonByUrl:urlString
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   [MVAPIValidator validateStorylineJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -710,7 +746,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     }
     [self getJsonByUrl:urlString
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   [MVAPIValidator validateStorylineJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -721,7 +759,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:urlString
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   [MVAPIValidator validateStorylineJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -737,7 +777,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     }
     [self getJsonByUrl:urlString
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   [MVAPIValidator validateStorylineJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   } failure:failure];
                }
                failure:failure];
 }
@@ -752,7 +794,9 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     }
     [self getJsonByUrl:urlString
                success:^(id json) {
-                   if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   [MVAPIValidator validateStorylineJson:json success:^{
+                       if (success) success([self arrayByJSON:json modelClassName:kModelTypeStoryLine]);
+                   } failure:failure];
                }
                failure:failure];
 }
