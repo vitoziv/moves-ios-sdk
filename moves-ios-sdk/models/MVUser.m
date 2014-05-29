@@ -39,7 +39,7 @@
                 _caloriesAvailable = [MVJsonValueParser boolValueFromObject:profile[@"caloriesAvailable"]];
             }
             
-            _platform = [MVJsonValueParser stringValueFromObject:dic[@"platform"]];
+            _platform = [MVJsonValueParser stringValueFromObject:profile[@"platform"]];
         }
     }
     
