@@ -8,13 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void(^MVAVSuccessBlock)(void);
+typedef void(^MVAVFailureBlock)(NSError *error);
+
 @interface MVAPIValidator : NSObject
 
-+ (void)validateProfileJson:(id)json error:(NSError **)error;
-+ (void)validateSummariesJson:(id)json error:(NSError **)error;
-+ (void)validateActivitiesJson:(id)json error:(NSError **)error;
-+ (void)validatePlacesJson:(id)json error:(NSError **)error;
-+ (void)validateStorylineJson:(id)json error:(NSError **)error;
-+ (void)validateActivityListJson:(id)json error:(NSError **)error;
++ (void)validateProfileJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure;
++ (void)validateSummariesJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure;
++ (void)validateActivitiesJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure;
++ (void)validatePlacesJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure;
++ (void)validateStorylineJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure;
++ (void)validateActivityListJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure;
 
 @end

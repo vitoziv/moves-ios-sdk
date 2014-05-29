@@ -12,55 +12,138 @@
 
 @implementation MVAPIValidator
 
-+ (void)validateProfileJson:(id)json error:(NSError **)error
++ (void)validateProfileJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure
 {
+    NSError *error;
     [MVRPJSONValidator validateValuesFrom:json
                          withRequirements:[self profileJsonRequirements]
-                                    error:error];
+                                    error:&error];
     
-    if (!*error) {
+    if (!error) {
         NSDictionary *localization = json[@"profile"][@"localization"];
         if (localization) {
             [MVRPJSONValidator validateValuesFrom:localization
                                  withRequirements:[self profileLocalizationJsonRequirements]
-                                            error:error];
+                                            error:&error];
         }
+    }
+    
+    
+    if (error){
+        if (failure) { failure(error); }
+    } else {
+        if (success) { success(); };
     }
 }
 
-+ (void)validateSummariesJson:(id)json error:(NSError **)error
++ (void)validateActivityListJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure
 {
+    __block NSError *error;
     if ([json isKindOfClass:[NSArray class]]) {
         [json enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             [MVRPJSONValidator validateValuesFrom:obj
-                                 withRequirements:[self summariesJsonRequirementsWithError:error]
-                                            error:error];
+                                 withRequirements:[self activityListJsonRequirements]
+                                            error:&error];
             
-            if (*error) {
+            if (error) {
                 *stop = YES;
             }
         }];
     }
-}
-
-+ (void)validateActivitiesJson:(id)json error:(NSError **)error
-{
-
-}
-
-+ (void)validatePlacesJson:(id)json error:(NSError **)error
-{
-
-}
-
-+ (void)validateStorylineJson:(id)json error:(NSError **)error
-{
-
-}
-
-+ (void)validateActivityListJson:(id)json error:(NSError **)error
-{
     
+    if (error){
+        if (failure) { failure(error); }
+    } else {
+        if (success) { success(); };
+    }
+}
+
++ (void)validateSummariesJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure
+{
+    __block NSError *error;
+    if ([json isKindOfClass:[NSArray class]]) {
+        [json enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [MVRPJSONValidator validateValuesFrom:obj
+                                 withRequirements:[self summariesJsonRequirementsWithError:&error]
+                                            error:&error];
+            
+            if (error) {
+                *stop = YES;
+            }
+        }];
+    }
+    
+    if (error){
+        if (failure) { failure(error); }
+    } else {
+        if (success) { success(); };
+    }
+}
+
++ (void)validateActivitiesJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure
+{
+    __block NSError *error;
+    if ([json isKindOfClass:[NSArray class]]) {
+        [json enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [MVRPJSONValidator validateValuesFrom:obj
+                                 withRequirements:[self activitiesJsonRequirementsWithError:&error]
+                                            error:&error];
+            
+            if (error) {
+                *stop = YES;
+            }
+        }];
+    }
+    
+    if (error){
+        if (failure) { failure(error); }
+    } else {
+        if (success) { success(); };
+    }
+}
+
++ (void)validatePlacesJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure
+{
+    __block NSError *error;
+    if ([json isKindOfClass:[NSArray class]]) {
+        [json enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [MVRPJSONValidator validateValuesFrom:obj
+                                 withRequirements:[self placesJsonRequirementsWithError:&error]
+                                            error:&error];
+            
+            if (error) {
+                *stop = YES;
+            }
+        }];
+    }
+    
+    if (error){
+        if (failure) { failure(error); }
+    } else {
+        if (success) { success(); };
+    }
+}
+
++ (void)validateStorylineJson:(id)json success:(MVAVSuccessBlock)success failure:(MVAVFailureBlock)failure
+{
+    __block NSError *error;
+    if ([json isKindOfClass:[NSArray class]]) {
+        [json enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [MVRPJSONValidator validateValuesFrom:obj
+                                 withRequirements:[self storylineJsonRequirementsWithError:&error]
+                                            error:&error];
+            
+            if (error) {
+                *stop = YES;
+            }
+        }];
+    }
+    
+    if (error){
+        if (failure) { failure(error); }
+    } else {
+        if (success) { success(); };
+    }
 }
 
 #pragma mark - Private
@@ -79,6 +162,77 @@
             }
         }];
         
+        return *error ? NO : YES;
+    }
+    
+    return NO;
+}
+
++ (BOOL)validateActivityArrayJson:(id)jsonValue error:(NSError **)error
+{
+    if ((NSNull *)jsonValue == [NSNull null]) {
+        return YES;
+    } else if ([jsonValue isKindOfClass:[NSArray class]]) {
+        [jsonValue enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [MVRPJSONValidator validateValuesFrom:obj
+                                 withRequirements:[self activityJsonRequirements]
+                                            error:error];
+            if (*error) {
+                *stop = YES;
+            } else {
+                NSArray *trackPoints = obj[@"trackPoints"];
+                if ([trackPoints isKindOfClass:[NSArray class]]) {
+                    [trackPoints enumerateObjectsUsingBlock:^(id trackPoint, NSUInteger idx, BOOL *stop) {
+                        [MVRPJSONValidator validateValuesFrom:trackPoint
+                                             withRequirements:[self trackPointsJsonRequirements]
+                                                        error:error];
+                        if (*error) { *stop = YES; }
+                    }];
+                    // Outer stop
+                    if (*error) { *stop = YES; }
+                }
+            }
+        }];
+        
+        return *error ? NO : YES;
+    }
+    
+    return NO;
+}
+
++ (BOOL)validateSegmentArrayJson:(id)jsonValue error:(NSError **)error
+{
+    if ((NSNull *)jsonValue == [NSNull null]) {
+        return YES;
+    } else if ([jsonValue isKindOfClass:[NSArray class]]) {
+        [jsonValue enumerateObjectsUsingBlock:^(id segment, NSUInteger idx, BOOL *stop) {
+            [MVRPJSONValidator validateValuesFrom:segment
+                                 withRequirements:[self segmentJsonRequirements]
+                                            error:error];
+            if (*error) {
+                *stop = YES;
+            } else {
+                NSDictionary *place = segment[@"place"];
+                if (place) {
+                    [MVRPJSONValidator validateValuesFrom:place
+                                         withRequirements:[self placeJsonRequirements]
+                                                    error:error];
+                    if (*error) { *stop = YES; }
+                }
+                
+                NSArray *activities = segment[@"activities"];
+                if ([activities isKindOfClass:[NSArray class]]) {
+                    [activities enumerateObjectsUsingBlock:^(id activity, NSUInteger idx, BOOL *stop) {
+                        [MVRPJSONValidator validateValuesFrom:activity
+                                             withRequirements:[self activityJsonRequirements]
+                                                        error:error];
+                        if (*error) { *stop = YES; }
+                    }];
+                    // Outer stop
+                    if (*error) { *stop = YES; }
+                }
+            }
+        }];
         return *error ? NO : YES;
     }
     
@@ -114,6 +268,18 @@
              };
 }
 
++ (NSDictionary *)activityListJsonRequirements
+{
+    return @{
+             @"activity": MVRPValidatorPredicate.isString,
+             @"group": MVRPValidatorPredicate.isString.isOptional,
+             @"geo": MVRPValidatorPredicate.isNumber,
+             @"place": MVRPValidatorPredicate.isNumber,
+             @"color": MVRPValidatorPredicate.isString,
+             @"units": MVRPValidatorPredicate.isString
+             };
+}
+
 + (NSDictionary *)summariesJsonRequirementsWithError:(NSError **)error
 {
     return @{
@@ -123,6 +289,47 @@
              @"summary" : [MVRPValidatorPredicate validateValueWithBlock:^BOOL(NSString *jsonKey, id jsonValue) {
                  return [self validateSummaryArrayJson:jsonValue error:error];
              }]
+             };
+}
+
++ (NSDictionary *)activitiesJsonRequirementsWithError:(NSError **)error
+{
+    return @{
+             @"date": MVRPValidatorPredicate.isString,
+             @"summary": [MVRPValidatorPredicate validateValueWithBlock:^BOOL(NSString *jsonKey, id jsonValue) {
+                 return [self validateSummaryArrayJson:jsonValue error:error];
+             }],
+             @"segments": [MVRPValidatorPredicate validateValueWithBlock:^BOOL(NSString *jsonKey, id jsonValue) {
+                 return [self validateSegmentArrayJson:jsonValue error:error];
+             }],
+             @"caloriesIdle": MVRPValidatorPredicate.isNumber.isOptional,
+             @"lastUpdate": MVRPValidatorPredicate.isString.isOptional
+             };
+}
+
++ (NSDictionary *)placesJsonRequirementsWithError:(NSError **)error
+{
+    return @{
+             @"date": MVRPValidatorPredicate.isString,
+             @"segments": [MVRPValidatorPredicate validateValueWithBlock:^BOOL(NSString *jsonKey, id jsonValue) {
+                 return [self validateSegmentArrayJson:jsonValue error:error];
+             }],
+             @"lastUpdate": MVRPValidatorPredicate.isString.isOptional
+             };
+}
+
++ (NSDictionary *)storylineJsonRequirementsWithError:(NSError **)error
+{
+    return @{
+             @"date": MVRPValidatorPredicate.isString,
+             @"summary": [MVRPValidatorPredicate validateValueWithBlock:^BOOL(NSString *jsonKey, id jsonValue) {
+                 return [self validateSummaryArrayJson:jsonValue error:error];
+             }],
+             @"segments": [MVRPValidatorPredicate validateValueWithBlock:^BOOL(NSString *jsonKey, id jsonValue) {
+                 return [self validateSegmentArrayJson:jsonValue error:error];
+             }],
+             @"caloriesIdle": MVRPValidatorPredicate.isNumber.isOptional,
+             @"lastUpdate": MVRPValidatorPredicate.isString.isOptional
              };
 }
 
@@ -140,54 +347,55 @@
              };
 }
 
-+ (NSDictionary *)placeJson
++ (NSDictionary *)segmentJsonRequirements
 {
     return @{
-             @"id": @4,
-             @"name": @"test",
-             @"type": @"foursquare",
-             @"foursquareId": @"4df0fdb17d8ba370a011d24c",
-             @"foursquareCategoryIds": @[@"4bf58dd8d48988d125941735"],
+             @"type": MVRPValidatorPredicate.isString,
+             @"startTime": MVRPValidatorPredicate.isString,
+             @"endTime": MVRPValidatorPredicate.isString,
+             @"place": MVRPValidatorPredicate.isDictionary.isOptional,
+             @"activities": MVRPValidatorPredicate.isArray.isOptional,
+             @"lastUpdate": MVRPValidatorPredicate.isString.isOptional
+             };
+}
+
++ (NSDictionary *)placeJsonRequirements
+{
+    return @{
+             @"id": MVRPValidatorPredicate.isNumber.isOptional,
+             @"name": MVRPValidatorPredicate.isString.isOptional,
+             @"type": MVRPValidatorPredicate.isString,
+             @"foursquareId": MVRPValidatorPredicate.isString.isOptional,
+             @"foursquareCategoryIds": MVRPValidatorPredicate.isArray.isOptional,
              @"location": @{
-                     @"lat": @55.55555,
-                     @"lon": @33.33333
+                     @"lat": MVRPValidatorPredicate.isNumber,
+                     @"lon": MVRPValidatorPredicate.isNumber
                      }
              };
 }
 
-+ (NSDictionary *)activityJson
++ (NSDictionary *)activityJsonRequirements
 {
     return @{
-             @"activity": @"walking",
-             @"group": @"walking",
-             @"manual": @NO,
-             @"startTime": @"20121212T071430+0200",
-             @"endTime": @"20121212T072732+0200",
-             @"duration": @782,
-             @"distance": @1251,
-             @"steps": @1353,
-             @"calories": @99,
-             @"trackPoints": @[
-                     @{
-                         @"lat": @55.55555,
-                         @"lon": @33.33333,
-                         @"time": @"20121212T071430+0200"
-                         }
-                     ]
+             @"activity": MVRPValidatorPredicate.isString,
+             @"group": MVRPValidatorPredicate.isString.isOptional,
+             @"manual": MVRPValidatorPredicate.isNumber,
+             @"startTime": MVRPValidatorPredicate.isString.isOptional,
+             @"endTime": MVRPValidatorPredicate.isString.isOptional,
+             @"duration": MVRPValidatorPredicate.isNumber,
+             @"distance": MVRPValidatorPredicate.isNumber.isOptional,
+             @"steps": MVRPValidatorPredicate.isNumber.isOptional,
+             @"calories": MVRPValidatorPredicate.isNumber.isOptional,
+             @"trackPoints": MVRPValidatorPredicate.isArray.isOptional
              };
 }
 
-+ (NSDictionary *)segmentJson
++ (NSDictionary *)trackPointsJsonRequirements
 {
     return @{
-             @"type": @"move",
-             @"startTime": @"20121212T071430+0200",
-             @"endTime": @"20121212T074617+0200",
-             @"place": [self placeJson],
-             @"activities": @[
-                     [self activityJson]
-                     ],
-             @"lastUpdate": @"20130317T121143Z"
+             @"lat": MVRPValidatorPredicate.isNumber,
+             @"lon": MVRPValidatorPredicate.isNumber,
+             @"time": MVRPValidatorPredicate.isString
              };
 }
 
