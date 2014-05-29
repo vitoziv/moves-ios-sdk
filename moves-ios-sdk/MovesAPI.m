@@ -732,7 +732,7 @@
                           failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE fromDate:fromDate toDate:toDate];
     if (trackPoints) {
-        urlString = [urlString stringByAppendingString:@"?trackPoints=true"];
+        urlString = [urlString stringByAppendingString:@"&trackPoints=true"];
     }
     [self getJsonByUrl:urlString
                success:^(id json) {
@@ -747,7 +747,7 @@
                             failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE pastDays:pastDays];
     if (trackPoints) {
-        urlString = [urlString stringByAppendingString:@"?trackPoints=true"];
+        urlString = [urlString stringByAppendingString:@"&trackPoints=true"];
     }
     [self getJsonByUrl:urlString
                success:^(id json) {
