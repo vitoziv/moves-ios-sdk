@@ -21,6 +21,9 @@
 		5F51392418A8C1F800B1931A /* MVSupportedActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F51392318A8C1F800B1931A /* MVSupportedActivity.m */; };
 		5F6A405C192861D000E40606 /* MVJsonFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6A405B192861D000E40606 /* MVJsonFactory.m */; };
 		5F8C5C29193591B2002ADC7E /* MVJsonValueParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8C5C28193591B2002ADC7E /* MVJsonValueParser.m */; };
+		5F8C5C961936E982002ADC7E /* MVRPJSONValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8C5C931936E982002ADC7E /* MVRPJSONValidator.m */; };
+		5F8C5C971936E982002ADC7E /* MVRPValidatorPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8C5C951936E982002ADC7E /* MVRPValidatorPredicate.m */; };
+		5F8C5C9A1936F032002ADC7E /* MVAPIValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8C5C991936F032002ADC7E /* MVAPIValidator.m */; };
 		5FB2FC641929D28B007CBDC3 /* MVLightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FB2FC631929D28B007CBDC3 /* MVLightCache.m */; };
 		5FB2FC671929D478007CBDC3 /* MVCalendarFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FB2FC661929D478007CBDC3 /* MVCalendarFactory.m */; };
 		5FC3C665183BAF2600D7951F /* MVOAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FC3C664183BAF2600D7951F /* MVOAuthViewController.m */; };
@@ -84,6 +87,12 @@
 		5F6A405B192861D000E40606 /* MVJsonFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVJsonFactory.m; sourceTree = "<group>"; };
 		5F8C5C27193591B2002ADC7E /* MVJsonValueParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVJsonValueParser.h; sourceTree = "<group>"; };
 		5F8C5C28193591B2002ADC7E /* MVJsonValueParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVJsonValueParser.m; sourceTree = "<group>"; };
+		5F8C5C921936E982002ADC7E /* MVRPJSONValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVRPJSONValidator.h; sourceTree = "<group>"; };
+		5F8C5C931936E982002ADC7E /* MVRPJSONValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVRPJSONValidator.m; sourceTree = "<group>"; };
+		5F8C5C941936E982002ADC7E /* MVRPValidatorPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVRPValidatorPredicate.h; sourceTree = "<group>"; };
+		5F8C5C951936E982002ADC7E /* MVRPValidatorPredicate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVRPValidatorPredicate.m; sourceTree = "<group>"; };
+		5F8C5C981936F032002ADC7E /* MVAPIValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVAPIValidator.h; sourceTree = "<group>"; };
+		5F8C5C991936F032002ADC7E /* MVAPIValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVAPIValidator.m; sourceTree = "<group>"; };
 		5FB2FC621929D28B007CBDC3 /* MVLightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVLightCache.h; sourceTree = "<group>"; };
 		5FB2FC631929D28B007CBDC3 /* MVLightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVLightCache.m; sourceTree = "<group>"; };
 		5FB2FC651929D478007CBDC3 /* MVCalendarFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVCalendarFactory.h; sourceTree = "<group>"; };
@@ -186,6 +195,7 @@
 		5F3D59E4183ED46200A7D3AF /* internal */ = {
 			isa = PBXGroup;
 			children = (
+				5F8C5C911936E982002ADC7E /* RPJSONValidator */,
 				5F3D59E5183ED58A00A7D3AF /* DFDateFormatterFactory.h */,
 				5F3D59E6183ED58A00A7D3AF /* DFDateFormatterFactory.m */,
 				5FC3C663183BAF2600D7951F /* MVOAuthViewController.h */,
@@ -196,6 +206,8 @@
 				5FB2FC661929D478007CBDC3 /* MVCalendarFactory.m */,
 				5F8C5C27193591B2002ADC7E /* MVJsonValueParser.h */,
 				5F8C5C28193591B2002ADC7E /* MVJsonValueParser.m */,
+				5F8C5C981936F032002ADC7E /* MVAPIValidator.h */,
+				5F8C5C991936F032002ADC7E /* MVAPIValidator.m */,
 			);
 			path = internal;
 			sourceTree = "<group>";
@@ -217,6 +229,17 @@
 				5F6A405B192861D000E40606 /* MVJsonFactory.m */,
 			);
 			name = Util;
+			sourceTree = "<group>";
+		};
+		5F8C5C911936E982002ADC7E /* RPJSONValidator */ = {
+			isa = PBXGroup;
+			children = (
+				5F8C5C921936E982002ADC7E /* MVRPJSONValidator.h */,
+				5F8C5C931936E982002ADC7E /* MVRPJSONValidator.m */,
+				5F8C5C941936E982002ADC7E /* MVRPValidatorPredicate.h */,
+				5F8C5C951936E982002ADC7E /* MVRPValidatorPredicate.m */,
+			);
+			path = RPJSONValidator;
 			sourceTree = "<group>";
 		};
 		5FFB3DDD1794072200B51480 = {
@@ -517,11 +540,14 @@
 				5FFB3E31179407EE00B51480 /* MVPlace.m in Sources */,
 				5FFB3E32179407EE00B51480 /* MVSegment.m in Sources */,
 				5F51392418A8C1F800B1931A /* MVSupportedActivity.m in Sources */,
+				5F8C5C961936E982002ADC7E /* MVRPJSONValidator.m in Sources */,
 				5FB2FC641929D28B007CBDC3 /* MVLightCache.m in Sources */,
+				5F8C5C9A1936F032002ADC7E /* MVAPIValidator.m in Sources */,
 				5FFB3E33179407EE00B51480 /* MVStoryLine.m in Sources */,
 				5F51391018A6255700B1931A /* MVLocalization.m in Sources */,
 				5F51391C18A640C500B1931A /* NSObject+LogProperties.m in Sources */,
 				5FFB3E34179407EE00B51480 /* MVSummary.m in Sources */,
+				5F8C5C971936E982002ADC7E /* MVRPValidatorPredicate.m in Sources */,
 				5FFB3E35179407EE00B51480 /* MVTrackPoint.m in Sources */,
 				5FFB3E36179407EE00B51480 /* MVUser.m in Sources */,
 				5FFB3E37179407EE00B51480 /* MovesAPI.m in Sources */,
