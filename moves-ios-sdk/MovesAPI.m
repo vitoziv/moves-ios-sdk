@@ -10,33 +10,34 @@
 #import "MVOAuthViewController.h"
 #import "DFDateFormatterFactory.h"
 #import "MVCalendarFactory.h"
+#import "MVAPIValidator.h"
 
-#define BASE_DOMAIN @"https://api.moves-app.com"
-#define BASE_DOMAIN_1_1 @"https://api.moves-app.com/api/1.1"
+static NSString *const BASE_DOMAIN = @"https://api.moves-app.com";
+static NSString *const BASE_DOMAIN_1_1 = @"https://api.moves-app.com/api/1.1";
 
-#define MV_URL_USER_PROFILE @"/user/profile"
-#define MV_URL_ACTIVITY_LIST @"/activities"
-#define MV_URL_SUMMARY @"/user/summary/daily"
-#define MV_URL_ACTIVITY @"/user/activities/daily"
-#define MV_URL_PLACES @"/user/places/daily"
-#define MV_URL_STORYLINE @"/user/storyline/daily"
+static NSString *const MV_URL_USER_PROFILE = @"/user/profile";
+static NSString *const MV_URL_ACTIVITY_LIST = @"/activities";
+static NSString *const MV_URL_SUMMARY = @"/user/summary/daily";
+static NSString *const MV_URL_ACTIVITY = @"/user/activities/daily";
+static NSString *const MV_URL_PLACES = @"/user/places/daily";
+static NSString *const MV_URL_STORYLINE = @"/user/storyline/daily";
 
-#define MV_AUTH_ACCESS_TOKEN @"MV_AUTH_ACCESS_TOKEN"
-#define MV_AUTH_REFRESH_TOKEN @"MV_AUTH_REFRESH_TOKEN"
-#define MV_AUTH_FETCH_TIME @"MV_AUTH_FETCH_TIME"
-#define MV_AUTH_EXPIRY @"MV_AUTH_EXPIRY"
-#define MV_AUTH_USER_ID @"MV_AUTH_USER_ID"
+static NSString *const MV_AUTH_ACCESS_TOKEN = @"MV_AUTH_ACCESS_TOKEN";
+static NSString *const MV_AUTH_REFRESH_TOKEN = @"MV_AUTH_REFRESH_TOKEN";
+static NSString *const MV_AUTH_FETCH_TIME = @"MV_AUTH_FETCH_TIME";
+static NSString *const MV_AUTH_EXPIRY = @"MV_AUTH_EXPIRY";
+static NSString *const MV_AUTH_USER_ID = @"MV_AUTH_USER_ID";
 
 
-#define kDateFormatTypeDay @"yyyyMMdd"
-#define kDateFormatTypeWeek @"yyyy-'W'ww"
-#define kDateFormatTypeMonth @"yyyyMM"
+static NSString *const kDateFormatTypeDay = @"yyyyMMdd";
+static NSString *const kDateFormatTypeWeek = @"yyyy-'W'ww";
+static NSString *const kDateFormatTypeMonth = @"yyyyMM";
 
-#define kModelTypeSupportedActivity @"MVSupportedActivity"
-#define kModelTypeSummary @"MVDailySummary"
-#define kModelTypeActivity @"MVDailyActivity"
-#define kModelTypePlace @"MVDailyPlace"
-#define kModelTypeStoryLine @"MVStoryLine"
+static NSString *const kModelTypeSupportedActivity = @"MVSupportedActivity";
+static NSString *const kModelTypeSummary = @"MVDailySummary";
+static NSString *const kModelTypeActivity = @"MVDailyActivity";
+static NSString *const kModelTypePlace = @"MVDailyPlace";
+static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 @interface MovesAPI() <MVOAuthViewControllerDelegate>
 
