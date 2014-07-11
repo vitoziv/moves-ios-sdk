@@ -7,12 +7,13 @@ moves-ios-sdk
 #Getting Started
 
 ##Installing the moves-ios-sdk
-**1. CocoaPods**
+
+**Use CocoaPods**
 
 - Add the ``pod 'moves-ios-sdk', '~> 0.2.2'`` pod to your **Podfile**. 
 - Run ``pod install``, and the Moves SDK will be available in your project.
 
-**2. Add the moves-ios-sdk to your project**
+**Manully way, add the moves-ios-sdk to your project**
 
 - Open your existing project.
 - Drag the **moves-ios-sdk** folder from the example project into your Xcode project.
