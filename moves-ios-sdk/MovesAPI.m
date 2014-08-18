@@ -386,6 +386,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (NSString *)urlByMVUrl:(NSString *)MVUrl pastDays:(NSInteger)days {
+    NSAssert(days <= 31, @"Moves Error! You should set the pastDays less than 31.");
     NSString *url = [NSString stringWithFormat:@"%@%@?pastDays=%li", BASE_DOMAIN_1_1, MVUrl, (long)days];
     return url;
 }
@@ -788,6 +789,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
                         trackPoints:(BOOL)trackPoints
                             success:(void(^)(NSArray *storyLines))success
                             failure:(void(^)(NSError *error))failure {
+    NSAssert(pastDays <= 7, @"Moves Error! You should set the pastDays less than 7.");
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE pastDays:pastDays];
     if (trackPoints) {
         urlString = [urlString stringByAppendingString:@"&trackPoints=true"];
