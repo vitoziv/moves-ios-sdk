@@ -39,7 +39,9 @@ copy and paste the following into the XML Source for the Info.plist:
         </dict>
     </array>
 ```
-**[YOUR URL SCHEME]** is setted when you [Register your app with Moves](https://dev.moves-app.com/clients)
+**[YOUR URL SCHEME]** is setted when you [Register your app with Moves](https://dev.moves-app.com/apps)
+
+**Important:** When configure your app [here](https://dev.moves-app.com/apps) you need to set the `Redirect URI` to: `[YOUR URL SCHEME]://authorization-completed` 
 
 ##Configure your App Delegate
 
