@@ -22,7 +22,7 @@
             NSString *firstDate = [MVJsonValueParser stringValueFromObject:profile[@"firstDate"]];
             if (firstDate) {
                 NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
-                formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+                formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
                 _firstDate = [formatter dateFromString:firstDate];
             }
             

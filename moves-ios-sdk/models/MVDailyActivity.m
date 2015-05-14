@@ -21,7 +21,7 @@
         if (date) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
             
-            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
             _date = [formatter dateFromString:date];
         }
         if (dic[@"caloriesIdle"]) {
@@ -40,7 +40,7 @@
         NSString *lastUpdate = [MVJsonValueParser stringValueFromObject:dic[@"lastUpdate"]];
         if (lastUpdate) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
-            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
             _lastUpdate = [formatter dateFromString:lastUpdate];
         }
     }

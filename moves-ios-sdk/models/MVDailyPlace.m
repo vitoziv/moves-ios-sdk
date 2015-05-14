@@ -17,7 +17,7 @@
     if (self && [dic isKindOfClass:[NSDictionary class]]) {
         if (dic[@"date"]) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
-            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];;
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
             NSString *dateString = [MVJsonValueParser stringValueFromObject:dic[@"date"]];
             if (dateString) {
                 _date = [formatter dateFromString:dateString];
@@ -31,7 +31,7 @@
         
         if (dic[@"lastUpdate"]) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
-            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
             NSString *dateString = [MVJsonValueParser stringValueFromObject:dic[@"lastUpdate"]];
             if (dateString) {
                 _lastUpdate = [formatter dateFromString:dateString];
