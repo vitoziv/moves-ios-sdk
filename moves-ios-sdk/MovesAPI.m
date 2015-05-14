@@ -6,6 +6,12 @@
 //  Copyright (c) 2013 vito. All rights reserved.
 //
 
+#ifdef __IPHONE_8_0
+    #define GregorianCalendar NSCalendarIdentifierGregorian
+#else
+    #define GregorianCalendar NSGregorianCalendar
+#endif
+
 #import "MovesAPI.h"
 #import "MVOAuthViewController.h"
 #import "DFDateFormatterFactory.h"
@@ -302,7 +308,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (NSString *)stringFromDate:(NSDate *)date byFormat:(NSString *)format {
     NSDateFormatter *dateFormatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:format];
-    dateFormatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+    dateFormatter.calendar = [MVCalendarFactory calendarWithIdentifier:GregorianCalendar];
     [dateFormatter setDateFormat:format];
     return [dateFormatter stringFromDate:date];
 }
