@@ -19,7 +19,7 @@
         _type = [MVJsonValueParser stringValueFromObject:dic[@"type"]];
         
         NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
-        formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+        formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
         NSString *startTime = [MVJsonValueParser stringValueFromObject:dic[@"startTime"]];
         if (startTime) {
             _startTime = [formatter dateFromString:startTime];

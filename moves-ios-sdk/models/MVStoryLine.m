@@ -19,7 +19,7 @@
         NSString *date = [MVJsonValueParser stringValueFromObject:dic[@"date"]];
         if (date) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd"];
-            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
             _date = [formatter dateFromString:date];
         }
         if (dic[@"caloriesIdle"]) {

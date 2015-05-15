@@ -26,7 +26,7 @@
         NSString *time = [MVJsonValueParser stringValueFromObject:dic[@"time"]];
         if (time) {
             NSDateFormatter *formatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:@"yyyyMMdd'T'HHmmssZ"];
-            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+            formatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
             _time = [formatter dateFromString:time];
         }
     }

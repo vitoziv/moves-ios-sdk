@@ -9,7 +9,6 @@
 #import "MovesAPI.h"
 #import "MVOAuthViewController.h"
 #import "DFDateFormatterFactory.h"
-#import "MVCalendarFactory.h"
 #import "MVAPIValidator.h"
 
 static NSString *const BASE_DOMAIN = @"https://api.moves-app.com";
@@ -302,7 +301,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (NSString *)stringFromDate:(NSDate *)date byFormat:(NSString *)format {
     NSDateFormatter *dateFormatter = [[DFDateFormatterFactory sharedFactory] dateFormatterWithFormat:format];
-    dateFormatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSGregorianCalendar];
+    dateFormatter.calendar = [MVCalendarFactory calendarWithIdentifier:NSCalendarIdentifierGregorian];
     [dateFormatter setDateFormat:format];
     return [dateFormatter stringFromDate:date];
 }

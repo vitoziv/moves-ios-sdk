@@ -7,6 +7,7 @@
 //
 
 #import "MVBaseDataModel.h"
+#import <CoreGraphics/CGBase.h>
 
 @interface MVTrackPoint : MVBaseDataModel
 

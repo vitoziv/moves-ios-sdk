@@ -15,6 +15,8 @@
 #import "MVStoryLine.h"
 #import "MVSupportedActivity.h"
 
+@class UIViewController;
+
 typedef NS_ENUM(NSUInteger, MVScopeType) {
     MVScopeTypeDefault = 0,
     MVScopeTypeActivity,
