@@ -12,28 +12,26 @@
 
 + (void)requestUrl:(NSString *)url convertValueToObject:(id)obj forJsonFlower:(void(^)(NSArray *jsonFlower))flower {
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               NSError *jsonError;
-                               NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data
-                                                                                      options:0
-                                                                                        error:&jsonError];
-                               if (!jsonError) {
-                                   NSArray *resultData = [self jsonFlowerWithJsonData:result deep:YES convertValueToObject:obj];
-                                   resultData = [resultData arrayByAddingObject:obj];
-                                   if (flower) {
-                                       flower(resultData);
-                                   }
-                                   NSLog(@"%@", resultData);
-                               } else {
-                                   NSLog(@"JSON error: %@", jsonError);
-                                   if (flower) {
-                                       flower(nil);
-                                   }
-                               }
-                               
-                           }];
+	NSURLSession *session = [NSURLSession sharedSession];
+	[[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		   NSError *jsonError;
+		   NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data
+																  options:0
+																	error:&jsonError];
+		   if (!jsonError) {
+			   NSArray *resultData = [self jsonFlowerWithJsonData:result deep:YES convertValueToObject:obj];
+			   resultData = [resultData arrayByAddingObject:obj];
+			   if (flower) {
+				   flower(resultData);
+			   }
+			   NSLog(@"%@", resultData);
+		   } else {
+			   NSLog(@"JSON error: %@", jsonError);
+			   if (flower) {
+				   flower(nil);
+			   }
+		   }
+	}] resume];
 }
 
 + (NSArray *)jsonFlowerWithJsonData:(id)jsonData convertValueToObject:(id)obj {
