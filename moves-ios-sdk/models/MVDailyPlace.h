@@ -12,7 +12,7 @@
 @interface MVDailyPlace : MVBaseDataModel
 
 @property (nonatomic, strong) NSDate *date;
-@property (nonatomic, strong) NSArray *segments;
+@property (nonatomic, strong) NSArray<MVSegment *> *segments;
 @property (nonatomic, strong) NSDate *lastUpdate;
 
 @end

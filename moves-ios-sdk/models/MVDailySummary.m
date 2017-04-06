@@ -7,7 +7,6 @@
 //
 
 #import "MVDailySummary.h"
-#import "MVSummary.h"
 #import "DFDateFormatterFactory.h"
 #import "MVJsonValueParser.h"
 

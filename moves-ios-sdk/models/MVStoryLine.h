@@ -12,8 +12,8 @@
 @interface MVStoryLine : MVBaseDataModel
 
 @property (nonatomic, strong) NSDate *date;
-@property (nonatomic, strong) NSArray *segments;
-@property (nonatomic, strong) NSArray *summaries;
+@property (nonatomic, strong) NSArray<MVSegment *> *segments;
+@property (nonatomic, strong) NSArray<MVSummary *> *summaries;
 @property (nonatomic) NSInteger caloriesIdle;
 @property (nonatomic, readonly) NSInteger dailyCalories;
 

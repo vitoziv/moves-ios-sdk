@@ -7,12 +7,14 @@
 //
 
 #import "MVBaseDataModel.h"
+#import "MVSummary.h"
+#import "MVSegment.h"
 
 @interface MVDailyActivity : MVBaseDataModel
 
 @property (nonatomic, strong) NSDate *date;
-@property (nonatomic, strong) NSArray *summaries;
-@property (nonatomic, strong) NSArray *segments;
+@property (nonatomic, strong) NSArray<MVSummary *> *summaries;
+@property (nonatomic, strong) NSArray<MVSegment *> *segments;
 @property (nonatomic) NSInteger caloriesIdle;
 @property (nonatomic, strong) NSDate *lastUpdate;
 @property (nonatomic, readonly) NSInteger dailyCalories;

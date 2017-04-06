@@ -9,6 +9,7 @@
 #import "MovesAPI.h"
 #import "MVOAuthViewController.h"
 #import "DFDateFormatterFactory.h"
+#import "MVCalendarFactory.h"
 #import "MVAPIValidator.h"
 
 static NSString *const BASE_DOMAIN = @"https://api.moves-app.com";
@@ -67,7 +68,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     dispatch_once(&onceToken, ^{
         _sharedClient = [[MovesAPI alloc] init];
     });
-
+    
     return _sharedClient;
 }
 
@@ -105,12 +106,12 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (BOOL)canHandleOpenUrl:(NSURL *)url {
     BOOL canHandle = NO;
-
+    
     if ([url.absoluteString hasPrefix:BASE_DOMAIN] || [url.absoluteString hasPrefix:[NSString stringWithFormat:@"%@://authorization-completed", self.callbackUrlScheme]]) {
         [self handleOpenUrl:url completion:nil];
         canHandle = YES;
     }
-
+    
     return canHandle;
 }
 
@@ -120,7 +121,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     if (value) {
         [self requestOrRefreshAccessToken:value success:^{
             if (completion) completion(YES);
-
+            
             if (self.authorizationSuccessCallback) {
                 if (self.authorizationSuccessCallback) self.authorizationSuccessCallback();
                 self.authorizationSuccessCallback = nil;
@@ -128,7 +129,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
             }
         } failure:^(NSError *reason) {
             if (completion) completion(NO);
-
+            
             if (self.authorizationFailureCallback) {
                 self.authorizationFailureCallback(reason);
                 self.authorizationFailureCallback = nil;
@@ -170,7 +171,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
         } else {
             NSString *urlString = [NSString stringWithFormat:@"%@/oauth/v1/authorize?response_type=code&client_id=%@&scope=%@", BASE_DOMAIN, self.oauthClientId, [self scopeStringByScopeType:self.scope]];
             urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-
+            
             self.oauthViewController = [[MVOAuthViewController alloc] initWithAuthorizationURL:[NSURL URLWithString:urlString]
                                                                                       delegate:self];
             UINavigationController *oauthNavController = [[UINavigationController alloc] initWithRootViewController:self.oauthViewController];
@@ -184,7 +185,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
                                        completion:nil];
         }
     }
-
+    
 }
 
 - (void)updateUserDefaultsWithAuthDic:(NSDictionary *)dic {
@@ -192,18 +193,18 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     NSString *refreshToken = dic[@"refresh_token"];
     NSNumber *expiry = dic[@"expires_in"];
     NSString *userID = dic[@"user_id"];
-
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
+    
     [defaults setObject:accessToken forKey:MV_AUTH_ACCESS_TOKEN];
     [defaults setObject:refreshToken forKey:MV_AUTH_REFRESH_TOKEN];
     [defaults setObject:expiry forKey:MV_AUTH_EXPIRY];
     [defaults setObject:userID forKey:MV_AUTH_USER_ID];
     NSDate *fetchTime = [NSDate date];
     [defaults setObject:fetchTime forKey:MV_AUTH_FETCH_TIME];
-
+    
     [defaults synchronize];
-
+    
     self.accessToken = accessToken;
     self.refreshToken = refreshToken;
     self.expiry = expiry;
@@ -217,7 +218,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 {
     NSString *params;
     NSString *path = @"/oauth/v1/access_token";
-
+    
     if(self.accessToken) {
         params = [NSString stringWithFormat:@"grant_type=refresh_token&refresh_token=%@&client_id=%@&client_secret=%@",
                   self.refreshToken,
@@ -230,33 +231,35 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
                   self.oauthClientSecret,
                   [self oauthRedirectUri]];
     }
-
+    
     NSString *url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN, path];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     request.HTTPBody = [params dataUsingEncoding:NSUTF8StringEncoding];
     request.HTTPMethod = @"POST";
-
-	NSURLSession *session = [NSURLSession sharedSession];
-	[[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-
-		   // handle response
-
-		   if (!error) {
-			   NSError *jsonError;
-			   NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data
-																		   options:NSJSONReadingMutableLeaves
-																			 error:&jsonError];
-			   if (!jsonError) {
-				   [self updateUserDefaultsWithAuthDic:responseDic];
-				   if (success) success();
-			   } else {
-				   if (failure) failure(jsonError);
-			   }
-		   } else {
-			   if (failure) failure(error);
-		   }
-
-	   }] resume];
+    
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response,
+                                               NSData *data,
+                                               NSError *error) {
+                               // handle response
+                               
+                               if (!error) {
+                                   NSError *jsonError;
+                                   NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data
+                                                                                               options:NSJSONReadingMutableLeaves
+                                                                                                 error:&jsonError];
+                                   if (!jsonError) {
+                                       [self updateUserDefaultsWithAuthDic:responseDic];
+                                       if (success) success();
+                                   } else {
+                                       if (failure) failure(jsonError);
+                                   }
+                               } else {
+                                   if (failure) failure(error);
+                               }
+                               
+                           }];
 }
 
 - (BOOL)isAuthenticated
@@ -275,7 +278,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     [defaults removeObjectForKey:MV_AUTH_REFRESH_TOKEN];
     [defaults removeObjectForKey:MV_AUTH_EXPIRY];
     [defaults removeObjectForKey:MV_AUTH_FETCH_TIME];
-
+    
     self.accessToken = nil;
     self.expiry = nil;
     self.refreshToken = nil;
@@ -312,19 +315,19 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
         if (scopeType & MVScopeTypeActivity) {
             [scope appendString:@"activity"];
         }
-
+        
         if (scopeType & MVScopeTypeLocation) {
             if (scope.length > 0) [scope appendString:@" "];
             [scope appendString:@"location"];
         }
     }
-
+    
     return scope;
 }
 
 - (NSString *)valueForKey:(NSString *)key inUrl:(NSURL *)url {
     NSArray *keysAndObjs = [[url.query stringByReplacingOccurrencesOfString:@"=" withString:@"&"] componentsSeparatedByString:@"&"];
-
+    
     for(NSUInteger i = 0, len = keysAndObjs.count; i < len; i += 2) {
         NSString *aKey = keysAndObjs[i];
         NSString *aValue = keysAndObjs[i+1];
@@ -332,20 +335,20 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
             return aValue;
         }
     }
-
+    
     return nil;
 }
 
 - (BOOL)key:(NSString *)key existingInUrl:(NSURL *)url {
     NSArray *keysAndObjs = [[url.query stringByReplacingOccurrencesOfString:@"=" withString:@"&"] componentsSeparatedByString:@"&"];
-
+    
     for(NSUInteger i = 0, len = keysAndObjs.count; i < len; i += 2) {
         NSString *aKey = keysAndObjs[i];
         if ([aKey isEqualToString:key]) {
             return YES;
         }
     }
-
+    
     return NO;
 }
 
@@ -360,20 +363,20 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     } else {
         url = [NSString stringWithFormat:@"%@%@/%@", BASE_DOMAIN_1_1, MVUrl, [self stringFromDate:date byFormat:dateFormat]];
     }
-
+    
     return url;
 }
 
 - (NSString *)urlByMVUrl:(NSString *)MVUrl
                 fromDate:(NSDate *)fromDate
                   toDate:(NSDate *)toDate {
-
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyyMMdd"];
     NSString *fromDateString = [dateFormatter stringFromDate:fromDate];
-
+    
     NSString *toDateString = [dateFormatter stringFromDate:toDate];
-
+    
     NSString *url = [NSString stringWithFormat:@"%@%@?from=%@&to=%@",
                      BASE_DOMAIN_1_1,
                      MVUrl,
@@ -394,7 +397,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
     if (![JSON isKindOfClass:[NSArray class]]) {
         return nil;
     }
-
+    
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (NSDictionary *dic in JSON) {
         NSObject *obj = [(MVBaseDataModel *)[NSClassFromString(className) alloc] initWithDictionary:dic];
@@ -407,7 +410,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 //- (BOOL)verifyCFBundleURLSchemes {
 //    NSArray *urlTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
 //    NSString* callbackScheme = [NSString stringWithFormat:@"mv-%@",self.oauthClientId];
-//
+//    
 //    for (NSDictionary *dict in urlTypes) {
 //        NSArray *urlSchemes = [dict objectForKey:@"CFBundleURLSchemes"];
 //        for (NSString *urlScheme in urlSchemes) {
@@ -438,50 +441,51 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
                                       failure:failure];
         } else {
             // Step 3. Everthing is right, now try to getting data
-
+            
             NSRange range = [url rangeOfString:@"?" options:NSCaseInsensitiveSearch];
             if (range.location != NSNotFound) {
                 url = [url stringByAppendingFormat:@"&access_token=%@", self.accessToken];
             } else {
                 url = [url stringByAppendingFormat:@"?access_token=%@", self.accessToken];
             }
-
+            
             NSLog(@"Moves request url: %@", url);
-
+            
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
                                                                    cachePolicy:NSURLRequestReloadRevalidatingCacheData
                                                                timeoutInterval:25];
-
-			NSURLSession *session = [NSURLSession sharedSession];
-			[[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-
-				if (!error) {
-				   NSError *jsonError;
-				   NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data
-																			   options:NSJSONReadingMutableLeaves
-																				 error:&jsonError];
-				   if (jsonError) {
-					   if (failure) {failure(jsonError);}
-				   } else {
-					   if (success) {success(responseDic);}
-				   }
-			   } else {
-				   // Cause your app was revoked in Moves app.
-				   if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
-					   NSLog(@"expired_access_token");
-
-					   NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
-
-					   if (failure) {failure(expiredError);}
-				   } else {
-					   if (failure) {failure(error);}
-				   }
-			   }
-
-			}] resume];
+            
+            [NSURLConnection sendAsynchronousRequest:request
+                                               queue:[NSOperationQueue mainQueue]
+                                   completionHandler:^(NSURLResponse *response,
+                                                       NSData *data,
+                                                       NSError *error) {
+                                       if (!error) {
+                                           NSError *jsonError;
+                                           NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data
+                                                                                                       options:NSJSONReadingMutableLeaves
+                                                                                                         error:&jsonError];
+                                           if (jsonError) {
+                                               if (failure) {failure(jsonError);}
+                                           } else {
+                                               if (success) {success(responseDic);}
+                                           }
+                                       } else {
+                                           // Cause your app was revoked in Moves app.
+                                           if ([error.userInfo[@"NSLocalizedRecoverySuggestion"] isEqualToString:@"expired_access_token"]) {
+                                               NSLog(@"expired_access_token");
+                                               
+                                               NSError *expiredError = [NSError errorWithDomain:@"MovesAPI Error" code:401 userInfo:@{@"ErrorReason": @"expired_access_token"}];
+                                               
+                                               if (failure) {failure(expiredError);}
+                                           } else {
+                                               if (failure) {failure(error);}
+                                           }
+                                       }
+                                   }];
         }
     }
-
+    
 }
 
 #pragma mark General
@@ -499,7 +503,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
                failure:failure];
 }
 
-- (void)getActivityListSuccess:(void(^)(NSArray *activityList))success
+- (void)getActivityListSuccess:(void(^)(NSArray<MVActivity *> *activityList))success
                        failure:(void(^)(NSError *error))failure {
     NSString *url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN_1_1, MV_URL_ACTIVITY_LIST];
     [self getJsonByUrl:url
@@ -516,7 +520,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 #pragma mark MVSummary
 
 - (void)getDayDailySummariesByDate:(NSDate *)date
-                           success:(void(^)(NSArray *dailySummaries))success
+                           success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
                            failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
@@ -529,7 +533,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getWeekDailySummariesByDate:(NSDate *)date
-                            success:(void(^)(NSArray *dailySummaries))success
+                            success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
@@ -542,7 +546,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getMonthDailySummariesByDate:(NSDate *)date
-                             success:(void(^)(NSArray *dailySummaries))success
+                             success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
                              failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
@@ -556,7 +560,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)getDailySummariesFromDate:(NSDate *)fromDate
                            toDate:(NSDate *)toDate
-                          success:(void(^)(NSArray *dailySummaries))success
+                          success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
                           failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
@@ -569,7 +573,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getDailySummariesByPastDays:(NSInteger)pastDays
-                            success:(void(^)(NSArray *dailySummaries))success
+                            success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY pastDays:pastDays];
     [self getJsonByUrl:url
@@ -583,7 +587,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 #pragma mark MVActivity
 - (void)getDayDailyActivitiesByDate:(NSDate *)date
-                            success:(void(^)(NSArray *dailyActivities))success
+                            success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
@@ -596,7 +600,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getWeekDailyActivitiesByDate:(NSDate *)date
-                             success:(void(^)(NSArray *dailyActivities))success
+                             success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
                              failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
@@ -609,7 +613,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getMonthDailyActivitiesByDate:(NSDate *)date
-                              success:(void (^)(NSArray *dailyActivities))success
+                              success:(void (^)(NSArray<MVActivity *> *dailyActivities))success
                               failure:(void (^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
@@ -623,7 +627,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)getDailyActivitiesFromDate:(NSDate *)fromDate
                             toDate:(NSDate *)toDate
-                           success:(void(^)(NSArray *dailyActivities))success
+                           success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
                            failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
@@ -636,7 +640,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getDailyActivitiesByPastDays:(NSInteger)pastDays
-                             success:(void(^)(NSArray *dailyActivities))success
+                             success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
                              failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY pastDays:pastDays];
     [self getJsonByUrl:url
@@ -651,7 +655,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 #pragma mark MVPlace
 - (void)getDayDailyPlacesByDate:(NSDate *)date
-                        success:(void(^)(NSArray *dailyPlaces))success
+                        success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
                         failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
@@ -663,7 +667,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getWeekDailyPlacesByDate:(NSDate *)date
-                         success:(void(^)(NSArray *dailyPlaces))success
+                         success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
                          failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
@@ -676,7 +680,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getMonthDailyPlacesByDate:(NSDate *)date
-                          success:(void(^)(NSArray *dailyPlaces))success
+                          success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
                           failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
@@ -690,7 +694,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)getDailyPlacesFromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate
-                       success:(void(^)(NSArray *dailyPlaces))success
+                       success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
                        failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
@@ -703,7 +707,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getDailyPlacesByPastDays:(NSInteger)pastDays
-                         success:(void(^)(NSArray *dailyPlaces))success
+                         success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
                          failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES pastDays:pastDays];
     [self getJsonByUrl:url
@@ -718,7 +722,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 #pragma mark - MVStoryLine
 - (void)getDayStoryLineByDate:(NSDate *)date
                   trackPoints:(BOOL)trackPoints
-                      success:(void(^)(NSArray *storyLines))success
+                      success:(void(^)(NSArray<MVStoryLine *> *storyLines))success
                       failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE date:date dateFormat:kDateFormatTypeDay];
     if (trackPoints) {
@@ -735,7 +739,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)getWeekStoryLineByDate:(NSDate *)date
                    trackPoints:(BOOL)trackPoints
-                       success:(void(^)(NSArray *storyLines))success
+                       success:(void(^)(NSArray<MVStoryLine *> *storyLines))success
                        failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE date:date dateFormat:kDateFormatTypeWeek];
     if (trackPoints) {
@@ -751,7 +755,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getMonthStoryLineByDate:(NSDate *)date
-                        success:(void(^)(NSArray *storyLines))success
+                        success:(void(^)(NSArray<MVStoryLine *> *storyLines))success
                         failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:urlString
@@ -766,7 +770,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 - (void)getDailyStoryLineFromDate:(NSDate *)fromDate
                            toDate:(NSDate *)toDate
                       trackPoints:(BOOL)trackPoints
-                          success:(void(^)(NSArray *storyLines))success
+                          success:(void(^)(NSArray<MVStoryLine *> *storyLines))success
                           failure:(void(^)(NSError *error))failure {
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE fromDate:fromDate toDate:toDate];
     if (trackPoints) {
@@ -783,7 +787,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)getDailyStoryLineByPastDays:(NSInteger)pastDays
                         trackPoints:(BOOL)trackPoints
-                            success:(void(^)(NSArray *storyLines))success
+                            success:(void(^)(NSArray<MVStoryLine *> *storyLines))success
                             failure:(void(^)(NSError *error))failure {
     NSAssert(pastDays <= 7, @"Moves Error! You should set the pastDays less than 7.");
     NSString *urlString = [self urlByMVUrl:MV_URL_STORYLINE pastDays:pastDays];
@@ -803,7 +807,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)oauthViewControllerDidCancel:(MVOAuthViewController *)sender {
     [sender dismissViewControllerAnimated:YES completion:nil];
-
+    
     if (self.authorizationFailureCallback) self.authorizationFailureCallback(nil);
     self.authorizationSuccessCallback = nil;
     self.authorizationFailureCallback = nil;
@@ -811,7 +815,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)oauthViewController:(MVOAuthViewController *)sender didFailWithError:(NSError *)error {
     [sender dismissViewControllerAnimated:YES completion:nil];
-
+    
     if (self.authorizationFailureCallback) self.authorizationFailureCallback(error);
     self.authorizationSuccessCallback = nil;
     self.authorizationFailureCallback = nil;

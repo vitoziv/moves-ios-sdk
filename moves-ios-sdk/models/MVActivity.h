@@ -15,6 +15,6 @@
 @property (nonatomic) BOOL manual;
 @property (nonatomic, strong) NSDate *startTime;
 @property (nonatomic, strong) NSDate *endTime;
-@property (nonatomic, strong) NSArray *trackPoints;
+@property (nonatomic, strong) NSArray<MVTrackPoint *> *trackPoints;
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import "MVDailyActivity.h"
-#import "MVSegment.h"
 #import "DFDateFormatterFactory.h"
 #import "MVJsonValueParser.h"
 

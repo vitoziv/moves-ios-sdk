@@ -16,7 +16,7 @@
 @property (nonatomic, strong) NSDate *startTime;
 @property (nonatomic, strong) NSDate *endTime;
 @property (nonatomic, strong) MVPlace *place;
-@property (nonatomic, strong) NSArray *activities;
+@property (nonatomic, strong) NSArray<MVActivity *> *activities;
 @property (nonatomic, strong) NSDate *lastUpdate;
 
 @end
