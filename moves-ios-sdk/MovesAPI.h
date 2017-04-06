@@ -52,73 +52,73 @@ typedef void(^MVAuthorizationFailureBlock)(NSError *error);
 - (void)getUserSuccess:(void(^)(MVUser *user))success
                failure:(void(^)(NSError *error))failure;
 
-- (void)getActivityListSuccess:(void(^)(NSArray<MVActivity *> *activityList))success
+- (void)getActivityListSuccess:(void(^)(NSArray<MVSupportedActivity *> *activityList))success
                        failure:(void(^)(NSError *error))failure;
 
 #pragma mark - MVSummary
 - (void)getDayDailySummariesByDate:(NSDate *)date
-                           success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                           success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                            failure:(void(^)(NSError *error))failure;
 
 - (void)getWeekDailySummariesByDate:(NSDate *)date
-                            success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                            success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                             failure:(void(^)(NSError *error))failure;
 
 - (void)getMonthDailySummariesByDate:(NSDate *)date
-                             success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                             success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                              failure:(void(^)(NSError *error))failure;
 
 - (void)getDailySummariesFromDate:(NSDate *)fromDate
                            toDate:(NSDate *)toDate
-                          success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                          success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                           failure:(void(^)(NSError *error))failure;
 
 - (void)getDailySummariesByPastDays:(NSInteger)pastDays
-                            success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                            success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                             failure:(void(^)(NSError *error))failure;
 
 #pragma mark - MVActivity
 - (void)getDayDailyActivitiesByDate:(NSDate *)date
-                            success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
+                            success:(void(^)(NSArray<MVDailyActivity *> *dailyActivities))success
                             failure:(void(^)(NSError *error))failure;
 
 - (void)getWeekDailyActivitiesByDate:(NSDate *)date
-                             success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
+                             success:(void(^)(NSArray<MVDailyActivity *> *dailyActivities))success
                              failure:(void(^)(NSError *error))failure;
 
 - (void)getMonthDailyActivitiesByDate:(NSDate *)date
-                              success:(void (^)(NSArray<MVActivity *> *dailyActivities))success
+                              success:(void (^)(NSArray<MVDailyActivity *> *dailyActivities))success
                               failure:(void (^)(NSError *error))failure;
 
 - (void)getDailyActivitiesFromDate:(NSDate *)fromDate
                             toDate:(NSDate *)toDate
-                           success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
+                           success:(void(^)(NSArray<MVDailyActivity *> *dailyActivities))success
                            failure:(void(^)(NSError *error))failure;
 
 - (void)getDailyActivitiesByPastDays:(NSInteger)pastDays
-                             success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
+                             success:(void(^)(NSArray<MVDailyActivity *> *dailyActivities))success
                              failure:(void(^)(NSError *error))failure;
 
 #pragma mark - MVPlace
 - (void)getDayDailyPlacesByDate:(NSDate *)date
-                        success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                        success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                         failure:(void(^)(NSError *error))failure;
 
 - (void)getWeekDailyPlacesByDate:(NSDate *)date
-                         success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                         success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                          failure:(void(^)(NSError *error))failure;
 
 - (void)getMonthDailyPlacesByDate:(NSDate *)date
-                          success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                          success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                           failure:(void(^)(NSError *error))failure;
 
 - (void)getDailyPlacesFromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate
-                       success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                       success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                        failure:(void(^)(NSError *error))failure;
 
 - (void)getDailyPlacesByPastDays:(NSInteger)pastDays
-                         success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                         success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                          failure:(void(^)(NSError *error))failure;
 
 #pragma mark - MVStoryLine

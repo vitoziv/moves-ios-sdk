@@ -503,7 +503,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
                failure:failure];
 }
 
-- (void)getActivityListSuccess:(void(^)(NSArray<MVActivity *> *activityList))success
+- (void)getActivityListSuccess:(void(^)(NSArray<MVSupportedActivity *> *activityList))success
                        failure:(void(^)(NSError *error))failure {
     NSString *url = [NSString stringWithFormat:@"%@%@", BASE_DOMAIN_1_1, MV_URL_ACTIVITY_LIST];
     [self getJsonByUrl:url
@@ -520,7 +520,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 #pragma mark MVSummary
 
 - (void)getDayDailySummariesByDate:(NSDate *)date
-                           success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                           success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                            failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
@@ -533,7 +533,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getWeekDailySummariesByDate:(NSDate *)date
-                            success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                            success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
@@ -546,7 +546,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getMonthDailySummariesByDate:(NSDate *)date
-                             success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                             success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                              failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
@@ -560,7 +560,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)getDailySummariesFromDate:(NSDate *)fromDate
                            toDate:(NSDate *)toDate
-                          success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                          success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                           failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
@@ -573,7 +573,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getDailySummariesByPastDays:(NSInteger)pastDays
-                            success:(void(^)(NSArray<MVSummary *> *dailySummaries))success
+                            success:(void(^)(NSArray<MVDailySummary *> *dailySummaries))success
                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_SUMMARY pastDays:pastDays];
     [self getJsonByUrl:url
@@ -587,7 +587,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 #pragma mark MVActivity
 - (void)getDayDailyActivitiesByDate:(NSDate *)date
-                            success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
+                            success:(void(^)(NSArray<MVDailyActivity *> *dailyActivities))success
                             failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
@@ -600,7 +600,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getWeekDailyActivitiesByDate:(NSDate *)date
-                             success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
+                             success:(void(^)(NSArray<MVDailyActivity *> *dailyActivities))success
                              failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
@@ -613,7 +613,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getMonthDailyActivitiesByDate:(NSDate *)date
-                              success:(void (^)(NSArray<MVActivity *> *dailyActivities))success
+                              success:(void (^)(NSArray<MVDailyActivity *> *dailyActivities))success
                               failure:(void (^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
@@ -627,7 +627,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)getDailyActivitiesFromDate:(NSDate *)fromDate
                             toDate:(NSDate *)toDate
-                           success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
+                           success:(void(^)(NSArray<MVDailyActivity *> *dailyActivities))success
                            failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
@@ -640,7 +640,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getDailyActivitiesByPastDays:(NSInteger)pastDays
-                             success:(void(^)(NSArray<MVActivity *> *dailyActivities))success
+                             success:(void(^)(NSArray<MVDailyActivity *> *dailyActivities))success
                              failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_ACTIVITY pastDays:pastDays];
     [self getJsonByUrl:url
@@ -655,7 +655,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 #pragma mark MVPlace
 - (void)getDayDailyPlacesByDate:(NSDate *)date
-                        success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                        success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                         failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeDay];
     [self getJsonByUrl:url
@@ -667,7 +667,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getWeekDailyPlacesByDate:(NSDate *)date
-                         success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                         success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                          failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeWeek];
     [self getJsonByUrl:url
@@ -680,7 +680,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getMonthDailyPlacesByDate:(NSDate *)date
-                          success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                          success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                           failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES date:date dateFormat:kDateFormatTypeMonth];
     [self getJsonByUrl:url
@@ -694,7 +694,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 
 - (void)getDailyPlacesFromDate:(NSDate *)fromDate
                         toDate:(NSDate *)toDate
-                       success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                       success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                        failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES fromDate:fromDate toDate:toDate];
     [self getJsonByUrl:url
@@ -707,7 +707,7 @@ static NSString *const kModelTypeStoryLine = @"MVStoryLine";
 }
 
 - (void)getDailyPlacesByPastDays:(NSInteger)pastDays
-                         success:(void(^)(NSArray<MVPlace *> *dailyPlaces))success
+                         success:(void(^)(NSArray<MVDailyPlace *> *dailyPlaces))success
                          failure:(void(^)(NSError *error))failure {
     NSString *url = [self urlByMVUrl:MV_URL_PLACES pastDays:pastDays];
     [self getJsonByUrl:url
